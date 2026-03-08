@@ -2,17 +2,71 @@
 interface Props {
   title: string;
   description: string;
+  descriptionEn?: string;
   ogImage?: string;
 }
 
-const { title, description, ogImage } = Astro.props;
+const { title, description, descriptionEn, ogImage } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = ogImage
   ? new URL(ogImage, Astro.site)
   : new URL(`${base}images/favicon-og.svg`, Astro.site);
 
-const faviconUrl = `${base}favicon.svg`;
+// JSON-LD: Organization + VirtualLocation schema (English for international indexing)
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://TIshow.github.io/weson-museum/#organization',
+      name: 'WESON MUSEUM',
+      url: 'https://TIshow.github.io/weson-museum/',
+      sameAs: [
+        'https://x.com/WESON_MUSEUM',
+        'https://www.instagram.com/weson_museum/',
+        'https://weson-museum.booth.pm/',
+      ],
+      description:
+        'WESON MUSEUM is a virtual reality art museum on VRChat, offering permanent exhibitions and the annual ARTLINK group show. Open to visitors worldwide regardless of location.',
+    },
+    {
+      '@type': 'Museum',
+      '@id': 'https://TIshow.github.io/weson-museum/#museum',
+      name: 'WESON MUSEUM',
+      alternateName: ['ウェソンミュージアム', 'VR美術館'],
+      url: 'https://TIshow.github.io/weson-museum/',
+      description:
+        'A virtual reality art museum built in VRChat. Featuring four permanent galleries — Sky, Palau, Forest, and Rain — plus the annual ARTLINK exhibition connecting artists and audiences across borders.',
+      keywords: [
+        'VR art museum', 'virtual reality museum', 'VRChat museum',
+        'ARTLINK', 'metaverse art', 'Japanese contemporary art',
+        'Palau art', 'VR gallery', 'online art exhibition',
+        'VR美術館', 'バーチャル美術館', 'メタバース美術展',
+      ],
+      event: {
+        '@type': 'Event',
+        name: 'VR Gallery Tour',
+        description: 'Weekly guided tour of WESON MUSEUM galleries. Every Saturday 21:00–22:00 JST on VRChat. Free entry, open to all.',
+        eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
+        location: {
+          '@type': 'VirtualLocation',
+          url: 'https://vrchat.com',
+        },
+        organizer: {
+          '@id': 'https://TIshow.github.io/weson-museum/#organization',
+        },
+        schedule: {
+          '@type': 'Schedule',
+          repeatFrequency: 'P1W',
+          byDay: 'https://schema.org/Saturday',
+          startTime: '21:00',
+          endTime: '22:00',
+        },
+      },
+    },
+  ],
+};
 ---
 
 <!-- charset & viewport -->
@@ -22,14 +76,21 @@ const faviconUrl = `${base}favicon.svg`;
 <!-- Canonical -->
 <link rel="canonical" href={canonicalURL} />
 
+<!-- hreflang: 同一URLで多言語対応（将来的に言語別パスを追加したら更新） -->
+<link rel="alternate" hreflang="ja" href={canonicalURL} />
+<link rel="alternate" hreflang="en" href={canonicalURL} />
+<link rel="alternate" hreflang="pau" href={canonicalURL} />
+<link rel="alternate" hreflang="x-default" href={canonicalURL} />
+
 <!-- Primary Meta -->
 <title>{title}</title>
 <meta name="description" content={description} />
+{descriptionEn && <meta name="description" lang="en" content={descriptionEn} />}
 
-<!-- テーマカラー（ブラウザのアドレスバー・モバイルUI） -->
+<!-- テーマカラー -->
 <meta name="theme-color" content="#050b0a" />
 
-<!-- Open Graph -->
+<!-- Open Graph (Japanese) -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:title" content={title} />
@@ -37,21 +98,22 @@ const faviconUrl = `${base}favicon.svg`;
 <meta property="og:image" content={ogImageURL} />
 <meta property="og:site_name" content="WESON MUSEUM" />
 <meta property="og:locale" content="ja_JP" />
+{descriptionEn && <meta property="og:locale:alternate" content="en_US" />}
+<meta property="og:locale:alternate" content="pau_PW" />
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@WESON_MUSEUM" />
 <meta name="twitter:title" content={title} />
-<meta name="twitter:description" content={description} />
+<meta name="twitter:description" content={descriptionEn ?? description} />
 <meta name="twitter:image" content={ogImageURL} />
 
 <!-- Favicon -->
-<link rel="icon" type="image/svg+xml" href={faviconUrl} />
-<!-- SVG非対応ブラウザ向けフォールバック（将来 .ico を追加する場合はここ） -->
-<!-- <link rel="alternate icon" href={`${base}favicon.ico`} /> -->
+<link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+<link rel="apple-touch-icon" href={`${base}favicon.svg`} />
 
-<!-- Apple Touch Icon（iOS ホーム画面追加時） -->
-<link rel="apple-touch-icon" href={faviconUrl} />
+<!-- Sitemap -->
+<link rel="sitemap" href="/weson-museum/sitemap-index.xml" />
 
-<!-- Sitemap（@astrojs/sitemap インテグレーション追加後に有効化） -->
-<!-- <link rel="sitemap" href="/sitemap-index.xml" /> -->
+<!-- JSON-LD structured data -->
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

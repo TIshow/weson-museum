@@ -21,6 +21,7 @@ const museums = [
     img: 'palau_museum.jpg',
     since: null,
     body: `パラオ共和国の海をイメージして設計されたVR美術館。海岸には漂流した絵画が展示され、館内には水が張られている。作品が水に濡れても成立するのはVRならではで、空間そのものが作品の一部となっている。パラオ共和国大使館後援のもと運営されている。`,
+    bodyEn: `A VR museum inspired by the seas of the Republic of Palau. Paintings drift along the shore, and the interior is filled with water — artworks that would be impossible to display in a physical gallery. Operated under the patronage of the Embassy of the Republic of Palau in Japan. / Ng diak el mo mesaod er a blai el museum — el mo er ngii a oba dellomel er a Belau.`,
     url: 'https://vrchat.com/home/launch?worldId=wrld_5b5a1ca5-4c71-401a-b004-f7d58c6f7a65',
     status: 'open',
   },
@@ -50,6 +51,7 @@ const museums = [
 <BaseLayout
   title="Exhibitions — WESON MUSEUM"
   description="WESON MUSEUMの常設展示。VRChat上に開かれた4つの美術館——天空・パラオ・森・雨降る——それぞれが固有の空気と演出を持つ空間です。"
+  descriptionEn="WESON MUSEUM's permanent exhibitions on VRChat: four unique galleries — Sky, Palau, Forest, and Rain — each with its own atmosphere and VR-exclusive presentation. The Palau Museum is operated under the patronage of the Embassy of the Republic of Palau."
 >
 
   <!-- Hero -->
@@ -110,6 +112,9 @@ const museums = [
             <h2 id={`museum-${m.num}`} class="museum-ja">{m.ja}</h2>
             <p class="museum-en mono-label">{m.en}{m.since && ` — Est. ${m.since}`}</p>
             <p class="museum-body">{m.body}</p>
+            {'bodyEn' in m && (
+              <p class="museum-body-en" lang="en">{m.bodyEn}</p>
+            )}
 
             <a
               href={m.url}
@@ -358,6 +363,15 @@ const museums = [
     font-size: var(--text-base);
     color: var(--color-text-muted);
     line-height: 2;
+    margin-top: var(--space-2);
+  }
+
+  .museum-body-en {
+    font-size: var(--text-sm);
+    color: var(--color-text-subtle);
+    line-height: 1.9;
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-4);
     margin-top: var(--space-2);
   }
 

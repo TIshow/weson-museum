@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 // GitHub Pages の設定
 // - site: 公開URLのルート（カスタムドメイン使用時は変更する）
@@ -20,4 +21,5 @@ export default defineConfig({
   base: '/weson-museum',
   output: 'static',
   trailingSlash: 'always',
+  integrations: [sitemap()],
 });
