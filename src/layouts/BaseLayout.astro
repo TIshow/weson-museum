@@ -369,7 +369,16 @@ const langBase = lang === 'en' ? `${base}/en` : base;
       letter-spacing: var(--tracking-wide);
     }
 
+    /* テキストナビを非表示、言語スイッチャーのみ残す */
+    .nav-links li:not(:last-child) {
+      display: none;
+    }
+
     .nav-links {
+      gap: var(--space-2);
+    }
+
+    .site-nav {
       gap: var(--space-4);
     }
 
