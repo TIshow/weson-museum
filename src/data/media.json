@@ -24,17 +24,19 @@
     "featured": true
   },
   {
-    "outlet": "メディア名（未入力）",
-    "title": "記事タイトルをここに入力してください",
-    "date": "2024-01-01",
+    "outlet": "CNET Japan",
+    "title": "VR美術展「ARTLINK」の挑戦--新しい形のアートコミュニケーション、海外交流にも効果",
+    "date": "2023-10-01",
     "type": "web",
+    "url": "https://japan.cnet.com/article/35212059/",
     "featured": false
   },
   {
-    "outlet": "メディア名（未入力）",
-    "title": "記事タイトルをここに入力してください",
-    "date": "2024-01-01",
+    "outlet": "CNET Japan",
+    "title": "メタバースにもUXを--仮想空間へ豊かに接続するためのデザインの重要性を考える",
+    "date": "2022-10-01",
     "type": "web",
+    "url": "https://japan.cnet.com/article/35195340/",
     "featured": false
   },
   {
