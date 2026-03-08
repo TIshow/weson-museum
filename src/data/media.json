@@ -1,0 +1,79 @@
+[
+  {
+    "outlet": "メディア名A",
+    "title": "記事タイトルをここに入力してください",
+    "date": "2025-03-01",
+    "type": "web",
+    "url": "https://example.com/article-1",
+    "featured": true
+  },
+  {
+    "outlet": "メディア名B",
+    "title": "記事タイトルをここに入力してください",
+    "date": "2025-02-15",
+    "type": "web",
+    "url": "https://example.com/article-2",
+    "featured": true
+  },
+  {
+    "outlet": "メディア名C（雑誌）",
+    "title": "記事タイトルをここに入力してください",
+    "date": "2025-02-01",
+    "type": "print",
+    "featured": true
+  },
+  {
+    "outlet": "メディア名D",
+    "title": "記事タイトルをここに入力してください",
+    "date": "2025-01-20",
+    "type": "web",
+    "url": "https://example.com/article-4",
+    "featured": false
+  },
+  {
+    "outlet": "メディア名E",
+    "title": "記事タイトルをここに入力してください",
+    "date": "2025-01-10",
+    "type": "web",
+    "url": "https://example.com/article-5",
+    "featured": false
+  },
+  {
+    "outlet": "メディア名F（雑誌）",
+    "title": "記事タイトルをここに入力してください",
+    "date": "2024-12-20",
+    "type": "print",
+    "featured": false
+  },
+  {
+    "outlet": "メディア名G",
+    "title": "記事タイトルをここに入力してください",
+    "date": "2024-12-01",
+    "type": "web",
+    "url": "https://example.com/article-7",
+    "featured": false
+  },
+  {
+    "outlet": "メディア名H",
+    "title": "記事タイトルをここに入力してください",
+    "date": "2024-11-15",
+    "type": "web",
+    "url": "https://example.com/article-8",
+    "featured": false
+  },
+  {
+    "outlet": "メディア名I（雑誌）",
+    "title": "記事タイトルをここに入力してください",
+    "date": "2024-11-01",
+    "type": "print",
+    "featured": false
+  },
+  {
+    "outlet": "メディア名J",
+    "title": "記事タイトルをここに入力してください",
+    "date": "2024-10-10",
+    "type": "web",
+    "url": "https://example.com/article-10",
+    "featured": false
+  }
+]

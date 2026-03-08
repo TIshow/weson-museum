@@ -1,0 +1,139 @@
+---
+interface Props {
+  outlet: string;
+  title: string;
+  date: string;
+  type: 'web' | 'print';
+  url?: string;
+}
+
+const { outlet, title, date, type, url } = Astro.props;
+
+const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
+  year: 'numeric',
+  month: 'long',
+});
+---
+
+<article class="media-card">
+  {url ? (
+    <a href={url} target="_blank" rel="noopener noreferrer" class="media-card-inner">
+      <div class="media-card-meta">
+        <span class="media-outlet mono-label">{outlet}</span>
+        <div class="media-card-tags">
+          <span class={`media-type-badge media-type-badge--${type}`}>
+            {type === 'web' ? 'Web' : '紙媒体'}
+          </span>
+          <span class="mono-label media-date">{formattedDate}</span>
+        </div>
+      </div>
+      <p class="media-title">{title}</p>
+      <span class="media-link-icon" aria-hidden="true">↗</span>
+    </a>
+  ) : (
+    <div class="media-card-inner">
+      <div class="media-card-meta">
+        <span class="media-outlet mono-label">{outlet}</span>
+        <div class="media-card-tags">
+          <span class={`media-type-badge media-type-badge--${type}`}>
+            {type === 'web' ? 'Web' : '紙媒体'}
+          </span>
+          <span class="mono-label media-date">{formattedDate}</span>
+        </div>
+      </div>
+      <p class="media-title">{title}</p>
+    </div>
+  )}
+</article>
+
+<style>
+  .media-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-1);
+    transition: all var(--transition-base);
+    height: 100%;
+  }
+
+  .media-card:has(a):hover {
+    border-color: var(--color-border-bright);
+    box-shadow: var(--glow-main);
+    transform: translateY(-2px);
+  }
+
+  .media-card-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+    position: relative;
+  }
+
+  .media-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .media-outlet {
+    color: var(--color-main);
+  }
+
+  .media-card-tags {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-shrink: 0;
+  }
+
+  .media-date {
+    color: var(--color-text-subtle);
+  }
+
+  .media-type-badge {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid;
+  }
+
+  .media-type-badge--web {
+    color: var(--color-main);
+    border-color: var(--color-border-bright);
+    background: var(--color-bg-glass);
+  }
+
+  .media-type-badge--print {
+    color: var(--color-accent);
+    border-color: var(--color-border-accent);
+    background: var(--color-accent-glow);
+  }
+
+  .media-title {
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    flex: 1;
+  }
+
+  .media-link-icon {
+    position: absolute;
+    bottom: var(--space-6);
+    right: var(--space-6);
+    font-size: var(--text-lg);
+    color: var(--color-main);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  .media-card:hover .media-link-icon {
+    opacity: 1;
+  }
+</style>

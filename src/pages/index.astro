@@ -1,8 +1,16 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Gallery from '@components/Gallery.astro';
+import MediaCard from '@components/MediaCard.astro';
+import mediaData from '../data/media.json';
 
 const base = import.meta.env.BASE_URL;
+
+// featured: true の掲載情報を新しい順に最大3件取得
+const featuredMedia = mediaData
+  .filter(m => m.featured)
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 3);
 
 const museums = [
   { num: '01', ja: '天空美術館', en: 'Sky Museum',    img: 'main_museum.jpg'   },
@@ -113,6 +121,41 @@ const museums = [
       </div>
     </div>
   </section>
+
+  <!-- ================================================================
+       Media
+       ================================================================ -->
+  {featuredMedia.length > 0 && (
+    <section class="section-media">
+      <div class="container">
+        <div class="section-header">
+          <span class="accent-line"></span>
+          <div>
+            <h2>Press &amp; Media</h2>
+            <p class="section-sub mono-label">メディア掲載</p>
+          </div>
+        </div>
+
+        <div class="media-grid">
+          {featuredMedia.map(item => (
+            <MediaCard
+              outlet={item.outlet}
+              title={item.title}
+              date={item.date}
+              type={item.type}
+              url={item.url}
+            />
+          ))}
+        </div>
+
+        <div class="media-more">
+          <a href="/weson-museum/media/" class="btn btn-outline">
+            掲載一覧をすべて見る
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- ================================================================
        VR Gallery Tour
@@ -459,6 +502,31 @@ const museums = [
     .artlink-banner {
       aspect-ratio: 4 / 3;
     }
+  }
+
+  /* ================================================================
+     Media
+     ================================================================ */
+  .section-media {
+    padding-block: var(--space-8) var(--space-16);
+  }
+
+  .media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+  }
+
+  @media (max-width: 900px) {
+    .media-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .media-more {
+    display: flex;
+    justify-content: flex-end;
   }
 
   /* ================================================================
