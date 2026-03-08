@@ -1,26 +1,18 @@
 [
   {
+    "outlet": "VRライフマガジン",
+    "title": "現実とメタバースが交差する、アートの最前線！画家たちによる美術総合展『ARTLINK 2025』、VRChatで開催！【寄稿】",
+    "date": "2025-02-01",
+    "type": "web",
+    "url": "https://vr-lifemagazine.com/artlink-2025/",
+    "featured": false
+  },
+  {
     "outlet": "GOODA（メンズライフスタイル）",
     "title": "「現実」と「仮想」を繋ぐ「メタバース美術館」",
     "date": "2023-05-01",
     "type": "web",
     "url": "https://gooda.brangista.com/book/202305/art-trip-metaverse.html",
-    "featured": true
-  },
-  {
-    "outlet": "withnews（朝日新聞）",
-    "title": "地方から「VR取材」やってみて…〝できたこと〟〝できなかったこと〟",
-    "date": "2022-01-07",
-    "type": "web",
-    "url": "https://withnews.jp/article/f0220107000qq000000000000000W0ez10701qq000024097A",
-    "featured": true
-  },
-  {
-    "outlet": "朝日新聞",
-    "title": "VR美術展　現実以上！？　3D空間に作品展示",
-    "date": "2021-07-01",
-    "type": "web",
-    "url": "https://www.asahi.com/articles/ASP767RM1P76PTLC003.html",
     "featured": true
   },
   {
@@ -40,38 +32,83 @@
     "featured": false
   },
   {
-    "outlet": "メディア名（未入力）",
-    "title": "記事タイトルをここに入力してください",
-    "date": "2024-01-01",
-    "type": "print",
-    "featured": false
-  },
-  {
-    "outlet": "メディア名（未入力）",
-    "title": "記事タイトルをここに入力してください",
-    "date": "2024-01-01",
+    "outlet": "CNET Japan",
+    "title": "メタバースで広がる美術の可能性--VR空間で作品展示を行う画家の植村友哉氏が見た未来",
+    "date": "2022-09-01",
     "type": "web",
+    "url": "https://japan.cnet.com/article/35194187/",
     "featured": false
   },
   {
-    "outlet": "メディア名（未入力）",
-    "title": "記事タイトルをここに入力してください",
-    "date": "2024-01-01",
+    "outlet": "CNET Japan",
+    "title": "現実とバーチャルが交差する--メタバースで美術館を開催して感じた芸術の新しい楽しみ方",
+    "date": "2022-08-01",
     "type": "web",
+    "url": "https://japan.cnet.com/article/35193657/",
     "featured": false
   },
   {
-    "outlet": "メディア名（未入力）",
-    "title": "記事タイトルをここに入力してください",
-    "date": "2024-01-01",
-    "type": "print",
-    "featured": false
-  },
-  {
-    "outlet": "メディア名（未入力）",
-    "title": "記事タイトルをここに入力してください",
-    "date": "2024-01-01",
+    "outlet": "withnews（朝日新聞）",
+    "title": "地方から「VR取材」やってみて…〝できたこと〟〝できなかったこと〟",
+    "date": "2022-01-07",
     "type": "web",
+    "url": "https://withnews.jp/article/f0220107000qq000000000000000W0ez10701qq000024097A",
+    "featured": true
+  },
+  {
+    "outlet": "朝日新聞",
+    "title": "VR美術展　現実以上！？　3D空間に作品展示",
+    "date": "2021-07-01",
+    "type": "web",
+    "url": "https://www.asahi.com/articles/ASP767RM1P76PTLC003.html",
+    "featured": true
+  },
+  {
+    "outlet": "VRニュース",
+    "title": "【VRニュース】VR VISION 2024年12月18日回",
+    "date": "2024-12-18",
+    "type": "web",
+    "url": "https://youtu.be/1fMTl1DsfKE?si=vKg2IK70JBnDTRpM",
+    "featured": false
+  },
+  {
+    "outlet": "はるかなSHOW",
+    "title": "植村友哉絵画展とARTLINK 2024、メタバース展示もリアル展示もライブな面白さ with Kana",
+    "date": "2024-11-01",
+    "type": "web",
+    "url": "https://harukanashow.org/archives/23633",
+    "featured": false
+  },
+  {
+    "outlet": "NewPrinet",
+    "title": "東洋美術印刷 メタバースとリアルのアート展示会ARTLINK2024に協力、購入作品をRevoria Press PC1120で印刷",
+    "date": "2024-11-01",
+    "type": "web",
+    "url": "https://www.newprinet.co.jp/%E6%9D%B1%E6%B4%8B%E7%BE%8E%E8%A1%93%E5%8D%B0%E5%88%B7-%E3%83%A1%E3%82%BF%E3%83%90%E3%83%BC%E3%82%B9%E3%81%A8%E3%83%AA%E3%82%A2%E3%83%AB%E3%81%AE%E3%82%A2%E3%83%BC%E3%83%88%E5%B1%95%E7%A4%BA%E4%BC%9Aa",
+    "featured": false
+  },
+  {
+    "outlet": "JAGAT（印刷学会）",
+    "title": "東洋美術印刷、「ARTLINK 2024展」に協賛",
+    "date": "2024-10-01",
+    "type": "web",
+    "url": "https://www.jagat.or.jp/archives/482868",
+    "featured": false
+  },
+  {
+    "outlet": "東洋美術印刷",
+    "title": "ARTLINK 2024 開催のお知らせ",
+    "date": "2024-10-01",
+    "type": "web",
+    "url": "https://www.toyobijutsu-prt.co.jp/wp-content/uploads/2024/10/artlink2024.pdf",
+    "featured": false
+  },
+  {
+    "outlet": "はるかなSHOW",
+    "title": "ART LINKーVR美術館での共同展示 with Tomoya",
+    "date": "2023-06-01",
+    "type": "web",
+    "url": "https://harukanashow.org/archives/23226",
     "featured": false
   }
 ]
