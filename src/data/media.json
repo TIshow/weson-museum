@@ -1,79 +1,75 @@
 [
   {
-    "outlet": "メディア名A",
-    "title": "記事タイトルをここに入力してください",
-    "date": "2025-03-01",
+    "outlet": "GOODA（メンズライフスタイル）",
+    "title": "「現実」と「仮想」を繋ぐ「メタバース美術館」",
+    "date": "2023-05-01",
     "type": "web",
-    "url": "https://example.com/article-1",
+    "url": "https://gooda.brangista.com/book/202305/art-trip-metaverse.html",
     "featured": true
   },
   {
-    "outlet": "メディア名B",
-    "title": "記事タイトルをここに入力してください",
-    "date": "2025-02-15",
+    "outlet": "withnews（朝日新聞）",
+    "title": "地方から「VR取材」やってみて…〝できたこと〟〝できなかったこと〟",
+    "date": "2022-01-07",
     "type": "web",
-    "url": "https://example.com/article-2",
+    "url": "https://withnews.jp/article/f0220107000qq000000000000000W0ez10701qq000024097A",
     "featured": true
   },
   {
-    "outlet": "メディア名C（雑誌）",
-    "title": "記事タイトルをここに入力してください",
-    "date": "2025-02-01",
-    "type": "print",
+    "outlet": "朝日新聞",
+    "title": "VR美術展　現実以上！？　3D空間に作品展示",
+    "date": "2021-07-01",
+    "type": "web",
+    "url": "https://www.asahi.com/articles/ASP767RM1P76PTLC003.html",
     "featured": true
   },
   {
-    "outlet": "メディア名D",
+    "outlet": "メディア名（未入力）",
     "title": "記事タイトルをここに入力してください",
-    "date": "2025-01-20",
+    "date": "2024-01-01",
     "type": "web",
-    "url": "https://example.com/article-4",
     "featured": false
   },
   {
-    "outlet": "メディア名E",
+    "outlet": "メディア名（未入力）",
     "title": "記事タイトルをここに入力してください",
-    "date": "2025-01-10",
+    "date": "2024-01-01",
     "type": "web",
-    "url": "https://example.com/article-5",
     "featured": false
   },
   {
-    "outlet": "メディア名F（雑誌）",
+    "outlet": "メディア名（未入力）",
     "title": "記事タイトルをここに入力してください",
-    "date": "2024-12-20",
-    "type": "print",
-    "featured": false
-  },
-  {
-    "outlet": "メディア名G",
-    "title": "記事タイトルをここに入力してください",
-    "date": "2024-12-01",
-    "type": "web",
-    "url": "https://example.com/article-7",
-    "featured": false
-  },
-  {
-    "outlet": "メディア名H",
-    "title": "記事タイトルをここに入力してください",
-    "date": "2024-11-15",
-    "type": "web",
-    "url": "https://example.com/article-8",
-    "featured": false
-  },
-  {
-    "outlet": "メディア名I（雑誌）",
-    "title": "記事タイトルをここに入力してください",
-    "date": "2024-11-01",
+    "date": "2024-01-01",
     "type": "print",
     "featured": false
   },
   {
-    "outlet": "メディア名J",
+    "outlet": "メディア名（未入力）",
     "title": "記事タイトルをここに入力してください",
-    "date": "2024-10-10",
+    "date": "2024-01-01",
     "type": "web",
-    "url": "https://example.com/article-10",
+    "featured": false
+  },
+  {
+    "outlet": "メディア名（未入力）",
+    "title": "記事タイトルをここに入力してください",
+    "date": "2024-01-01",
+    "type": "web",
+    "featured": false
+  },
+  {
+    "outlet": "メディア名（未入力）",
+    "title": "記事タイトルをここに入力してください",
+    "date": "2024-01-01",
+    "type": "print",
+    "featured": false
+  },
+  {
+    "outlet": "メディア名（未入力）",
+    "title": "記事タイトルをここに入力してください",
+    "date": "2024-01-01",
+    "type": "web",
     "featured": false
   }
 ]
