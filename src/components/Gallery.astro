@@ -1,0 +1,164 @@
+---
+/**
+ * Gallery.astro — Three.js 作品ギャラリー
+ * IntersectionObserver でビューポートに入ったときに初期化（遅延ロード）
+ * basePath は <script> 内で import.meta.env.BASE_URL から取得する
+ */
+---
+
+<div class="gallery-wrap" id="gallery-wrap">
+  <!-- Three.js キャンバス -->
+  <canvas
+    id="gallery-canvas"
+    aria-label="WESON MUSEUM 作品ギャラリー（3D）"
+    role="img"
+  ></canvas>
+
+  <!-- ローディング表示 -->
+  <div class="gallery-loading" id="gallery-loading" aria-hidden="true">
+    <div class="loading-ring"></div>
+    <span class="mono-label">Loading Gallery</span>
+  </div>
+
+  <!-- 操作ヒント -->
+  <div class="gallery-hint" aria-hidden="true">
+    <span class="mono-label">drag to explore</span>
+  </div>
+
+  <!-- JS 無効時フォールバック -->
+  <noscript>
+    <div class="gallery-fallback">
+      <div class="fallback-grid">
+        {Array.from({ length: 8 }, (_, i) => (
+          <img
+            src={`${import.meta.env.BASE_URL}images/artworks/artwork${i + 1}.jpg`}
+            alt={`作品 ${i + 1}`}
+            loading="lazy"
+          />
+        ))}
+      </div>
+    </div>
+  </noscript>
+</div>
+
+<script>
+  const wrap    = document.getElementById('gallery-wrap') as HTMLElement | null;
+  const canvas  = document.getElementById('gallery-canvas') as HTMLCanvasElement | null;
+  const loading = document.getElementById('gallery-loading') as HTMLElement | null;
+
+  if (wrap && canvas && loading) {
+    // ビューポートに入ったタイミングで Three.js を初期化（遅延ロード）
+    // Vite が GalleryScene.ts を別チャンクに分割し、必要時だけ読み込む
+    const observer = new IntersectionObserver(
+      async (entries) => {
+        if (!entries[0].isIntersecting) return;
+        observer.disconnect();
+
+        try {
+          const { initGallery } = await import('./three/GalleryScene');
+          const basePath = import.meta.env.BASE_URL;
+          loading.style.opacity = '0';
+          setTimeout(() => loading.remove(), 400);
+          initGallery(canvas, basePath);
+        } catch (err) {
+          console.error('Gallery init failed:', err);
+          loading.style.display = 'none';
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(wrap);
+  }
+</script>
+
+<style>
+  .gallery-wrap {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    min-height: 480px;
+    max-height: 860px;
+    overflow: hidden;
+    background: #050b0a;
+  }
+
+  canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* ---- Loading ---- */
+  .gallery-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: #050b0a;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .loading-ring {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(52, 178, 170, 0.2);
+    border-top-color: #34b2aa;
+    animation: spin 1.2s linear infinite;
+    box-shadow: 0 0 16px rgba(52, 178, 170, 0.3);
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .gallery-loading .mono-label {
+    color: #34b2aa;
+  }
+
+  /* ---- Hint ---- */
+  .gallery-hint {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(52, 178, 170, 0.5);
+    pointer-events: none;
+    animation: hint-fade 3s ease-in-out 2s both;
+  }
+
+  @keyframes hint-fade {
+    0%   { opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* ---- Fallback (noscript) ---- */
+  .gallery-fallback {
+    padding: 2rem;
+  }
+
+  .fallback-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+
+  .fallback-grid img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+  }
+
+  @media (max-width: 640px) {
+    .fallback-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

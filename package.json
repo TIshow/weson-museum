@@ -10,9 +10,11 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.5.5"
+    "astro": "^5.5.5",
+    "three": "^0.183.2"
   },
   "devDependencies": {
+    "@types/three": "^0.183.1",
     "prettier": "^3.5.3",
     "prettier-plugin-astro": "^0.14.1"
   }
