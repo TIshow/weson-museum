@@ -40,9 +40,9 @@ const museums = [
     en: 'Rain Museum',
     img: 'rain_museum.jpg',
     since: null,
-    body: `雨が静かに降り続ける空間に、作品が展示される美術館。現在は再建築中のため、一時的に通常の観覧ができない状態となっている。`,
+    body: `雨が静かに降り続ける空間に、作品が展示される美術館。現在も観覧可能だが、今後リニューアルを予定している。`,
     url: 'https://vrchat.com/home/launch?worldId=wrld_ae3b767b-c661-469a-a0f5-3441fa826e64',
-    status: 'closed',
+    status: 'renovation',
   },
 ];
 ---
@@ -94,11 +94,11 @@ const museums = [
                 alt={m.ja}
                 loading="lazy"
                 decoding="async"
-                class={m.status === 'closed' ? 'img-closed' : ''}
+                class={m.status === 'renovation' ? 'img-renovation' : ''}
               />
-              {m.status === 'closed' && (
-                <div class="closed-badge mono-label" aria-label="再建築中">
-                  Under Construction
+              {m.status === 'renovation' && (
+                <div class="closed-badge mono-label" aria-label="リニューアル予定">
+                  Renovation Planned
                 </div>
               )}
             </div>
@@ -111,21 +111,15 @@ const museums = [
             <p class="museum-en mono-label">{m.en}{m.since && ` — Est. ${m.since}`}</p>
             <p class="museum-body">{m.body}</p>
 
-            {m.status === 'open' ? (
-              <a
-                href={m.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="btn btn-outline museum-btn"
-              >
-                VRChatで入場する
-                <span class="btn-icon" aria-hidden="true">↗</span>
-              </a>
-            ) : (
-              <span class="btn btn-disabled" aria-disabled="true">
-                現在再建築中
-              </span>
-            )}
+            <a
+              href={m.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-outline museum-btn"
+            >
+              VRChatで入場する
+              <span class="btn-icon" aria-hidden="true">↗</span>
+            </a>
           </div>
 
         </div>
@@ -318,8 +312,8 @@ const museums = [
     filter: brightness(0.9) saturate(1.05);
   }
 
-  .img-closed {
-    filter: brightness(0.5) saturate(0) !important;
+  .img-renovation {
+    filter: brightness(0.7) saturate(0.6) !important;
   }
 
   .closed-badge {
