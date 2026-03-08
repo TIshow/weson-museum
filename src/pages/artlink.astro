@@ -1,0 +1,640 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL;
+
+const connections = [
+  {
+    num: '01',
+    en: 'Art and those yet to encounter it',
+    ja: '美術と、まだ出会っていない人',
+    body: '普段、美術館には行かない。作品の見方がわからない。そういった人が、偶然 VR 空間に迷い込み、作品の前で立ち止まる。その偶然の出会いを、ARTLINK は大切にしています。',
+  },
+  {
+    num: '02',
+    en: 'Works and dialogue',
+    ja: '作品と、対話の時間',
+    body: '毎週土曜の在廊イベントでは、作家本人が空間に在席し、鑑賞者と言葉を交わします。作品について直接話を聞ける環境は、鑑賞をより深く、より個人的なものにします。',
+  },
+  {
+    num: '03',
+    en: 'Artists and new audiences',
+    ja: '作家と、新しい鑑賞者',
+    body: 'VR という回路を通じて、作家はこれまでリーチできなかった層と出会います。テクノロジーに詳しくない作家でも、展示を続ける中で、予想外の場所からファンが生まれています。',
+  },
+  {
+    num: '04',
+    en: 'Virtual encounters, real movements',
+    ja: 'バーチャルでの出会いが、リアルを動かす',
+    body: 'VR での観覧をきっかけに、作家の個展へ足を運ぶ鑑賞者が実際に生まれています。仮想空間での接点は、現実の行動や関係へと続いていく入口にもなります。',
+  },
+];
+
+const archives = [
+  { year: '2025', path: `${base}artlink/2025/`, note: '最新回' },
+  { year: '2024', path: `${base}artlink/2024/`, note: '' },
+];
+---
+
+<BaseLayout
+  title="ARTLINK — WESON MUSEUM"
+  description="ARTLINKは、WESON MUSEUMを基盤とした複数作家によるVR総合美術展です。美術とまだ出会っていない人、作家と新しい鑑賞者、バーチャルと現実をつなぐ展覧会として、年に数回開催されています。"
+>
+
+  <!-- ================================================================
+       Hero
+       ================================================================ -->
+  <section class="al-hero">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="パンくずリスト">
+        <ol>
+          <li><a href="/weson-museum/">Home</a></li>
+          <li aria-current="page">ARTLINK</li>
+        </ol>
+      </nav>
+
+      <p class="al-eyebrow mono-label">Special Exhibition — WESON MUSEUM</p>
+
+      <h1 class="al-h1">ARTLINK</h1>
+
+      <p class="al-subline">VRがひらく、美術との新しい接点</p>
+      <p class="al-subline-en mono-label">Connecting art, people, and spaces</p>
+
+      <p class="al-lead">
+        ARTLINK は、WESON MUSEUM を基盤に開催される、複数作家による VR 総合美術展です。<br class="br-md" />
+        年に数回の企画として、美術と、これまで美術に縁が薄かった人びとのあいだに、<br class="br-md" />
+        新しい接点をつくることを目指しています。
+      </p>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Section 1: ARTLINKとは
+       ================================================================ -->
+  <section class="al-section" aria-labelledby="sec-what">
+    <div class="container">
+      <div class="section-layout">
+        <div class="section-aside">
+          <span class="accent-line"></span>
+          <h2 id="sec-what" class="section-heading">
+            ARTLINKとは
+          </h2>
+        </div>
+        <div class="section-body prose">
+          <p>
+            ARTLINK は、単なるデジタル展示の場ではありません。
+            WESON MUSEUM が育ててきた VR 空間を舞台に、
+            国内外の作家が集まり、作品を並べ、対話し、観客と空間を共にする企画です。
+          </p>
+          <p>
+            「展示する」ということを、作品を壁に掛けるだけの行為としては捉えていません。
+            作家と鑑賞者が同じ場に立ち、言葉が生まれ、
+            それがまた次の関係へとつながっていく——
+            そのような場を育てるための企画として、ARTLINK は続けられています。
+          </p>
+          <p>
+            鑑賞の敷居を下げること、美術へのアクセスの間口を広げること。
+            その問いに、VR という技術を通じて向き合い続けることが、
+            この展覧会の基本的な姿勢です。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Section 2: VRがひらく、美術との新しい出会い
+       ================================================================ -->
+  <section class="al-section al-section--tinted" aria-labelledby="sec-encounter">
+    <div class="container">
+      <div class="section-layout">
+        <div class="section-aside">
+          <span class="accent-line" style="background:var(--color-accent);box-shadow:0 0 12px var(--color-accent);"></span>
+          <h2 id="sec-encounter" class="section-heading">
+            偶然の出会いに、<br />価値がある
+          </h2>
+        </div>
+        <div class="section-body prose">
+          <p>
+            日本において、美術はしばしば日常から少し遠い文化として受け取られます。
+            「美術館は敷居が高い」「作品の見方がわからない」
+            ——そういった感覚を持つ人は、決して少なくありません。
+          </p>
+          <p>
+            VR 空間への参加には、特別な準備も、事前知識も必要ありません。
+            友人に誘われて、あるいは何気なく入ったとき、
+            たまたま作品の前に立っていた——そういう偶然の来訪が、
+            美術との最初の接点になることがあります。
+          </p>
+          <p>
+            毎週土曜日に開催している在廊イベントには、
+            普段あまり美術館に行かない方や、作品の語り方を知らない方が多く参加しています。
+            それでも、作品の前でなにかを感じ、作家と言葉を交わした経験は、
+            確かなものとして残ります。
+          </p>
+          <p>
+            アクセスのハードルを下げることは、
+            美術を「やさしくする」ことではありません。
+            より多くの人が美術の深さに触れる機会を持てるように、
+            入口を広くしておくことです。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Section 3: ARTLINKがつなぐもの
+       ================================================================ -->
+  <section class="al-section" aria-labelledby="sec-connects">
+    <div class="container">
+      <header class="center-header">
+        <span class="accent-line" style="margin-inline: auto;"></span>
+        <h2 id="sec-connects" class="center-heading">ARTLINKがつなぐもの</h2>
+      </header>
+
+      <ol class="connects-grid" aria-label="ARTLINKがつなぐもの">
+        {connections.map(c => (
+          <li class="connect-item">
+            <span class="connect-num mono-label">{c.num}</span>
+            <h3 class="connect-en">{c.en}</h3>
+            <p class="connect-ja mono-label">{c.ja}</p>
+            <p class="connect-body">{c.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Section 4: WESON MUSEUMとの関係
+       ================================================================ -->
+  <section class="al-section al-section--tinted" aria-labelledby="sec-relation">
+    <div class="container">
+      <div class="section-layout">
+        <div class="section-aside">
+          <span class="accent-line"></span>
+          <h2 id="sec-relation" class="section-heading">
+            WESON MUSEUM<br />との関係
+          </h2>
+        </div>
+        <div class="section-body prose">
+          <p>
+            WESON MUSEUM は、VRChat 上に構築された常設美術館です。
+            天空・森・パラオ・雨——それぞれ固有の空気を持つ四つの空間が、
+            常に開かれた状態で存在しています。
+          </p>
+          <p>
+            ARTLINK は、その「場」を活用する「企画」です。
+            WESON MUSEUM があるからこそ、ARTLINK は継続的に開催できます。
+            そして ARTLINK が開催されることで、WESON MUSEUM はより多くの人に知られ、
+            常設展示もまた新しい目で見られていきます。
+          </p>
+          <p>
+            場と企画が互いを育てる関係——
+            ARTLINK は、WESON MUSEUM と一体のものとして動いています。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Section 5: 美術の裾野を広げるために
+       ================================================================ -->
+  <section class="al-section" aria-labelledby="sec-goal">
+    <div class="container">
+      <div class="section-layout">
+        <div class="section-aside">
+          <span class="accent-line"></span>
+          <h2 id="sec-goal" class="section-heading">
+            美術の裾野を<br />広げるために
+          </h2>
+        </div>
+        <div class="section-body prose">
+          <p>
+            ARTLINK の目標のひとつは、美術の裾野を広げることです。
+          </p>
+          <p>
+            これまで交わりにくかった人と人、作家と鑑賞者、
+            美術と日常のあいだに、接点をつくること。
+            その接点から、新しい発見や関係が生まれることを、
+            私たちは信じています。
+          </p>
+          <p>
+            VR は目的ではなく、手段です。
+            テクノロジーが変わっても、大切にしたいことは変わりません——
+            美術が、もう少しだけ多くの人の日常に近いところにあること。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Section 6: Archive
+       ================================================================ -->
+  <section class="al-section al-section--tinted" aria-labelledby="sec-archive">
+    <div class="container">
+      <div class="section-layout">
+        <div class="section-aside">
+          <span class="accent-line"></span>
+          <h2 id="sec-archive" class="section-heading">Archive</h2>
+        </div>
+        <div class="section-body">
+          <p class="archive-intro">
+            歴代の ARTLINK 展示記録です。各回の詳細は、年度別ページをご覧ください。
+          </p>
+          <ul class="archive-list" aria-label="ARTLINK 年度別アーカイブ">
+            {archives.map(a => (
+              <li class="archive-row">
+                <a href={a.path} class="archive-link">
+                  <span class="archive-year mono-label">ARTLINK {a.year}</span>
+                  {a.note && <span class="archive-note tag">{a.note}</span>}
+                  <span class="archive-arrow" aria-hidden="true">→</span>
+                </a>
+              </li>
+            ))}
+            <li class="archive-row">
+              <a href={`${base}artlink/archive/`} class="archive-link archive-link--all">
+                <span class="archive-year mono-label">全アーカイブ</span>
+                <span class="archive-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       CTA
+       ================================================================ -->
+  <section class="al-cta" aria-label="関連ページへの導線">
+    <div class="container">
+      <div class="cta-divider" aria-hidden="true"></div>
+      <p class="cta-lead mono-label">Explore WESON MUSEUM</p>
+      <nav aria-label="関連ページへのリンク">
+        <ul class="cta-links">
+          <li>
+            <a href="/weson-museum/about/" class="btn btn-outline">
+              About
+              <span class="cta-link-sub">美術館について</span>
+            </a>
+          </li>
+          <li>
+            <a href="/weson-museum/exhibitions/" class="btn btn-outline">
+              Exhibitions
+              <span class="cta-link-sub">常設展示を見る</span>
+            </a>
+          </li>
+          <li>
+            <a href="/weson-museum/media/" class="btn btn-outline">
+              Press &amp; Media
+              <span class="cta-link-sub">メディア掲載</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* ================================================================
+     Hero
+     ================================================================ */
+  .al-hero {
+    padding-block: var(--space-16) var(--space-24);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .breadcrumb ol {
+    list-style: none;
+    display: flex;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-12);
+  }
+
+  .breadcrumb li + li::before {
+    content: '/';
+    margin-right: var(--space-2);
+    color: var(--color-border-bright);
+  }
+
+  .breadcrumb a {
+    color: var(--color-text-subtle);
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-main);
+  }
+
+  .al-eyebrow {
+    color: var(--color-main);
+    margin-bottom: var(--space-6);
+  }
+
+  .al-h1 {
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 200;
+    letter-spacing: var(--tracking-widest);
+    line-height: 1;
+    margin-bottom: var(--space-6);
+    color: var(--color-text);
+  }
+
+  .al-subline {
+    font-size: var(--text-xl);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .al-subline-en {
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-12);
+  }
+
+  .al-lead {
+    font-size: var(--text-lg);
+    line-height: 2;
+    color: var(--color-text-muted);
+    max-width: var(--content-width);
+  }
+
+  .br-md {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .br-md {
+      display: block;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .al-hero {
+      padding-block: var(--space-12) var(--space-16);
+    }
+
+    .al-subline {
+      font-size: var(--text-lg);
+    }
+
+    .al-lead {
+      font-size: var(--text-base);
+    }
+  }
+
+  /* ================================================================
+     Section 共通
+     ================================================================ */
+  .al-section {
+    padding-block: var(--space-24);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .al-section--tinted {
+    background: var(--color-bg-1);
+  }
+
+  @media (max-width: 640px) {
+    .al-section {
+      padding-block: var(--space-16);
+    }
+  }
+
+  /* 2カラムレイアウト */
+  .section-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: var(--space-16);
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .section-layout {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+  }
+
+  .section-aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    position: sticky;
+    top: calc(var(--nav-height) + var(--space-8));
+  }
+
+  @media (max-width: 768px) {
+    .section-aside {
+      position: static;
+      flex-direction: row;
+      align-items: flex-start;
+    }
+  }
+
+  .section-heading {
+    font-size: var(--text-xl);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wider);
+    line-height: 1.5;
+  }
+
+  /* センターヘッダー */
+  .center-header {
+    text-align: center;
+    margin-bottom: var(--space-16);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .center-heading {
+    font-size: var(--text-2xl);
+    font-weight: 200;
+    letter-spacing: var(--tracking-widest);
+  }
+
+  /* ================================================================
+     Prose
+     ================================================================ */
+  .prose p + p {
+    margin-top: var(--space-6);
+  }
+
+  .prose p {
+    line-height: 2;
+    color: var(--color-text-muted);
+  }
+
+  /* ================================================================
+     ARTLINKがつなぐもの
+     ================================================================ */
+  .connects-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-1);
+  }
+
+  @media (max-width: 640px) {
+    .connects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .connect-item {
+    padding: var(--space-8);
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    transition: background var(--transition-base), border-color var(--transition-base);
+  }
+
+  .connect-item:hover {
+    background: var(--color-bg-glass);
+    border-color: var(--color-border-bright);
+  }
+
+  .connect-num {
+    color: var(--color-main);
+  }
+
+  .connect-en {
+    font-size: var(--text-lg);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wide);
+    line-height: 1.3;
+  }
+
+  .connect-ja {
+    color: var(--color-text-muted);
+    letter-spacing: var(--tracking-wider);
+  }
+
+  .connect-body {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.9;
+    margin-top: var(--space-2);
+  }
+
+  /* ================================================================
+     Archive
+     ================================================================ */
+  .archive-intro {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 2;
+    margin-bottom: var(--space-8);
+  }
+
+  .archive-list {
+    list-style: none;
+    border-top: 1px solid var(--color-border);
+    max-width: var(--content-width);
+  }
+
+  .archive-row {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .archive-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding-block: var(--space-5);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .archive-link:hover {
+    color: var(--color-main);
+    text-decoration: none;
+  }
+
+  .archive-link:hover .archive-arrow {
+    transform: translateX(4px);
+    color: var(--color-main);
+  }
+
+  .archive-year {
+    color: inherit;
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-widest);
+  }
+
+  .archive-note {
+    font-size: var(--text-xs);
+  }
+
+  .archive-arrow {
+    margin-left: auto;
+    font-size: var(--text-sm);
+    color: var(--color-text-subtle);
+    transition: transform var(--transition-fast), color var(--transition-fast);
+  }
+
+  .archive-link--all .archive-year {
+    color: var(--color-text-subtle);
+  }
+
+  /* ================================================================
+     CTA
+     ================================================================ */
+  .al-cta {
+    padding-block: var(--space-24);
+  }
+
+  @media (max-width: 640px) {
+    .al-cta {
+      padding-block: var(--space-16);
+    }
+  }
+
+  .cta-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--color-main);
+    box-shadow: var(--glow-main);
+    margin-bottom: var(--space-8);
+  }
+
+  .cta-lead {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .cta-links {
+    list-style: none;
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .cta-link-sub {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-normal);
+    text-transform: none;
+    color: var(--color-text-muted);
+  }
+</style>
