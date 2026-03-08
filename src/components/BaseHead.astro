@@ -4,14 +4,19 @@ interface Props {
   description: string;
   descriptionEn?: string;
   ogImage?: string;
+  lang?: 'ja' | 'en';
 }
 
-const { title, description, descriptionEn, ogImage } = Astro.props;
+const { title, description, descriptionEn, ogImage, lang = 'ja' } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = ogImage
   ? new URL(ogImage, Astro.site)
   : new URL(`${base}images/favicon-og.svg`, Astro.site);
+
+const jaUrl = new URL(Astro.url.pathname.replace('/en/', '/').replace(/\/en$/, '/'), Astro.site);
+const enUrl = new URL(Astro.url.pathname.includes('/en/') ? Astro.url.pathname : Astro.url.pathname.replace('/weson-museum/', '/weson-museum/en/'), Astro.site);
+const ogLocale = lang === 'en' ? 'en_US' : 'ja_JP';
 
 // JSON-LD: Organization + VirtualLocation schema (English for international indexing)
 const jsonLd = {
@@ -76,11 +81,10 @@ const jsonLd = {
 <!-- Canonical -->
 <link rel="canonical" href={canonicalURL} />
 
-<!-- hreflang: 同一URLで多言語対応（将来的に言語別パスを追加したら更新） -->
-<link rel="alternate" hreflang="ja" href={canonicalURL} />
-<link rel="alternate" hreflang="en" href={canonicalURL} />
-<link rel="alternate" hreflang="pau" href={canonicalURL} />
-<link rel="alternate" hreflang="x-default" href={canonicalURL} />
+<!-- hreflang: ja/en bilingual routing -->
+<link rel="alternate" hreflang="ja" href={jaUrl} />
+<link rel="alternate" hreflang="en" href={enUrl} />
+<link rel="alternate" hreflang="x-default" href={jaUrl} />
 
 <!-- Primary Meta -->
 <title>{title}</title>
@@ -97,9 +101,9 @@ const jsonLd = {
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImageURL} />
 <meta property="og:site_name" content="WESON MUSEUM" />
-<meta property="og:locale" content="ja_JP" />
-{descriptionEn && <meta property="og:locale:alternate" content="en_US" />}
-<meta property="og:locale:alternate" content="pau_PW" />
+<meta property="og:locale" content={ogLocale} />
+{lang === 'ja' && <meta property="og:locale:alternate" content="en_US" />}
+{lang === 'en' && <meta property="og:locale:alternate" content="ja_JP" />}
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />

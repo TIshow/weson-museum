@@ -1,0 +1,218 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import mediaData from '../../data/media.json';
+
+// Sort by date descending
+const sorted = (mediaData as any[])
+  .slice()
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+const webCount   = sorted.filter(m => m.type === 'web').length;
+const printCount = sorted.filter(m => m.type === 'print').length;
+---
+
+<BaseLayout
+  title="Press & Media — WESON MUSEUM"
+  description="Press coverage and media features of WESON MUSEUM. Web articles, magazines, and newspapers."
+  lang="en"
+>
+  <div class="container page-wrap">
+
+    <!-- Page header -->
+    <header class="page-header">
+      <span class="accent-line"></span>
+      <div>
+        <p class="page-label mono-label">Press &amp; Media</p>
+        <h1>Press &amp; Media</h1>
+        <p class="page-summary">
+          <span>{sorted.length} items</span>
+          <span class="summary-sep">/</span>
+          <span>Web <strong>{webCount}</strong></span>
+          <span class="summary-sep">/</span>
+          <span>Print <strong>{printCount}</strong></span>
+        </p>
+      </div>
+    </header>
+
+    <!-- List -->
+    <ol class="media-list" reversed>
+      {sorted.map((item, i) => {
+        const formattedDate = new Date(item.date).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+
+        return (
+          <li class="media-row">
+            <span class="media-row-num mono-label">{String(sorted.length - i).padStart(2, '0')}</span>
+
+            <div class="media-row-body">
+              <div class="media-row-meta">
+                <span class={`media-type-badge media-type-badge--${item.type}`}>
+                  {item.type === 'web' ? 'Web' : 'Print'}
+                </span>
+                <span class="media-row-outlet mono-label">{item.outlet}</span>
+                <span class="media-row-date mono-label">{formattedDate}</span>
+              </div>
+
+              {item.url ? (
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="media-row-title"
+                >
+                  {item.title}
+                  <span class="media-ext-icon" aria-label="External link">↗</span>
+                </a>
+              ) : (
+                <p class="media-row-title media-row-title--nolink">{item.title}</p>
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+
+    <div class="back-link">
+      <a href="/weson-museum/en/" class="btn btn-outline">← Back to top</a>
+    </div>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .page-wrap {
+    padding-block: var(--space-16) var(--space-24);
+  }
+
+  @media (max-width: 640px) {
+    .page-wrap { padding-block: var(--space-12) var(--space-16); }
+    h1 { font-size: var(--text-2xl); }
+    .page-header { margin-bottom: var(--space-12); }
+  }
+
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-6);
+    margin-bottom: var(--space-16);
+  }
+
+  .page-label {
+    color: var(--color-main);
+    margin-bottom: var(--space-2);
+  }
+
+  h1 {
+    font-size: var(--text-3xl);
+    font-weight: 200;
+    letter-spacing: var(--tracking-wider);
+    margin-bottom: var(--space-4);
+  }
+
+  .page-summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .page-summary strong { color: var(--color-main); }
+  .summary-sep { color: var(--color-border-bright); }
+
+  .media-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .media-row {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: var(--space-6);
+    align-items: start;
+    padding-block: var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+    transition: background var(--transition-fast);
+  }
+
+  .media-row:hover { background: var(--color-bg-glass); }
+
+  .media-row-num {
+    color: var(--color-text-subtle);
+    padding-top: 2px;
+    text-align: right;
+  }
+
+  .media-row-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .media-row-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .media-type-badge {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid;
+    flex-shrink: 0;
+  }
+
+  .media-type-badge--web {
+    color: var(--color-main);
+    border-color: var(--color-border-bright);
+  }
+
+  .media-type-badge--print {
+    color: var(--color-accent);
+    border-color: var(--color-border-accent);
+  }
+
+  .media-row-outlet { color: var(--color-text-muted); }
+
+  .media-row-date {
+    color: var(--color-text-subtle);
+    margin-left: auto;
+  }
+
+  @media (max-width: 640px) {
+    .media-row-date { margin-left: 0; }
+  }
+
+  .media-row-title {
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  a.media-row-title:hover { color: var(--color-main-light); }
+  .media-row-title--nolink { cursor: default; }
+
+  .media-ext-icon {
+    font-size: var(--text-sm);
+    color: var(--color-main);
+    flex-shrink: 0;
+  }
+
+  .back-link { margin-top: var(--space-16); }
+</style>

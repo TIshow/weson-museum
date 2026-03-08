@@ -1,5 +1,6 @@
 ---
 import BaseHead from '@components/BaseHead.astro';
+import LanguageSwitcher from '@components/LanguageSwitcher.astro';
 import '@styles/global.css';
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
   description?: string;
   descriptionEn?: string;
   ogImage?: string;
+  lang?: 'ja' | 'en';
 }
 
 const {
@@ -14,27 +16,31 @@ const {
   description = 'WESON MUSEUM — VRで体験する現代アートの美術館',
   descriptionEn,
   ogImage,
+  lang = 'ja',
 } = Astro.props;
+
+const base = '/weson-museum';
+const langBase = lang === 'en' ? `${base}/en` : base;
 ---
 
 <!doctype html>
-<html lang="ja">
+<html lang={lang}>
   <head>
-    <BaseHead title={title} description={description} descriptionEn={descriptionEn} ogImage={ogImage} />
+    <BaseHead title={title} description={description} descriptionEn={descriptionEn} ogImage={ogImage} lang={lang} />
   </head>
   <body>
     <header class="site-header">
       <nav class="container site-nav">
-        <a href="/weson-museum/" class="site-logo" aria-label="WESON MUSEUM ホームへ">
+        <a href={`${langBase}/`} class="site-logo" aria-label="WESON MUSEUM ホームへ">
           <span class="logo-mark">W</span>
           <span class="logo-text">ESON MUSEUM</span>
         </a>
 
         <ul class="nav-links" role="list">
-          <li><a href="/weson-museum/exhibitions/">Exhibitions</a></li>
-          <li><a href="/weson-museum/news/">News</a></li>
-          <li><a href="/weson-museum/about/">About</a></li>
-          <li><a href="/weson-museum/en/" class="nav-lang" aria-label="English page">EN</a></li>
+          <li><a href={`${langBase}/exhibitions/`}>Exhibitions</a></li>
+          <li><a href={`${langBase}/news/`}>News</a></li>
+          <li><a href={`${langBase}/about/`}>About</a></li>
+          <li><LanguageSwitcher /></li>
         </ul>
 
         <!-- モバイル: ハンバーガーは将来実装 -->
@@ -92,9 +98,9 @@ const {
         <!-- サイト内ナビ -->
         <nav class="footer-nav" aria-label="フッターナビゲーション">
           <ul role="list">
-            <li><a href="/weson-museum/exhibitions/">Exhibitions</a></li>
-            <li><a href="/weson-museum/news/">News</a></li>
-            <li><a href="/weson-museum/about/">About</a></li>
+            <li><a href={`${langBase}/exhibitions/`}>Exhibitions</a></li>
+            <li><a href={`${langBase}/news/`}>News</a></li>
+            <li><a href={`${langBase}/about/`}>About</a></li>
           </ul>
         </nav>
       </div>

@@ -1,0 +1,71 @@
+---
+const { pathname } = Astro.url;
+const base = import.meta.env.BASE_URL.replace(/\/$/, ''); // '/weson-museum'
+
+const isEn = pathname.startsWith(base + '/en/') || pathname === base + '/en';
+const relativePath = pathname.slice(base.length); // e.g. '/about/' or '/en/about/'
+
+const jaUrl = isEn
+  ? base + (relativePath.replace(/^\/en/, '') || '/')
+  : pathname;
+
+const enUrl = isEn
+  ? pathname
+  : base + '/en' + relativePath;
+---
+
+<nav class="lang-switcher" aria-label="Language / 言語">
+  <a
+    href={jaUrl}
+    class={`lang-btn${!isEn ? ' lang-btn--active' : ''}`}
+    lang="ja"
+    hreflang="ja"
+    aria-current={!isEn ? 'true' : undefined}
+  >JA</a>
+  <span class="lang-sep" aria-hidden="true">|</span>
+  <a
+    href={enUrl}
+    class={`lang-btn${isEn ? ' lang-btn--active' : ''}`}
+    lang="en"
+    hreflang="en"
+    aria-current={isEn ? 'true' : undefined}
+  >EN</a>
+</nav>
+
+<style>
+  .lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .lang-btn {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wider);
+    color: var(--color-text-subtle);
+    text-decoration: none;
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    transition: all var(--transition-fast);
+  }
+
+  .lang-btn:hover {
+    color: var(--color-main);
+    border-color: var(--color-border-bright);
+    text-decoration: none;
+  }
+
+  .lang-btn--active {
+    color: var(--color-main);
+    border-color: var(--color-border-bright);
+    background: var(--color-bg-glass);
+  }
+
+  .lang-sep {
+    color: var(--color-border-bright);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+</style>

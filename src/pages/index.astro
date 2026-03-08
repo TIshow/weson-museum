@@ -25,6 +25,16 @@ const museums = [
   descriptionEn="WESON MUSEUM is a virtual reality art museum on VRChat. Explore four permanent galleries, join weekly guided tours every Saturday, and discover the annual ARTLINK group exhibition."
 >
 
+<script>
+  if (!sessionStorage.getItem('weson-lang')) {
+    sessionStorage.setItem('weson-lang', '1');
+    const lang = navigator.language || '';
+    if (lang.startsWith('en')) {
+      location.replace('/weson-museum/en/');
+    }
+  }
+</script>
+
   <!-- ================================================================
        Hero
        ================================================================ -->
