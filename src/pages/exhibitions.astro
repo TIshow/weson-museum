@@ -1,0 +1,442 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL;
+
+const museums = [
+  {
+    num: '01',
+    ja: '天空美術館',
+    en: 'Sky Museum',
+    img: 'main_museum.jpg',
+    since: '2021',
+    body: `2021年にVRChatへ開館した、WESON MUSEUMの本館。空中に浮かぶ展示空間に、油彩・アクリルなどの作品が並ぶ。館内ではマンタの絵から実際にマンタが泳ぎ出し、空間を静かに漂う——現実の美術館では実現できない演出が、この場所の原点にある。`,
+    url: 'https://vrchat.com/home/launch?worldId=wrld_a272c878-3435-4dbb-bdf3-d23efc50a1fc',
+    status: 'open',
+  },
+  {
+    num: '02',
+    ja: 'パラオ美術館',
+    en: 'Palau Museum',
+    img: 'palau_museum.jpg',
+    since: null,
+    body: `パラオ共和国の海をイメージして設計されたVR美術館。海岸には漂流した絵画が展示され、館内には水が張られている。作品が水に濡れても成立するのはVRならではで、空間そのものが作品の一部となっている。パラオ共和国大使館後援のもと運営されている。`,
+    url: 'https://vrchat.com/home/launch?worldId=wrld_5b5a1ca5-4c71-401a-b004-f7d58c6f7a65',
+    status: 'open',
+  },
+  {
+    num: '03',
+    ja: '森美術館',
+    en: 'Forest Museum',
+    img: 'forest_museum.jpg',
+    since: null,
+    body: `森の中に作品を置くのではなく、森そのものを美術館として設計した空間。主に植物や果物をモチーフとした作品が展示され、展示空間と作品が互いに呼応している。作品に合わせて展示環境をつくれることは、VR美術館ならではの自由さのひとつ。`,
+    url: 'https://vrchat.com/home/launch?worldId=wrld_cc87c364-530e-4c1b-b7ee-8982310d6be9',
+    status: 'open',
+  },
+  {
+    num: '04',
+    ja: '雨降る美術館',
+    en: 'Rain Museum',
+    img: 'rain_museum.jpg',
+    since: null,
+    body: `雨が静かに降り続ける空間に、作品が展示される美術館。現在は再建築中のため、一時的に通常の観覧ができない状態となっている。`,
+    url: 'https://vrchat.com/home/launch?worldId=wrld_ae3b767b-c661-469a-a0f5-3441fa826e64',
+    status: 'closed',
+  },
+];
+---
+
+<BaseLayout
+  title="Exhibitions — WESON MUSEUM"
+  description="WESON MUSEUMの常設展示。VRChat上に開かれた4つの美術館——天空・パラオ・森・雨降る——それぞれが固有の空気と演出を持つ空間です。"
+>
+
+  <!-- Hero -->
+  <section class="ex-hero">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="パンくずリスト">
+        <ol>
+          <li><a href="/weson-museum/">Home</a></li>
+          <li aria-current="page">Exhibitions</li>
+        </ol>
+      </nav>
+
+      <p class="ex-eyebrow mono-label">Permanent Exhibitions — VRChat</p>
+      <h1 class="ex-h1">Exhibitions</h1>
+      <p class="ex-lead">
+        WESON MUSEUM は、VRChat 上に4つの常設美術館を持ちます。<br class="br-md" />
+        それぞれ異なる空気と演出を持つ空間で、作品の展示が継続的に行われています。
+      </p>
+
+      <div class="tour-note glass">
+        <span class="status-dot" aria-hidden="true"></span>
+        <p class="mono-label">
+          VR在廊ツアー — 毎週土曜日 21:00〜22:00 ／ VRChat上の各館を巡回開催
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Museums -->
+  <div class="museums">
+    {museums.map((m, i) => (
+      <section
+        class={`museum-section${i % 2 === 1 ? ' museum-section--alt' : ''}`}
+        aria-labelledby={`museum-${m.num}`}
+      >
+        <div class="container museum-layout">
+
+          <div class="museum-img-col">
+            <div class="museum-img-wrap">
+              <img
+                src={`${base}images/museums/${m.img}`}
+                alt={m.ja}
+                loading="lazy"
+                decoding="async"
+                class={m.status === 'closed' ? 'img-closed' : ''}
+              />
+              {m.status === 'closed' && (
+                <div class="closed-badge mono-label" aria-label="再建築中">
+                  Under Construction
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div class="museum-text-col">
+            <div class="museum-num mono-label">{m.num}</div>
+            <span class="accent-line"></span>
+            <h2 id={`museum-${m.num}`} class="museum-ja">{m.ja}</h2>
+            <p class="museum-en mono-label">{m.en}{m.since && ` — Est. ${m.since}`}</p>
+            <p class="museum-body">{m.body}</p>
+
+            {m.status === 'open' ? (
+              <a
+                href={m.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-outline museum-btn"
+              >
+                VRChatで入場する
+                <span class="btn-icon" aria-hidden="true">↗</span>
+              </a>
+            ) : (
+              <span class="btn btn-disabled" aria-disabled="true">
+                現在再建築中
+              </span>
+            )}
+          </div>
+
+        </div>
+      </section>
+    ))}
+  </div>
+
+  <!-- CTA -->
+  <section class="ex-cta" aria-label="関連ページへの導線">
+    <div class="container">
+      <div class="cta-divider" aria-hidden="true"></div>
+      <p class="cta-lead mono-label">Explore WESON MUSEUM</p>
+      <nav aria-label="関連ページへのリンク">
+        <ul class="cta-links">
+          <li>
+            <a href="/weson-museum/artlink/" class="btn btn-outline">
+              ARTLINK
+              <span class="cta-link-sub">企画展を見る</span>
+            </a>
+          </li>
+          <li>
+            <a href="/weson-museum/about/" class="btn btn-outline">
+              About
+              <span class="cta-link-sub">美術館について</span>
+            </a>
+          </li>
+          <li>
+            <a href="/weson-museum/news/" class="btn btn-outline">
+              News
+              <span class="cta-link-sub">最新情報</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* ================================================================
+     Hero
+     ================================================================ */
+  .ex-hero {
+    padding-block: var(--space-16) var(--space-12);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .breadcrumb ol {
+    list-style: none;
+    display: flex;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-12);
+  }
+
+  .breadcrumb li + li::before {
+    content: '/';
+    margin-right: var(--space-2);
+    color: var(--color-border-bright);
+  }
+
+  .breadcrumb a {
+    color: var(--color-text-subtle);
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-main);
+  }
+
+  .ex-eyebrow {
+    color: var(--color-main);
+    margin-bottom: var(--space-4);
+  }
+
+  .ex-h1 {
+    font-size: clamp(2.4rem, 7vw, 4rem);
+    font-weight: 200;
+    letter-spacing: var(--tracking-widest);
+    margin-bottom: var(--space-6);
+  }
+
+  .ex-lead {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    line-height: 2;
+    max-width: var(--content-width);
+    margin-bottom: var(--space-10);
+  }
+
+  .br-md { display: none; }
+  @media (min-width: 640px) { .br-md { display: block; } }
+
+  .tour-note {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-md);
+  }
+
+  .tour-note .mono-label {
+    color: var(--color-main);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-main);
+    box-shadow: var(--glow-main);
+    flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ================================================================
+     Museum Sections
+     ================================================================ */
+  .museum-section {
+    padding-block: var(--space-16);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .museum-section--alt {
+    background: var(--color-bg-1);
+  }
+
+  .museum-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    align-items: center;
+  }
+
+  /* 偶数館は画像と文を逆順に */
+  .museum-section--alt .museum-img-col {
+    order: 2;
+  }
+
+  .museum-section--alt .museum-text-col {
+    order: 1;
+  }
+
+  @media (max-width: 768px) {
+    .museum-layout {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+
+    .museum-section--alt .museum-img-col,
+    .museum-section--alt .museum-text-col {
+      order: unset;
+    }
+
+    .museum-section {
+      padding-block: var(--space-12);
+    }
+  }
+
+  /* ---- 画像 ---- */
+  .museum-img-wrap {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+
+  .museum-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.8) saturate(0.9);
+    transition: transform var(--transition-slow), filter var(--transition-slow);
+  }
+
+  .museum-img-wrap:hover img {
+    transform: scale(1.03);
+    filter: brightness(0.9) saturate(1.05);
+  }
+
+  .img-closed {
+    filter: brightness(0.5) saturate(0) !important;
+  }
+
+  .closed-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(5, 11, 10, 0.85);
+    border: 1px solid var(--color-border-bright);
+    color: var(--color-text-muted);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    letter-spacing: var(--tracking-widest);
+  }
+
+  /* ---- テキスト ---- */
+  .museum-text-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .museum-num {
+    color: var(--color-main);
+  }
+
+  .museum-ja {
+    font-size: var(--text-2xl);
+    font-weight: 200;
+    letter-spacing: var(--tracking-wider);
+    line-height: 1.2;
+  }
+
+  .museum-en {
+    color: var(--color-text-muted);
+    letter-spacing: var(--tracking-widest);
+    margin-top: calc(-1 * var(--space-2));
+  }
+
+  .museum-body {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    line-height: 2;
+    margin-top: var(--space-2);
+  }
+
+  .museum-btn {
+    align-self: flex-start;
+    margin-top: var(--space-2);
+  }
+
+  .btn-icon {
+    font-size: var(--text-sm);
+    color: var(--color-main);
+  }
+
+  .btn-disabled {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    padding: var(--space-3) var(--space-8);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-subtle);
+    cursor: not-allowed;
+    align-self: flex-start;
+    margin-top: var(--space-2);
+  }
+
+  /* ================================================================
+     CTA
+     ================================================================ */
+  .ex-cta {
+    padding-block: var(--space-24);
+  }
+
+  @media (max-width: 640px) {
+    .ex-cta {
+      padding-block: var(--space-16);
+    }
+  }
+
+  .cta-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--color-main);
+    box-shadow: var(--glow-main);
+    margin-bottom: var(--space-8);
+  }
+
+  .cta-lead {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .cta-links {
+    list-style: none;
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .cta-link-sub {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-normal);
+    text-transform: none;
+    color: var(--color-text-muted);
+  }
+</style>
