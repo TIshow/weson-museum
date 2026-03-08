@@ -21,65 +21,142 @@ const {
     <BaseHead title={title} description={description} ogImage={ogImage} />
   </head>
   <body>
-    <header>
-      <nav class="container">
-        <a href="/" class="site-title">WESON MUSEUM</a>
-        <ul class="nav-links">
-          <li><a href="/exhibitions/">展示</a></li>
-          <li><a href="/news/">ニュース</a></li>
-          <li><a href="/about/">について</a></li>
+    <header class="site-header">
+      <nav class="container site-nav">
+        <a href="/weson-museum/" class="site-logo" aria-label="WESON MUSEUM ホームへ">
+          <span class="logo-mark">W</span>
+          <span class="logo-text">ESON MUSEUM</span>
+        </a>
+
+        <ul class="nav-links" role="list">
+          <li><a href="/weson-museum/exhibitions/">Exhibitions</a></li>
+          <li><a href="/weson-museum/news/">News</a></li>
+          <li><a href="/weson-museum/about/">About</a></li>
         </ul>
+
+        <!-- モバイル: ハンバーガーは将来実装 -->
       </nav>
     </header>
 
-    <main>
+    <main id="main-content">
       <slot />
     </main>
 
-    <footer>
-      <div class="container">
-        <p>&copy; {new Date().getFullYear()} WESON MUSEUM. All rights reserved.</p>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <span class="logo-text">WESON MUSEUM</span>
+          <p class="footer-tagline mono-label">Virtual Reality Art Museum</p>
+        </div>
+        <nav class="footer-nav" aria-label="フッターナビゲーション">
+          <ul role="list">
+            <li><a href="/weson-museum/exhibitions/">Exhibitions</a></li>
+            <li><a href="/weson-museum/news/">News</a></li>
+            <li><a href="/weson-museum/about/">About</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="container footer-bottom">
+        <span class="mono-label">&copy; {new Date().getFullYear()} WESON MUSEUM</span>
+        <span class="mono-label footer-status">
+          <span class="status-dot" aria-hidden="true"></span>
+          System Online
+        </span>
       </div>
     </footer>
   </body>
 </html>
 
 <style>
-  header {
+  /* ---- Header ---- */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+    background: rgba(5, 11, 10, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--color-border);
-    padding-block: var(--spacing-md);
   }
 
-  header nav {
+  .site-nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--spacing-lg);
+    gap: var(--space-8);
   }
 
-  .site-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: var(--color-text);
-  }
-
-  .site-title:hover {
+  /* ---- Logo ---- */
+  .site-logo {
+    display: flex;
+    align-items: baseline;
+    gap: 0;
     text-decoration: none;
-    color: var(--color-accent);
+    color: var(--color-text);
+    transition: all var(--transition-base);
   }
 
+  .site-logo:hover {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .site-logo:hover .logo-mark {
+    color: var(--color-accent);
+    text-shadow: var(--glow-accent-strong);
+  }
+
+  .logo-mark {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--color-main);
+    text-shadow: var(--glow-main);
+    transition: all var(--transition-base);
+  }
+
+  .logo-text {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+  }
+
+  /* ---- Nav Links ---- */
   .nav-links {
     list-style: none;
     display: flex;
-    gap: var(--spacing-lg);
+    gap: var(--space-8);
+    align-items: center;
   }
 
   .nav-links a {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
     color: var(--color-text-muted);
-    font-size: 0.9rem;
-    letter-spacing: 0.05em;
-    transition: color 0.2s;
+    padding-block: var(--space-2);
+    position: relative;
+    transition: color var(--transition-base);
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--color-accent);
+    box-shadow: var(--glow-accent);
+    transform: scaleX(0);
+    transition: transform var(--transition-base);
   }
 
   .nav-links a:hover {
@@ -87,15 +164,94 @@ const {
     text-decoration: none;
   }
 
-  main {
-    min-height: calc(100vh - 12rem);
+  .nav-links a:hover::after {
+    transform: scaleX(1);
   }
 
-  footer {
+  /* ---- Main ---- */
+  #main-content {
+    min-height: calc(100vh - var(--nav-height) - 160px);
+  }
+
+  /* ---- Footer ---- */
+  .site-footer {
     border-top: 1px solid var(--color-border);
-    padding-block: var(--spacing-lg);
-    text-align: center;
+    margin-top: var(--space-32);
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-8);
+    padding-block: var(--space-12);
+  }
+
+  .footer-tagline {
+    margin-top: var(--space-2);
+    color: var(--color-text-subtle);
+  }
+
+  .footer-nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: flex-end;
+  }
+
+  .footer-nav a {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
     color: var(--color-text-muted);
-    font-size: 0.85rem;
+  }
+
+  .footer-nav a:hover {
+    color: var(--color-main);
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-subtle);
+  }
+
+  .footer-status {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-main);
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-main);
+    box-shadow: var(--glow-main);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  @media (max-width: 640px) {
+    .footer-inner {
+      flex-direction: column;
+    }
+
+    .footer-nav ul {
+      align-items: flex-start;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
   }
 </style>

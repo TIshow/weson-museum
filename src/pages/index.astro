@@ -3,57 +3,491 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="WESON MUSEUM — VRで体験する現代アートの美術館">
+
+  <!-- Hero -->
   <section class="hero">
-    <div class="container">
-      <h1>WESON MUSEUM</h1>
-      <p class="tagline">VRで体験する、新しいアートの空間</p>
-      <p class="description">
-        WESON MUSEUM は、バーチャルリアリティを通じて<br />
-        現代アートを体験できるオンライン美術館です。
+    <div class="hero-bg" aria-hidden="true">
+      <div class="hero-orb hero-orb--main"></div>
+      <div class="hero-orb hero-orb--accent"></div>
+    </div>
+
+    <div class="container hero-content">
+      <p class="hero-eyebrow mono-label">Virtual Reality Art Museum</p>
+      <h1 class="hero-title">
+        <span class="hero-title-w">W</span>ESON<br />
+        <span class="hero-title-sub">MUSEUM</span>
+      </h1>
+      <p class="hero-description">
+        バーチャルリアリティを通じて、新しい次元の<br class="br-desktop" />
+        アート体験を届ける美術館。
       </p>
+      <div class="hero-actions">
+        <a href="/weson-museum/exhibitions/" class="btn btn-primary">Enter Exhibition</a>
+        <a href="/weson-museum/about/" class="btn btn-outline">About Museum</a>
+      </div>
+
+      <!-- サイバーパンク的なデータ表示 -->
+      <div class="hero-meta" aria-label="ミュージアム情報">
+        <div class="hero-meta-item">
+          <span class="mono-label">Status</span>
+          <span class="hero-meta-value">
+            <span class="status-dot" aria-hidden="true"></span>
+            Online
+          </span>
+        </div>
+        <div class="hero-meta-divider" aria-hidden="true">/</div>
+        <div class="hero-meta-item">
+          <span class="mono-label">Format</span>
+          <span class="hero-meta-value">Virtual Reality</span>
+        </div>
+        <div class="hero-meta-divider" aria-hidden="true">/</div>
+        <div class="hero-meta-item">
+          <span class="mono-label">Access</span>
+          <span class="hero-meta-value">Free</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- スクロール誘導 -->
+    <div class="scroll-indicator" aria-hidden="true">
+      <span class="mono-label">Scroll</span>
+      <div class="scroll-line"></div>
     </div>
   </section>
 
-  <section class="section">
+  <!-- Divider -->
+  <div class="section-divider container" aria-hidden="true">
+    <span class="mono-label">// Current Exhibition</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- Coming Soon Section -->
+  <section class="section-coming-soon">
     <div class="container">
-      <h2>現在準備中</h2>
-      <p>新しい展示を鋭意準備中です。もうしばらくお待ちください。</p>
+      <div class="coming-soon-card glass">
+        <div class="coming-soon-gfx" aria-hidden="true">
+          <div class="gfx-ring gfx-ring--1"></div>
+          <div class="gfx-ring gfx-ring--2"></div>
+          <div class="gfx-ring gfx-ring--3"></div>
+          <span class="gfx-label mono-label">Exhibition Loading</span>
+        </div>
+        <div class="coming-soon-text">
+          <span class="tag">Coming Soon</span>
+          <h2>新しい展示を準備中</h2>
+          <p>
+            WESON MUSEUM の初回展示は鋭意準備中です。<br />
+            バーチャル空間でしか体験できないアートをお届けします。
+          </p>
+          <a href="/weson-museum/news/" class="btn btn-outline" style="margin-top: var(--space-6)">
+            News &amp; Updates
+          </a>
+        </div>
+      </div>
     </div>
   </section>
+
+  <!-- Vision Section -->
+  <section class="section-vision">
+    <div class="container">
+      <div class="vision-grid">
+        <div class="vision-header">
+          <span class="accent-line"></span>
+          <h2>Our Vision</h2>
+        </div>
+        <div class="vision-body">
+          <p class="vision-lead">
+            美術館の敷居をなくし、<br />
+            VR によって誰もがアートと出会える場所をつくる。
+          </p>
+          <p>
+            WESON MUSEUM は、バーチャルリアリティという技術を用いて、
+            物理的な空間の制約を超えた新しい美術体験を提供します。
+            作品との距離感、空間の没入感、そして光と影のインタラクション —
+            それはリアルな美術館とは異なる、純粋にデジタルに設計された体験です。
+          </p>
+        </div>
+      </div>
+
+      <div class="pillars">
+        <div class="pillar card">
+          <span class="pillar-num mono-label">01</span>
+          <h3>Immersion</h3>
+          <p>VR によって構築された完全没入型の展示空間</p>
+        </div>
+        <div class="pillar card">
+          <span class="pillar-num mono-label">02</span>
+          <h3>Access</h3>
+          <p>場所・時間・身体的制約を超えた、誰でも無料で入れる美術館</p>
+        </div>
+        <div class="pillar card">
+          <span class="pillar-num mono-label">03</span>
+          <h3>Dialogue</h3>
+          <p>作品とテクノロジーの対話から生まれる新しいアートの文脈</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </BaseLayout>
 
 <style>
+  /* ---- Hero ---- */
   .hero {
-    padding-block: var(--spacing-xl);
-    text-align: center;
+    position: relative;
+    min-height: calc(100vh - var(--nav-height));
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding-block: var(--space-32);
   }
 
-  h1 {
-    font-size: clamp(2rem, 6vw, 4rem);
-    letter-spacing: 0.15em;
-    margin-bottom: var(--spacing-md);
-    color: var(--color-accent);
+  /* 背景: メインカラーとアクセントカラーのグロー */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
   }
 
-  .tagline {
-    font-size: 1.25rem;
-    color: var(--color-text-muted);
-    margin-bottom: var(--spacing-lg);
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.18;
   }
 
-  .description {
-    line-height: 2;
+  .hero-orb--main {
+    width: 600px;
+    height: 600px;
+    background: var(--color-main);
+    top: -100px;
+    left: -200px;
+    animation: float-orb 8s ease-in-out infinite;
+  }
+
+  .hero-orb--accent {
+    width: 300px;
+    height: 300px;
+    background: var(--color-accent);
+    bottom: 100px;
+    right: 10%;
+    opacity: 0.1;
+    animation: float-orb 6s ease-in-out infinite reverse;
+  }
+
+  @keyframes float-orb {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(30px, -30px) scale(1.05); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    color: var(--color-main);
+    margin-bottom: var(--space-6);
+    letter-spacing: var(--tracking-widest);
+  }
+
+  /* メインタイトル: 美術館の重厚さ × サイバーな光 */
+  .hero-title {
+    font-size: var(--text-hero);
+    font-weight: 200;
+    letter-spacing: var(--tracking-widest);
+    line-height: 0.95;
+    margin-bottom: var(--space-8);
     color: var(--color-text);
   }
 
-  .section {
-    padding-block: var(--spacing-xl);
-    border-top: 1px solid var(--color-border);
+  .hero-title-w {
+    color: var(--color-accent);
+    text-shadow: var(--glow-accent-strong), 0 0 80px rgba(252, 250, 10, 0.3);
+    font-weight: 700;
   }
 
-  h2 {
-    font-size: 1.5rem;
-    margin-bottom: var(--spacing-md);
-    letter-spacing: 0.05em;
+  .hero-title-sub {
+    font-size: 0.55em;
+    letter-spacing: 0.4em;
+    color: var(--color-text-muted);
+    display: block;
+    margin-top: var(--space-2);
+  }
+
+  .hero-description {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    line-height: 1.8;
+    margin-bottom: var(--space-12);
+    max-width: 480px;
+  }
+
+  .br-desktop {
+    display: block;
+  }
+
+  @media (max-width: 640px) {
+    .br-desktop { display: none; }
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-16);
+  }
+
+  /* --- Hero Meta (サイバーパンクデータ表示) --- */
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    padding: var(--space-4) var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-glass);
+    backdrop-filter: blur(8px);
+    width: fit-content;
+  }
+
+  .hero-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .hero-meta-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-main-light);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .hero-meta-divider {
+    color: var(--color-border-bright);
+    font-family: var(--font-mono);
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 8px var(--color-accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* --- Scroll Indicator --- */
+  .scroll-indicator {
+    position: absolute;
+    bottom: var(--space-8);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-subtle);
+    animation: scroll-fade 2s ease-in-out infinite;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, var(--color-main-dim), transparent);
+  }
+
+  @keyframes scroll-fade {
+    0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
+    50% { opacity: 1; transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ---- Section Divider ---- */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    margin-block: var(--space-16);
+    color: var(--color-text-subtle);
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  /* ---- Coming Soon ---- */
+  .section-coming-soon {
+    padding-block: var(--space-8);
+  }
+
+  .coming-soon-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    align-items: center;
+    padding: var(--space-16);
+    border-radius: var(--radius-lg);
+  }
+
+  @media (max-width: 768px) {
+    .coming-soon-card {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* アニメーションするリング（Three.js の予告的表現） */
+  .coming-soon-gfx {
+    position: relative;
+    aspect-ratio: 1;
+    max-width: 320px;
+    margin-inline: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gfx-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--color-main);
+    opacity: 0.4;
+  }
+
+  .gfx-ring--1 {
+    width: 100%;
+    height: 100%;
+    border-color: var(--color-main-dim);
+    animation: rotate 20s linear infinite;
+  }
+
+  .gfx-ring--2 {
+    width: 70%;
+    height: 70%;
+    border-color: var(--color-main);
+    border-style: dashed;
+    box-shadow: 0 0 20px var(--color-main-glow);
+    animation: rotate 14s linear infinite reverse;
+  }
+
+  .gfx-ring--3 {
+    width: 40%;
+    height: 40%;
+    border-color: var(--color-accent);
+    opacity: 0.6;
+    box-shadow: 0 0 15px var(--color-accent-glow);
+    animation: rotate 8s linear infinite;
+  }
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .gfx-label {
+    position: relative;
+    z-index: 1;
+    color: var(--color-main);
+  }
+
+  .coming-soon-text .tag {
+    margin-bottom: var(--space-4);
+  }
+
+  .coming-soon-text h2 {
+    font-size: var(--text-2xl);
+    margin-block: var(--space-4) var(--space-6);
+  }
+
+  .coming-soon-text p {
+    color: var(--color-text-muted);
+    line-height: 1.9;
+  }
+
+  /* ---- Vision ---- */
+  .section-vision {
+    padding-block: var(--space-24);
+  }
+
+  .vision-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--space-16);
+    align-items: start;
+    margin-bottom: var(--space-16);
+  }
+
+  @media (max-width: 768px) {
+    .vision-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .vision-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding-top: var(--space-2);
+  }
+
+  .vision-header h2 {
+    font-size: var(--text-xl);
+    letter-spacing: var(--tracking-widest);
+  }
+
+  .vision-lead {
+    font-size: var(--text-xl);
+    font-weight: 300;
+    color: var(--color-text);
+    line-height: 1.7;
+    margin-bottom: var(--space-8);
+  }
+
+  .vision-body p:not(.vision-lead) {
+    color: var(--color-text-muted);
+  }
+
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+  }
+
+  @media (max-width: 768px) {
+    .pillars {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .pillar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .pillar-num {
+    color: var(--color-accent);
+  }
+
+  .pillar h3 {
+    font-size: var(--text-lg);
+    font-weight: 400;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .pillar p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.7;
   }
 </style>
