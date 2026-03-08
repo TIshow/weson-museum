@@ -1,0 +1,101 @@
+---
+import BaseHead from '@components/BaseHead.astro';
+import '@styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title,
+  description = 'WESON MUSEUM — VRで体験する現代アートの美術館',
+  ogImage,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <BaseHead title={title} description={description} ogImage={ogImage} />
+  </head>
+  <body>
+    <header>
+      <nav class="container">
+        <a href="/" class="site-title">WESON MUSEUM</a>
+        <ul class="nav-links">
+          <li><a href="/exhibitions/">展示</a></li>
+          <li><a href="/news/">ニュース</a></li>
+          <li><a href="/about/">について</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; {new Date().getFullYear()} WESON MUSEUM. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  header {
+    border-bottom: 1px solid var(--color-border);
+    padding-block: var(--spacing-md);
+  }
+
+  header nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+  }
+
+  .site-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--color-text);
+  }
+
+  .site-title:hover {
+    text-decoration: none;
+    color: var(--color-accent);
+  }
+
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: var(--spacing-lg);
+  }
+
+  .nav-links a {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  main {
+    min-height: calc(100vh - 12rem);
+  }
+
+  footer {
+    border-top: 1px solid var(--color-border);
+    padding-block: var(--spacing-lg);
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+  }
+</style>

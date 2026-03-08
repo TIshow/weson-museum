@@ -1,0 +1,45 @@
+# 依存関係
+node_modules/
+.pnp
+.pnp.js
+
+# ビルド成果物
+dist/
+.output/
+
+# Astro キャッシュ
+.astro/
+
+# 環境変数（秘密情報は絶対にコミットしない）
+.env
+.env.local
+.env.*.local
+
+# エディタ
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+
+# ログ
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Python（将来利用時）
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# その他
+*.tgz
+.cache/

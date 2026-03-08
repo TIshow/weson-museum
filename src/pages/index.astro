@@ -1,0 +1,59 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="WESON MUSEUM — VRで体験する現代アートの美術館">
+  <section class="hero">
+    <div class="container">
+      <h1>WESON MUSEUM</h1>
+      <p class="tagline">VRで体験する、新しいアートの空間</p>
+      <p class="description">
+        WESON MUSEUM は、バーチャルリアリティを通じて<br />
+        現代アートを体験できるオンライン美術館です。
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>現在準備中</h2>
+      <p>新しい展示を鋭意準備中です。もうしばらくお待ちください。</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--spacing-xl);
+    text-align: center;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 6vw, 4rem);
+    letter-spacing: 0.15em;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-accent);
+  }
+
+  .tagline {
+    font-size: 1.25rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .description {
+    line-height: 2;
+    color: var(--color-text);
+  }
+
+  .section {
+    padding-block: var(--spacing-xl);
+    border-top: 1px solid var(--color-border);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-md);
+    letter-spacing: 0.05em;
+  }
+</style>
