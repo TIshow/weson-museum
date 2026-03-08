@@ -6,10 +6,13 @@ interface Props {
 }
 
 const { title, description, ogImage } = Astro.props;
+const base = import.meta.env.BASE_URL;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = ogImage
   ? new URL(ogImage, Astro.site)
-  : new URL('/og-default.png', Astro.site);
+  : new URL(`${base}images/favicon-og.svg`, Astro.site);
+
+const faviconUrl = `${base}favicon.svg`;
 ---
 
 <!-- charset & viewport -->
@@ -23,21 +26,32 @@ const ogImageURL = ogImage
 <title>{title}</title>
 <meta name="description" content={description} />
 
+<!-- テーマカラー（ブラウザのアドレスバー・モバイルUI） -->
+<meta name="theme-color" content="#050b0a" />
+
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImageURL} />
+<meta property="og:site_name" content="WESON MUSEUM" />
+<meta property="og:locale" content="ja_JP" />
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@WESON_MUSEUM" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImageURL} />
 
 <!-- Favicon -->
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/svg+xml" href={faviconUrl} />
+<!-- SVG非対応ブラウザ向けフォールバック（将来 .ico を追加する場合はここ） -->
+<!-- <link rel="alternate icon" href={`${base}favicon.ico`} /> -->
 
-<!-- Sitemap（astro:sitemap インテグレーション追加後に有効化） -->
+<!-- Apple Touch Icon（iOS ホーム画面追加時） -->
+<link rel="apple-touch-icon" href={faviconUrl} />
+
+<!-- Sitemap（@astrojs/sitemap インテグレーション追加後に有効化） -->
 <!-- <link rel="sitemap" href="/sitemap-index.xml" /> -->
