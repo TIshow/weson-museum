@@ -270,7 +270,7 @@ const museums = [
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
-    margin-bottom: var(--space-10);
+    margin-bottom: var(--space-8);
   }
 
   .section-header h2 {
@@ -298,8 +298,32 @@ const museums = [
   }
 
   @media (max-width: 640px) {
+    .hero {
+      padding-block: var(--space-16) var(--space-12);
+    }
+
+    .hero-description {
+      font-size: var(--text-base);
+    }
+
     .museums-grid {
       grid-template-columns: 1fr;
+    }
+
+    .section-museums {
+      padding-block: var(--space-12);
+    }
+
+    .section-artlink {
+      padding-block: var(--space-6) var(--space-12);
+    }
+
+    .section-media {
+      padding-block: var(--space-6) var(--space-12);
+    }
+
+    .section-tour {
+      padding-block: var(--space-6) var(--space-16);
     }
   }
 

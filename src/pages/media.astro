@@ -86,6 +86,20 @@ const printCount = sorted.filter(m => m.type === 'print').length;
     padding-block: var(--space-16) var(--space-24);
   }
 
+  @media (max-width: 640px) {
+    .page-wrap {
+      padding-block: var(--space-12) var(--space-16);
+    }
+
+    h1 {
+      font-size: var(--text-2xl);
+    }
+
+    .page-header {
+      margin-bottom: var(--space-12);
+    }
+  }
+
   /* ---- ヘッダー ---- */
   .page-header {
     display: flex;

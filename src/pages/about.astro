@@ -379,6 +379,28 @@ const ahead = [
       grid-template-columns: 1fr;
       gap: var(--space-8);
     }
+
+    .about-section {
+      padding-block: var(--space-16);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .about-hero {
+      padding-block: var(--space-12) var(--space-16);
+    }
+
+    .about-cta {
+      padding-block: var(--space-16);
+    }
+
+    .about-h1 {
+      font-size: clamp(1.6rem, 7vw, 2.4rem);
+    }
+
+    .about-lead {
+      font-size: var(--text-base);
+    }
   }
 
   .section-aside {
