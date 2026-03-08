@@ -1,0 +1,714 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL;
+
+const galleries = [
+  {
+    num: '01',
+    name: 'Sky Museum',
+    ja: '天空美術館',
+    img: 'main_museum.jpg',
+    body: 'The original WESON MUSEUM gallery, opened in 2021. Paintings of manta rays come alive — the mantas swim out of the canvas and drift through the space. An experience only possible in VR.',
+    url: 'https://vrchat.com/home/launch?worldId=wrld_a272c878-3435-4dbb-bdf3-d23efc50a1fc',
+  },
+  {
+    num: '02',
+    name: 'Palau Museum',
+    ja: 'パラオ美術館',
+    img: 'palau_museum.jpg',
+    body: 'Inspired by the seas of the Republic of Palau. Paintings drift along the shoreline, and the interior is filled with water — artworks that could never exist in a physical gallery. Operated under the patronage of the Embassy of the Republic of Palau in Japan.',
+    url: 'https://vrchat.com/home/launch?worldId=wrld_5b5a1ca5-4c71-401a-b004-f7d58c6f7a65',
+  },
+  {
+    num: '03',
+    name: 'Forest Museum',
+    ja: '森美術館',
+    img: 'forest_museum.jpg',
+    body: 'The forest itself is the museum. Works — many featuring plants and fruit — are displayed within a living woodland, where the space and the artwork respond to each other. A reminder of how freely VR can shape an exhibition environment.',
+    url: 'https://vrchat.com/home/launch?worldId=wrld_cc87c364-530e-4c1b-b7ee-8982310d6be9',
+  },
+  {
+    num: '04',
+    name: 'Rain Museum',
+    ja: '雨降る美術館',
+    img: 'rain_museum.jpg',
+    body: 'A gallery where rain falls quietly around the artworks. Currently open to visitors, with a renovation planned for the future.',
+    url: 'https://vrchat.com/home/launch?worldId=wrld_ae3b767b-c661-469a-a0f5-3441fa826e64',
+  },
+];
+
+const contacts = [
+  {
+    label: 'X (Twitter)',
+    handle: '@WESON_MUSEUM',
+    url: 'https://x.com/WESON_MUSEUM',
+    note: 'DM open',
+  },
+  {
+    label: 'Instagram',
+    handle: '@weson_museum',
+    url: 'https://www.instagram.com/weson_museum/',
+    note: 'DM open',
+  },
+  {
+    label: 'Discord',
+    handle: 'discord.gg/kGHFcAZZDX',
+    url: 'https://discord.gg/kGHFcAZZDX',
+    note: 'Join our server',
+  },
+];
+---
+
+<BaseLayout
+  title="WESON MUSEUM — A Virtual Reality Art Museum"
+  description="WESON MUSEUM is a virtual reality art museum on VRChat. Four permanent galleries, weekly guided tours, and the annual ARTLINK group exhibition — open to visitors worldwide."
+  descriptionEn="WESON MUSEUM is a virtual reality art museum on VRChat. Four permanent galleries, weekly guided tours, and the annual ARTLINK group exhibition — open to visitors worldwide."
+>
+
+  <!-- ================================================================
+       Hero
+       ================================================================ -->
+  <section class="en-hero">
+    <div class="container">
+      <p class="en-eyebrow mono-label">Virtual Reality Art Museum — VRChat</p>
+      <h1 class="en-h1">
+        A museum open<br />
+        to anyone,<br />
+        <span class="en-h1-sub">from anywhere.</span>
+      </h1>
+      <p class="en-lead">
+        WESON MUSEUM is a virtual reality art museum built in VRChat.
+        No travel required. No prior knowledge of art needed.
+        Just enter the space, and let the works speak for themselves.
+      </p>
+      <div class="en-actions">
+        <a href="#galleries" class="btn btn-primary">Enter Galleries</a>
+        <a href="#contact" class="btn btn-outline">Get in Touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       About
+       ================================================================ -->
+  <section class="en-section en-section--tinted" aria-labelledby="about-heading">
+    <div class="container">
+      <div class="section-layout">
+        <div class="section-aside">
+          <span class="accent-line"></span>
+          <h2 id="about-heading" class="section-heading">About</h2>
+        </div>
+        <div class="section-body prose">
+          <p>
+            WESON MUSEUM was founded with a simple belief: art should be
+            accessible to more people. In Japan, museums can feel distant
+            from everyday life. VR offers a way to lower that threshold —
+            not by making art easier, but by widening the door.
+          </p>
+          <p>
+            Every Saturday from 21:00 to 22:00 JST, we host a live guided
+            tour of our galleries on VRChat. Artists join in person, answer
+            questions, and talk with visitors directly. Many attendees have
+            never been to an art museum before. That is exactly the point.
+          </p>
+          <p>
+            Connections formed in VR have led people to visit real exhibitions,
+            follow artists they discovered here, and become part of an ongoing
+            community. The virtual space is a starting point, not an end.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Galleries
+       ================================================================ -->
+  <section class="en-section" id="galleries" aria-labelledby="galleries-heading">
+    <div class="container">
+      <header class="center-header">
+        <span class="accent-line" style="margin-inline: auto;"></span>
+        <h2 id="galleries-heading" class="center-heading">Permanent Galleries</h2>
+        <p class="center-sub mono-label">Four spaces. Always open on VRChat.</p>
+      </header>
+
+      <ol class="galleries-list">
+        {galleries.map((g, i) => (
+          <li class={`gallery-row${i % 2 === 1 ? ' gallery-row--alt' : ''}`}>
+            <div class="gallery-img-wrap">
+              <img
+                src={`${base}images/museums/${g.img}`}
+                alt={g.name}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="gallery-text">
+              <span class="gallery-num mono-label">{g.num}</span>
+              <span class="accent-line"></span>
+              <h3 class="gallery-name">{g.name}</h3>
+              <p class="gallery-ja mono-label">{g.ja}</p>
+              <p class="gallery-body">{g.body}</p>
+              <a
+                href={g.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-outline gallery-btn"
+              >
+                Enter on VRChat ↗
+              </a>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       ARTLINK
+       ================================================================ -->
+  <section class="en-section en-section--tinted" aria-labelledby="artlink-heading">
+    <div class="container">
+      <div class="section-layout">
+        <div class="section-aside">
+          <span class="accent-line" style="background:var(--color-accent);box-shadow:0 0 12px var(--color-accent);"></span>
+          <h2 id="artlink-heading" class="section-heading">ARTLINK</h2>
+        </div>
+        <div class="section-body prose">
+          <p>
+            ARTLINK is a group exhibition hosted on WESON MUSEUM,
+            bringing together multiple artists in a shared VR space.
+            Held several times a year, it has welcomed artists and visitors
+            from Japan, the Republic of Palau, the United States, and beyond.
+          </p>
+          <p>
+            The 2024 edition combined a VRChat exhibition with a physical
+            gallery in Tokyo — a hybrid format connecting virtual and
+            real-world audiences. In 2025, the show returned to a fully
+            VR format, with 17 participating artists.
+          </p>
+          <p>
+            If you are an artist interested in participating, or an organization
+            looking to collaborate, please get in touch via DM.
+          </p>
+          <div class="prose-link">
+            <a href="/weson-museum/artlink/" class="inline-link">
+              Learn more about ARTLINK →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Weekly Tour
+       ================================================================ -->
+  <section class="en-section" aria-labelledby="tour-heading">
+    <div class="container">
+      <div class="section-layout">
+        <div class="section-aside">
+          <span class="accent-line"></span>
+          <h2 id="tour-heading" class="section-heading">
+            Weekly<br />Gallery Tour
+          </h2>
+        </div>
+        <div class="section-body">
+          <div class="tour-card glass">
+            <div class="tour-time-row">
+              <span class="tour-time">21:00</span>
+              <span class="tour-sep">—</span>
+              <span class="tour-time">22:00</span>
+              <span class="tour-tz mono-label">JST</span>
+            </div>
+            <p class="tour-day mono-label">Every Saturday</p>
+            <p class="tour-desc">
+              Artists join the VRChat space in person and guide visitors
+              through the galleries. Ask questions, share impressions,
+              and experience art together in real time.
+              Free entry. No reservation required.
+            </p>
+            <p class="tour-platform mono-label">
+              <span class="status-dot" aria-hidden="true"></span>
+              VRChat · Free · Open to all
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Contact
+       ================================================================ -->
+  <section class="en-section en-section--tinted" id="contact" aria-labelledby="contact-heading">
+    <div class="container">
+      <div class="section-layout">
+        <div class="section-aside">
+          <span class="accent-line"></span>
+          <h2 id="contact-heading" class="section-heading">
+            Get in<br />Touch
+          </h2>
+        </div>
+        <div class="section-body">
+          <p class="contact-intro">
+            For exhibition inquiries, collaboration proposals, or any questions,
+            please reach out via DM on any of the platforms below.
+            We welcome messages in English.
+          </p>
+          <ul class="contact-list">
+            {contacts.map(c => (
+              <li class="contact-row">
+                <a
+                  href={c.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="contact-link"
+                >
+                  <div class="contact-text">
+                    <span class="contact-label mono-label">{c.label}</span>
+                    <span class="contact-handle">{c.handle}</span>
+                  </div>
+                  <span class="contact-note mono-label">{c.note}</span>
+                  <span class="contact-arrow" aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Footer nav
+       ================================================================ -->
+  <section class="en-cta" aria-label="Site navigation">
+    <div class="container">
+      <div class="cta-divider" aria-hidden="true"></div>
+      <p class="cta-lead mono-label">Also available in Japanese</p>
+      <a href="/weson-museum/" class="btn btn-outline">
+        日本語サイトへ
+        <span style="font-family: var(--font-body); text-transform: none; font-size: var(--text-xs); letter-spacing: 0; color: var(--color-text-muted);">Japanese site</span>
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* ================================================================
+     Hero
+     ================================================================ */
+  .en-hero {
+    padding-block: var(--space-24) var(--space-16);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .en-eyebrow {
+    color: var(--color-main);
+    margin-bottom: var(--space-6);
+  }
+
+  .en-h1 {
+    font-size: clamp(2.4rem, 7vw, 4.5rem);
+    font-weight: 200;
+    letter-spacing: var(--tracking-wide);
+    line-height: 1.15;
+    margin-bottom: var(--space-8);
+  }
+
+  .en-h1-sub {
+    color: var(--color-main);
+    text-shadow: var(--glow-main);
+  }
+
+  .en-lead {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    line-height: 2;
+    max-width: 600px;
+    margin-bottom: var(--space-10);
+  }
+
+  .en-actions {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 640px) {
+    .en-hero {
+      padding-block: var(--space-16) var(--space-12);
+    }
+
+    .en-lead {
+      font-size: var(--text-base);
+    }
+  }
+
+  /* ================================================================
+     Section 共通
+     ================================================================ */
+  .en-section {
+    padding-block: var(--space-24);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .en-section--tinted {
+    background: var(--color-bg-1);
+  }
+
+  @media (max-width: 640px) {
+    .en-section {
+      padding-block: var(--space-16);
+    }
+  }
+
+  .section-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: var(--space-16);
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .section-layout {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+  }
+
+  .section-aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    position: sticky;
+    top: calc(var(--nav-height) + var(--space-8));
+  }
+
+  @media (max-width: 768px) {
+    .section-aside {
+      position: static;
+      flex-direction: row;
+      align-items: flex-start;
+    }
+  }
+
+  .section-heading {
+    font-size: var(--text-xl);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wider);
+    line-height: 1.5;
+  }
+
+  .center-header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-16);
+  }
+
+  .center-heading {
+    font-size: var(--text-2xl);
+    font-weight: 200;
+    letter-spacing: var(--tracking-widest);
+  }
+
+  .center-sub {
+    color: var(--color-text-subtle);
+  }
+
+  /* ================================================================
+     Prose
+     ================================================================ */
+  .prose p + p {
+    margin-top: var(--space-6);
+  }
+
+  .prose p {
+    line-height: 2;
+    color: var(--color-text-muted);
+  }
+
+  .prose-link {
+    margin-top: var(--space-8);
+  }
+
+  .inline-link {
+    font-size: var(--text-sm);
+    color: var(--color-main);
+    letter-spacing: var(--tracking-wide);
+    border-bottom: 1px solid var(--color-border-bright);
+    padding-bottom: 2px;
+    transition: all var(--transition-fast);
+  }
+
+  .inline-link:hover {
+    color: var(--color-main-light);
+    border-color: var(--color-main);
+    text-decoration: none;
+  }
+
+  /* ================================================================
+     Galleries
+     ================================================================ */
+  .galleries-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  .gallery-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    align-items: center;
+  }
+
+  .gallery-row--alt .gallery-img-wrap {
+    order: 2;
+  }
+
+  .gallery-row--alt .gallery-text {
+    order: 1;
+  }
+
+  @media (max-width: 768px) {
+    .gallery-row {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+
+    .gallery-row--alt .gallery-img-wrap,
+    .gallery-row--alt .gallery-text {
+      order: unset;
+    }
+  }
+
+  .gallery-img-wrap {
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+
+  .gallery-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.8) saturate(0.9);
+    transition: transform var(--transition-slow), filter var(--transition-slow);
+  }
+
+  .gallery-img-wrap:hover img {
+    transform: scale(1.03);
+    filter: brightness(0.9) saturate(1.05);
+  }
+
+  .gallery-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .gallery-num {
+    color: var(--color-main);
+  }
+
+  .gallery-name {
+    font-size: var(--text-2xl);
+    font-weight: 200;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .gallery-ja {
+    color: var(--color-text-muted);
+    margin-top: calc(-1 * var(--space-2));
+  }
+
+  .gallery-body {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    line-height: 2;
+    margin-top: var(--space-2);
+  }
+
+  .gallery-btn {
+    align-self: flex-start;
+    margin-top: var(--space-2);
+  }
+
+  /* ================================================================
+     Weekly Tour
+     ================================================================ */
+  .tour-card {
+    padding: var(--space-8);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .tour-time-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+
+  .tour-time {
+    font-size: var(--text-3xl);
+    font-weight: 200;
+    color: var(--color-accent);
+    text-shadow: 0 0 24px rgba(252, 250, 10, 0.3);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .tour-sep {
+    color: var(--color-text-muted);
+    font-size: var(--text-xl);
+  }
+
+  .tour-tz {
+    color: var(--color-text-subtle);
+    margin-left: var(--space-2);
+  }
+
+  .tour-day {
+    color: var(--color-main);
+    letter-spacing: var(--tracking-widest);
+  }
+
+  .tour-desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 2;
+    max-width: 480px;
+  }
+
+  .tour-platform {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-main);
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-main);
+    box-shadow: var(--glow-main);
+    flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ================================================================
+     Contact
+     ================================================================ */
+  .contact-intro {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    line-height: 2;
+    margin-bottom: var(--space-8);
+    max-width: 520px;
+  }
+
+  .contact-list {
+    list-style: none;
+    border-top: 1px solid var(--color-border);
+    max-width: var(--content-width);
+  }
+
+  .contact-row {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding-block: var(--space-5);
+    text-decoration: none;
+    transition: color var(--transition-fast), background var(--transition-fast);
+    border-radius: var(--radius-sm);
+  }
+
+  .contact-link:hover {
+    color: var(--color-main);
+    text-decoration: none;
+  }
+
+  .contact-link:hover .contact-arrow {
+    transform: translateX(4px);
+    color: var(--color-main);
+  }
+
+  .contact-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    flex: 1;
+  }
+
+  .contact-label {
+    color: var(--color-text-subtle);
+  }
+
+  .contact-handle {
+    font-size: var(--text-base);
+    color: var(--color-text);
+  }
+
+  .contact-note {
+    color: var(--color-main);
+  }
+
+  .contact-arrow {
+    color: var(--color-text-subtle);
+    font-size: var(--text-sm);
+    transition: transform var(--transition-fast), color var(--transition-fast);
+  }
+
+  /* ================================================================
+     CTA
+     ================================================================ */
+  .en-cta {
+    padding-block: var(--space-24);
+  }
+
+  @media (max-width: 640px) {
+    .en-cta {
+      padding-block: var(--space-16);
+    }
+  }
+
+  .cta-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--color-main);
+    box-shadow: var(--glow-main);
+    margin-bottom: var(--space-8);
+  }
+
+  .cta-lead {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+  }
+
+  .btn {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+</style>
