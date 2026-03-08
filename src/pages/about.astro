@@ -1,0 +1,556 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+const values = [
+  {
+    num: '01',
+    en: 'Art in virtual space',
+    ja: 'VR空間での展示',
+    body: 'WESON MUSEUM は、VRChat 上に構築された美術館です。天空・森・パラオ・雨といった、それぞれ固有の空気と光を持つ空間で、作品は展示されます。',
+  },
+  {
+    num: '02',
+    en: 'Dialogue around artworks',
+    ja: '作品をめぐる対話',
+    body: '毎週土曜日の在廊ツアーをはじめ、作家・作品・鑑賞者が同じ場に立つ機会を大切にしています。作品の前で生まれる言葉や問いを、美術館の核にしたいと考えています。',
+  },
+  {
+    num: '03',
+    en: 'Openness across distance',
+    ja: '距離を越えた開かれ',
+    body: '場所・身体・移動の制約を越えて、アートと出会える環境を育てたいと思っています。VR上の美術館は、誰でも、どこからでも入ることができます。',
+  },
+  {
+    num: '04',
+    en: 'Connection between virtual and physical',
+    ja: '仮想と現実の接続',
+    body: 'WESON MUSEUM は、VR空間の中だけで完結しません。現実での鑑賞・購入・展示との接続を意識しながら、アートの循環を支える場でありたいと考えています。',
+  },
+];
+
+const ahead = [
+  { label: '展示アーカイブ',   body: 'これまでの展示記録を蓄積・公開し、時間を越えて作品と出会える場をつくります。' },
+  { label: '作家紹介',         body: 'WESON MUSEUM に関わるアーティストのプロフィールや活動を紹介します。' },
+  { label: 'ワールド案内',     body: '各常設館の空間設計や見どころを、テキストと映像で伝えます。' },
+  { label: '記事・レポート発信', body: '展示の背景、制作過程、対話の記録をアーカイブとして発信します。' },
+];
+---
+
+<BaseLayout
+  title="About — WESON MUSEUM"
+  description="WESON MUSEUM は、VR空間に開かれた美術館です。作品の展示にとどまらず、作家・作品・鑑賞者をつなぐ場として、継続的に運営されています。"
+>
+
+  <!-- ================================================================
+       Hero
+       ================================================================ -->
+  <section class="about-hero">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="パンくずリスト">
+        <ol>
+          <li><a href="/weson-museum/">Home</a></li>
+          <li aria-current="page">About</li>
+        </ol>
+      </nav>
+
+      <p class="about-eyebrow mono-label">About WESON MUSEUM</p>
+
+      <h1 class="about-h1">
+        A museum for art,<br />
+        dialogue, and connection<br />
+        <span class="about-h1-sub">in virtual space.</span>
+      </h1>
+
+      <p class="about-lead">
+        WESON MUSEUM は、VR空間に開かれた美術館です。<br class="br-md" />
+        作品を並べるためだけの場所ではなく、<br class="br-md" />
+        作品の前に立ち止まり、対話し、<br class="br-md" />
+        他者と鑑賞を共有するための場でもあります。
+      </p>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       WESON MUSEUM とは
+       ================================================================ -->
+  <section class="about-section" aria-labelledby="section-what">
+    <div class="container">
+      <div class="section-layout">
+        <div class="section-aside">
+          <span class="accent-line"></span>
+          <h2 id="section-what" class="section-heading">
+            WESON MUSEUM<br />とは
+          </h2>
+        </div>
+        <div class="section-body prose">
+          <p>
+            WESON MUSEUM は、VRChat 上に構築された常設美術館です。
+            天空美術館・森美術館・パラオ美術館・雨降る美術館、
+            それぞれ異なる空気と光を持つ四つの空間で、
+            作品の展示が継続的に行われています。
+          </p>
+          <p>
+            私たちがこの美術館を運営するうえで大切にしているのは、
+            「展示」という行為そのものだけではありません。
+            毎週土曜日の在廊ツアーに見られるように、
+            作家と鑑賞者が同じ空間に立ち、作品について言葉を交わす時間を、
+            美術館の中心に置いています。
+          </p>
+          <p>
+            距離や場所の制約を越えて、アートと出会うための環境を育てたい——
+            その考えのもと、WESON MUSEUM は継続的に運営され、
+            作家・作品・鑑賞者をつなぐ基盤として機能しています。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       What we value
+       ================================================================ -->
+  <section class="about-section about-section--tinted" aria-labelledby="section-values">
+    <div class="container">
+      <header class="values-header">
+        <h2 id="section-values" class="section-heading-center">
+          What we value
+          <span class="section-heading-sub mono-label">大切にしていること</span>
+        </h2>
+      </header>
+
+      <ol class="values-grid" aria-label="WESON MUSEUM が大切にしていること">
+        {values.map(v => (
+          <li class="value-item">
+            <span class="value-num mono-label">{v.num}</span>
+            <h3 class="value-en">{v.en}</h3>
+            <p class="value-ja mono-label">{v.ja}</p>
+            <p class="value-body">{v.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       ARTLINK との関係
+       ================================================================ -->
+  <section class="about-section" aria-labelledby="section-artlink">
+    <div class="container">
+      <div class="section-layout">
+        <div class="section-aside">
+          <span class="accent-line" style="background:var(--color-accent);box-shadow:0 0 12px var(--color-accent);"></span>
+          <h2 id="section-artlink" class="section-heading">ARTLINK</h2>
+        </div>
+        <div class="section-body prose">
+          <p>
+            ARTLINK は、WESON MUSEUM を基盤として展開される、
+            複数作家によるVR総合美術展です。
+            年に数回開催され、国内外の作家が一つの仮想空間に集まります。
+          </p>
+          <p>
+            WESON MUSEUM が「場」であるとすれば、
+            ARTLINK はその場を最大限に活用した企画です。
+            VR空間での展示体験に加え、現実空間での鑑賞・流通との接続、
+            海外作家との交流といった試みを通じて、
+            アートの見方や関わり方をひらいていくことを目指しています。
+          </p>
+          <p>
+            展示という行為が、
+            単なる作品の提示を超えて、
+            作品と人、人と人をつなぐコミュニケーションになる——
+            その可能性を、ARTLINK は探り続けています。
+          </p>
+          <div class="prose-link">
+            <a href="/weson-museum/artlink/" class="inline-link">
+              ARTLINK の展示記録を見る →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Looking ahead
+       ================================================================ -->
+  <section class="about-section" aria-labelledby="section-ahead">
+    <div class="container">
+      <div class="section-layout">
+        <div class="section-aside">
+          <span class="accent-line"></span>
+          <h2 id="section-ahead" class="section-heading">
+            Looking<br />ahead
+            <span class="section-heading-sub mono-label">今後の展望</span>
+          </h2>
+        </div>
+        <div class="section-body">
+          <p class="ahead-intro">
+            WESON MUSEUM は、展示の場であるとともに、
+            アーカイブとして記録を積み重ねていく場でもあります。
+            以下のような取り組みを、少しずつ育てていく予定です。
+          </p>
+          <ul class="ahead-list" aria-label="今後の取り組み">
+            {ahead.map(item => (
+              <li class="ahead-item">
+                <h3 class="ahead-label">{item.label}</h3>
+                <p class="ahead-body">{item.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       CTA
+       ================================================================ -->
+  <section class="about-cta" aria-label="各ページへの導線">
+    <div class="container">
+      <div class="cta-divider" aria-hidden="true"></div>
+      <p class="cta-lead mono-label">Explore WESON MUSEUM</p>
+      <nav aria-label="関連ページへのリンク">
+        <ul class="cta-links">
+          <li>
+            <a href="/weson-museum/exhibitions/" class="btn btn-outline">
+              Exhibitions
+              <span class="cta-link-sub">常設展示を見る</span>
+            </a>
+          </li>
+          <li>
+            <a href="/weson-museum/artlink/" class="btn btn-outline">
+              ARTLINK
+              <span class="cta-link-sub">企画展を見る</span>
+            </a>
+          </li>
+          <li>
+            <a href="/weson-museum/news/" class="btn btn-outline">
+              News
+              <span class="cta-link-sub">最新情報</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* ================================================================
+     Hero
+     ================================================================ */
+  .about-hero {
+    padding-block: var(--space-16) var(--space-24);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .breadcrumb ol {
+    list-style: none;
+    display: flex;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-12);
+  }
+
+  .breadcrumb li + li::before {
+    content: '/';
+    margin-right: var(--space-2);
+    color: var(--color-border-bright);
+  }
+
+  .breadcrumb a {
+    color: var(--color-text-subtle);
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-main);
+  }
+
+  .about-eyebrow {
+    color: var(--color-main);
+    margin-bottom: var(--space-8);
+  }
+
+  .about-h1 {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 200;
+    letter-spacing: var(--tracking-wide);
+    line-height: 1.25;
+    margin-bottom: var(--space-8);
+    max-width: 680px;
+  }
+
+  .about-h1-sub {
+    color: var(--color-text-muted);
+    font-size: 0.85em;
+  }
+
+  .about-lead {
+    font-size: var(--text-lg);
+    line-height: 2;
+    color: var(--color-text-muted);
+    max-width: var(--content-width);
+  }
+
+  .br-md {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .br-md {
+      display: block;
+    }
+  }
+
+  /* ================================================================
+     セクション共通
+     ================================================================ */
+  .about-section {
+    padding-block: var(--space-24);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .about-section--tinted {
+    background: var(--color-bg-1);
+  }
+
+  /* 2カラムレイアウト（aside + body） */
+  .section-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: var(--space-16);
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .section-layout {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+  }
+
+  .section-aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    position: sticky;
+    top: calc(var(--nav-height) + var(--space-8));
+  }
+
+  @media (max-width: 768px) {
+    .section-aside {
+      position: static;
+      flex-direction: row;
+      align-items: flex-start;
+    }
+  }
+
+  .section-heading {
+    font-size: var(--text-xl);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wider);
+    line-height: 1.4;
+  }
+
+  .section-heading-sub {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+    margin-top: var(--space-2);
+    letter-spacing: var(--tracking-widest);
+  }
+
+  /* センタリングヘッダー（values用） */
+  .values-header {
+    text-align: center;
+    margin-bottom: var(--space-16);
+  }
+
+  .section-heading-center {
+    font-size: var(--text-2xl);
+    font-weight: 200;
+    letter-spacing: var(--tracking-widest);
+  }
+
+  /* ================================================================
+     Prose（本文ブロック）
+     ================================================================ */
+  .prose {
+    max-width: var(--content-width);
+  }
+
+  .prose p + p {
+    margin-top: var(--space-6);
+  }
+
+  .prose p {
+    line-height: 2;
+    color: var(--color-text-muted);
+  }
+
+  .prose-link {
+    margin-top: var(--space-8);
+  }
+
+  .inline-link {
+    font-size: var(--text-sm);
+    color: var(--color-main);
+    letter-spacing: var(--tracking-wide);
+    border-bottom: 1px solid var(--color-border-bright);
+    padding-bottom: 2px;
+    transition: all var(--transition-fast);
+  }
+
+  .inline-link:hover {
+    color: var(--color-main-light);
+    border-color: var(--color-main);
+    text-decoration: none;
+  }
+
+  /* ================================================================
+     What we value
+     ================================================================ */
+  .values-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-1);
+  }
+
+  @media (max-width: 640px) {
+    .values-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .value-item {
+    padding: var(--space-8);
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    transition: background var(--transition-base), border-color var(--transition-base);
+  }
+
+  .value-item:hover {
+    background: var(--color-bg-glass);
+    border-color: var(--color-border-bright);
+  }
+
+  .value-num {
+    color: var(--color-main);
+  }
+
+  .value-en {
+    font-size: var(--text-lg);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wide);
+    line-height: 1.3;
+  }
+
+  .value-ja {
+    color: var(--color-text-muted);
+    letter-spacing: var(--tracking-wider);
+  }
+
+  .value-body {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.9;
+    margin-top: var(--space-2);
+  }
+
+  /* ================================================================
+     Looking ahead
+     ================================================================ */
+  .ahead-intro {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    line-height: 2;
+    margin-bottom: var(--space-10);
+    max-width: var(--content-width);
+  }
+
+  .ahead-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--color-border);
+    max-width: var(--content-width);
+  }
+
+  .ahead-item {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: var(--space-8);
+    padding-block: var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+    align-items: baseline;
+  }
+
+  @media (max-width: 640px) {
+    .ahead-item {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+  }
+
+  .ahead-label {
+    font-size: var(--text-sm);
+    font-weight: 400;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text);
+  }
+
+  .ahead-body {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.8;
+  }
+
+  /* ================================================================
+     CTA
+     ================================================================ */
+  .about-cta {
+    padding-block: var(--space-24);
+  }
+
+  .cta-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--color-main);
+    box-shadow: var(--glow-main);
+    margin-bottom: var(--space-8);
+  }
+
+  .cta-lead {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .cta-links {
+    list-style: none;
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .cta-link-sub {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-normal);
+    text-transform: none;
+    color: var(--color-text-muted);
+  }
+</style>
