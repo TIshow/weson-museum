@@ -45,7 +45,7 @@ const sorted = allNews.sort(
                   <span class="tag">{tag}</span>
                 ))}
               </div>
-              <a href={`/weson-museum/news/${post.slug}/`} class="news-title">
+              <a href={`/news/${post.slug}/`} class="news-title">
                 {post.data.title}
               </a>
               <p class="news-desc">{post.data.description}</p>
@@ -56,7 +56,7 @@ const sorted = allNews.sort(
     </ol>
 
     <div class="back-link">
-      <a href="/weson-museum/en/" class="btn btn-outline">← Back to top</a>
+      <a href="/en/" class="btn btn-outline">← Back to top</a>
     </div>
 
   </div>

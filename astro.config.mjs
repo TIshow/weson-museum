@@ -17,8 +17,8 @@ export default defineConfig({
   // TODO: デプロイ前に自分の GitHub ユーザー名に変更してください
   // 例: 'https://your-username.github.io'
   // カスタムドメイン使用時: 'https://museum.weson.jp'
-  site: 'https://TIshow.github.io',
-  base: '/weson-museum',
+  site: 'https://weson-museum.com',
+  base: '/',
   output: 'static',
   trailingSlash: 'always',
   integrations: [sitemap()],

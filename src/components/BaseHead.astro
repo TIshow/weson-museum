@@ -15,7 +15,7 @@ const ogImageURL = ogImage
   : new URL(`${base}images/favicon-og.svg`, Astro.site);
 
 const jaUrl = new URL(Astro.url.pathname.replace('/en/', '/').replace(/\/en$/, '/'), Astro.site);
-const enUrl = new URL(Astro.url.pathname.includes('/en/') ? Astro.url.pathname : Astro.url.pathname.replace('/weson-museum/', '/weson-museum/en/'), Astro.site);
+const enUrl = new URL(Astro.url.pathname.includes('/en/') ? Astro.url.pathname : '/en' + Astro.url.pathname, Astro.site);
 const ogLocale = lang === 'en' ? 'en_US' : 'ja_JP';
 
 // JSON-LD: Organization + VirtualLocation schema (English for international indexing)
@@ -24,9 +24,9 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'Organization',
-      '@id': 'https://TIshow.github.io/weson-museum/#organization',
+      '@id': 'https://weson-museum.com/#organization',
       name: 'WESON MUSEUM',
-      url: 'https://TIshow.github.io/weson-museum/',
+      url: 'https://weson-museum.com/',
       sameAs: [
         'https://x.com/WESON_MUSEUM',
         'https://www.instagram.com/weson_museum/',
@@ -37,10 +37,10 @@ const jsonLd = {
     },
     {
       '@type': 'Museum',
-      '@id': 'https://TIshow.github.io/weson-museum/#museum',
+      '@id': 'https://weson-museum.com/#museum',
       name: 'WESON MUSEUM',
       alternateName: ['ウェソンミュージアム', 'VR美術館'],
-      url: 'https://TIshow.github.io/weson-museum/',
+      url: 'https://weson-museum.com/',
       description:
         'A virtual reality art museum built in VRChat. Featuring four permanent galleries — Sky, Palau, Forest, and Rain — plus the annual ARTLINK exhibition connecting artists and audiences across borders.',
       keywords: [
@@ -59,7 +59,7 @@ const jsonLd = {
           url: 'https://vrchat.com',
         },
         organizer: {
-          '@id': 'https://TIshow.github.io/weson-museum/#organization',
+          '@id': 'https://weson-museum.com/#organization',
         },
         schedule: {
           '@type': 'Schedule',
@@ -120,7 +120,7 @@ const jsonLd = {
 <link rel="apple-touch-icon" href={`${base}favicon.svg`} />
 
 <!-- Sitemap -->
-<link rel="sitemap" href="/weson-museum/sitemap-index.xml" />
+<link rel="sitemap" href="/sitemap-index.xml" />
 
 <!-- JSON-LD structured data -->
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

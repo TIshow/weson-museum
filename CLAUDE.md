@@ -6,8 +6,8 @@
 
 WESON MUSEUM の公式 Web サイト。VRChat 上に開かれた美術館のサイトで、GitHub Pages で静的ホスティングされています。
 
-- **公開URL**: https://TIshow.github.io/weson-museum/
-- **ベースパス**: `/weson-museum`（GitHub Pages サブパス）
+- **公開URL**: https://weson-museum.com/
+- **ベースパス**: `/`（カスタムドメイン）
 - **言語**: 日本語（デフォルト）/ 英語（`/en/`）
 
 ## 技術スタック
@@ -35,7 +35,7 @@ pnpm preview  # ビルド結果のプレビュー
 ```astro
 <!-- 正しい -->
 <img src={`${import.meta.env.BASE_URL}images/foo.jpg`} />
-<a href="/weson-museum/about/">About</a>
+<a href="/about/">About</a>
 
 <!-- 間違い -->
 <img src="/images/foo.jpg" />
@@ -143,7 +143,7 @@ draft: false
 ## 注意事項
 
 - `--space-10` はデザイントークンに**存在しない**（`--space-8` または `--space-12` を使う）
-- 英語ページの内部リンクは必ず `/weson-museum/en/*` を向けること
+- 英語ページの内部リンクは必ず `/en/*` を向けること
 - `BaseLayout` に `lang="en"` を渡し忘れると nav リンクが日本語パスになる
 - news の Content Collections は配列 JSON ではなく 1ファイル = 1記事の Markdown 形式
 - Three.js の dynamic import パスは相対パス `'./three/GalleryScene'` を使う（絶対パス不可）
