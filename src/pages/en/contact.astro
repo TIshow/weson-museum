@@ -1,0 +1,274 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Contact — WESON MUSEUM"
+  description="Contact WESON MUSEUM. We welcome inquiries about exhibitions, press coverage, and collaboration."
+  lang="en"
+>
+
+  <section class="contact-hero">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/en/">Home</a></li>
+          <li aria-current="page">Contact</li>
+        </ol>
+      </nav>
+
+      <p class="contact-eyebrow mono-label">Get in Touch</p>
+      <h1 class="contact-h1">Contact</h1>
+      <p class="contact-lead">
+        Feel free to reach out regarding exhibitions, press, or collaboration.
+      </p>
+    </div>
+  </section>
+
+  <section class="contact-form-section">
+    <div class="container contact-layout">
+
+      <form
+        action="https://formspree.io/f/mpqylybo"
+        method="POST"
+        class="contact-form"
+      >
+        <input type="hidden" name="_language" value="en" />
+
+        <div class="form-group">
+          <label for="name" class="form-label mono-label">Name <span class="required" aria-hidden="true">*</span></label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            autocomplete="name"
+            class="form-input"
+            placeholder="Jane Doe"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="form-label mono-label">Email <span class="required" aria-hidden="true">*</span></label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            autocomplete="email"
+            class="form-input"
+            placeholder="your@email.com"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="subject" class="form-label mono-label">Subject</label>
+          <input
+            type="text"
+            id="subject"
+            name="subject"
+            class="form-input"
+            placeholder="Inquiry subject"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="message" class="form-label mono-label">Message <span class="required" aria-hidden="true">*</span></label>
+          <textarea
+            id="message"
+            name="message"
+            required
+            rows="7"
+            class="form-input form-textarea"
+            placeholder="Write your message here"
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary form-submit">Send Message</button>
+      </form>
+
+      <aside class="contact-info">
+        <div class="info-block">
+          <p class="info-label mono-label">Email</p>
+          <a href="mailto:wesonmuseum@gmail.com" class="info-value">wesonmuseum@gmail.com</a>
+        </div>
+        <div class="info-block">
+          <p class="info-label mono-label">X (Twitter)</p>
+          <a href="https://x.com/WESON_MUSEUM" target="_blank" rel="noopener noreferrer" class="info-value">@WESON_MUSEUM</a>
+        </div>
+        <div class="info-block">
+          <p class="info-label mono-label">Note</p>
+          <p class="info-note">We aim to respond within a few business days.</p>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* ---- Hero ---- */
+  .contact-hero {
+    padding-block: var(--space-12) var(--space-8);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .breadcrumb ol {
+    list-style: none;
+    display: flex;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-8);
+  }
+
+  .breadcrumb li + li::before {
+    content: '/';
+    margin-right: var(--space-2);
+    color: var(--color-border-bright);
+  }
+
+  .breadcrumb a {
+    color: var(--color-text-muted);
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-main);
+  }
+
+  .contact-eyebrow {
+    color: var(--color-main);
+    margin-bottom: var(--space-3);
+  }
+
+  .contact-h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.1;
+    margin-bottom: var(--space-6);
+  }
+
+  .contact-lead {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    max-width: 48ch;
+  }
+
+  /* ---- Layout ---- */
+  .contact-form-section {
+    padding-block: var(--space-12);
+  }
+
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: var(--space-12);
+    align-items: start;
+  }
+
+  /* ---- Form ---- */
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .form-label {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    letter-spacing: var(--tracking-wider);
+  }
+
+  .required {
+    color: var(--color-accent);
+    margin-left: 0.2em;
+  }
+
+  .form-input {
+    background: var(--color-bg-1);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    padding: var(--space-3) var(--space-4);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    outline: none;
+    width: 100%;
+  }
+
+  .form-input::placeholder {
+    color: var(--color-text-subtle);
+  }
+
+  .form-input:focus {
+    border-color: var(--color-main);
+    box-shadow: var(--glow-main);
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 160px;
+  }
+
+  .form-submit {
+    align-self: flex-start;
+    margin-top: var(--space-2);
+  }
+
+  /* ---- Info sidebar ---- */
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding: var(--space-8);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-1);
+  }
+
+  .info-label {
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-1);
+  }
+
+  .info-value {
+    font-size: var(--text-sm);
+    color: var(--color-main);
+    word-break: break-all;
+  }
+
+  .info-value:hover {
+    text-decoration: underline;
+  }
+
+  .info-note {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  /* ---- Mobile ---- */
+  @media (max-width: 768px) {
+    .contact-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-info {
+      order: -1;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: var(--space-6);
+    }
+  }
+</style>
