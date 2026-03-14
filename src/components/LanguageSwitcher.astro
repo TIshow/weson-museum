@@ -1,17 +1,15 @@
 ---
 const { pathname } = Astro.url;
-const base = import.meta.env.BASE_URL.replace(/\/$/, ''); // '/weson-museum'
-
-const isEn = pathname.startsWith(base + '/en/') || pathname === base + '/en';
-const relativePath = pathname.slice(base.length); // e.g. '/about/' or '/en/about/'
+const isEn = pathname.startsWith('/en/') || pathname === '/en';
+const relativePath = pathname; // e.g. '/about/' or '/en/about/'
 
 const jaUrl = isEn
-  ? base + (relativePath.replace(/^\/en/, '') || '/')
+  ? relativePath.replace(/^\/en/, '') || '/'
   : pathname;
 
 const enUrl = isEn
   ? pathname
-  : base + '/en' + relativePath;
+  : '/en' + relativePath;
 ---
 
 <nav class="lang-switcher" aria-label="Language / 言語">
