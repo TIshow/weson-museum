@@ -13,10 +13,10 @@ const featuredMedia = mediaData
   .slice(0, 3);
 
 const museums = [
-  { num: '01', ja: '天空美術館', en: 'Sky Museum',    img: 'main_museum.jpg'   },
-  { num: '02', ja: '森美術館',   en: 'Forest Museum', img: 'forest_museum.jpg' },
-  { num: '03', ja: 'パラオ美術館', en: 'Palau Museum',  img: 'palau_museum.jpg'  },
-  { num: '04', ja: '雨降る美術館', en: 'Rain Museum',   img: 'rain_museum.jpg'   },
+  { num: '01', ja: '天空美術館', en: 'Sky Museum',    img: 'main_museum.jpg',   anchor: 'museum-01' },
+  { num: '02', ja: '森美術館',   en: 'Forest Museum', img: 'forest_museum.jpg', anchor: 'museum-03' },
+  { num: '03', ja: 'パラオ美術館', en: 'Palau Museum',  img: 'palau_museum.jpg',  anchor: 'museum-02' },
+  { num: '04', ja: '雨降る美術館', en: 'Rain Museum',   img: 'rain_museum.jpg',   anchor: 'museum-04' },
 ];
 ---
 
@@ -77,7 +77,7 @@ const museums = [
 
       <div class="museums-grid">
         {museums.map((m) => (
-          <a href={`/exhibitions/#museum-${m.num}`} class="museum-card">
+          <a href={`/exhibitions/#${m.anchor}`} class="museum-card">
             <div class="museum-img-wrap">
               <img
                 src={`${base}images/museums/${m.img}`}
