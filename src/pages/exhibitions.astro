@@ -49,7 +49,7 @@ const museums = [
 ---
 
 <BaseLayout
-  title="Exhibitions — WESON MUSEUM"
+  title="常設展示 — WESON MUSEUM | VRChat VR美術館"
   description="WESON MUSEUMの常設展示。VRChat上に開かれた4つの美術館——天空・パラオ・森・雨降る——それぞれが固有の空気と演出を持つ空間です。"
   descriptionEn="WESON MUSEUM's permanent exhibitions on VRChat: four unique galleries — Sky, Palau, Forest, and Rain — each with its own atmosphere and VR-exclusive presentation. The Palau Museum is operated under the patronage of the Embassy of the Republic of Palau."
 >
@@ -84,8 +84,9 @@ const museums = [
   <div class="museums">
     {museums.map((m, i) => (
       <section
+        id={`museum-${m.num}`}
         class={`museum-section${i % 2 === 1 ? ' museum-section--alt' : ''}`}
-        aria-labelledby={`museum-${m.num}`}
+        aria-labelledby={`museum-heading-${m.num}`}
       >
         <div class="container museum-layout">
 
@@ -109,7 +110,7 @@ const museums = [
           <div class="museum-text-col">
             <div class="museum-num mono-label">{m.num}</div>
             <span class="accent-line"></span>
-            <h2 id={`museum-${m.num}`} class="museum-ja">{m.ja}</h2>
+            <h2 id={`museum-heading-${m.num}`} class="museum-ja">{m.ja}</h2>
             <p class="museum-en mono-label">{m.en}{m.since && ` — Est. ${m.since}`}</p>
             <p class="museum-body">{m.body}</p>
             {'bodyEn' in m && (
