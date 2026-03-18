@@ -15,10 +15,10 @@ const featuredMedia = (mediaData as any[])
 
 // Top page display order: Sky(01) → Forest(03) → Palau(02) → Rain(04)
 const topPageOrder = ['01', '03', '02', '04'];
-const museums = topPageOrder.map((num, i) => ({
-  ...museumsData.find(x => x.num === num)!,
-  displayNum: String(i + 1).padStart(2, '0'),
-}));
+const museums = topPageOrder.map((num, i) => {
+  const m = museumsData.find(x => x.num === num)!;
+  return { ...m, displayNum: String(i + 1).padStart(2, '0'), anchor: `museum-${m.num}` };
+});
 ---
 
 <BaseLayout
@@ -68,7 +68,7 @@ const museums = topPageOrder.map((num, i) => ({
 
       <div class="museums-grid">
         {museums.map((m) => (
-          <article class="museum-card">
+          <a href={`/en/exhibitions/#${m.anchor}`} class="museum-card">
             <div class="museum-img-wrap">
               <img
                 src={`${base}images/museums/${m.img}`}
@@ -84,8 +84,15 @@ const museums = topPageOrder.map((num, i) => ({
                 </div>
               </div>
             </div>
-          </article>
+          </a>
         ))}
+      </div>
+
+      <div class="museums-footer">
+        <a href="/en/exhibitions/" class="museums-all-link mono-label">
+          View all permanent galleries
+          <span class="museums-all-arrow" aria-hidden="true">→</span>
+        </a>
       </div>
     </div>
   </section>
@@ -288,10 +295,42 @@ const museums = topPageOrder.map((num, i) => ({
   }
 
   .museum-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
     border-radius: var(--radius-md);
     overflow: hidden;
     border: 1px solid var(--color-border);
     transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  }
+
+  .museums-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--space-6);
+  }
+
+  .museums-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-main);
+    text-decoration: none;
+    transition: color var(--transition-base), gap var(--transition-base);
+  }
+
+  .museums-all-link:hover {
+    color: var(--color-text);
+    gap: var(--space-3);
+  }
+
+  .museums-all-arrow {
+    display: inline-block;
+    transition: transform var(--transition-base);
+  }
+
+  .museums-all-link:hover .museums-all-arrow {
+    transform: translateX(4px);
   }
 
   .museum-card:hover {
