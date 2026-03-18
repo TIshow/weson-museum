@@ -3,21 +3,22 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Gallery from '@components/Gallery.astro';
 import MediaCard from '@components/MediaCard.astro';
 import mediaData from '../../data/media.json';
+import museumsData from '../../data/museums.json';
 
 const base = import.meta.env.BASE_URL;
 
 // featured: true media items, newest first, max 3
-const featuredMedia = mediaData
-  .filter((m: any) => m.featured)
-  .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
+const featuredMedia = (mediaData as any[])
+  .filter((m) => m.featured)
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   .slice(0, 3);
 
-const museums = [
-  { num: '01', ja: '天空美術館', en: 'Sky Museum',    img: 'main_museum.jpg'   },
-  { num: '02', ja: '森美術館',   en: 'Forest Museum', img: 'forest_museum.jpg' },
-  { num: '03', ja: 'パラオ美術館', en: 'Palau Museum',  img: 'palau_museum.jpg'  },
-  { num: '04', ja: '雨降る美術館', en: 'Rain Museum',   img: 'rain_museum.jpg'   },
-];
+// Top page display order: Sky(01) → Forest(03) → Palau(02) → Rain(04)
+const topPageOrder = ['01', '03', '02', '04'];
+const museums = topPageOrder.map((num, i) => ({
+  ...museumsData.find(x => x.num === num)!,
+  displayNum: String(i + 1).padStart(2, '0'),
+}));
 ---
 
 <BaseLayout
@@ -76,7 +77,7 @@ const museums = [
                 decoding="async"
               />
               <div class="museum-overlay">
-                <span class="museum-num mono-label">{m.num}</span>
+                <span class="museum-num mono-label">{m.displayNum}</span>
                 <div class="museum-names">
                   <span class="museum-name-en-main">{m.en}</span>
                   <span class="museum-name-ja mono-label">{m.ja}</span>
@@ -142,6 +143,7 @@ const museums = [
               date={item.date}
               type={item.type}
               url={item.url}
+              lang="en"
             />
           ))}
         </div>

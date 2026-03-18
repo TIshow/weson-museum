@@ -1,51 +1,9 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import museumsData from '../data/museums.json';
 
 const base = import.meta.env.BASE_URL;
-
-const museums = [
-  {
-    num: '01',
-    ja: '天空美術館',
-    en: 'Sky Museum',
-    img: 'main_museum.jpg',
-    since: '2021',
-    body: `2021年にVRChatへ開館した、WESON MUSEUMの本館。空中に浮かぶ展示空間に、油彩・アクリルなどの作品が並ぶ。館内ではマンタの絵から実際にマンタが泳ぎ出し、空間を静かに漂う——現実の美術館では実現できない演出が、この場所の原点にある。`,
-    url: 'https://vrchat.com/home/launch?worldId=wrld_a272c878-3435-4dbb-bdf3-d23efc50a1fc',
-    status: 'open',
-  },
-  {
-    num: '02',
-    ja: 'パラオ美術館',
-    en: 'Palau Museum',
-    img: 'palau_museum.jpg',
-    since: null,
-    body: `パラオ共和国の海をイメージして設計されたVR美術館。海岸には漂流した絵画が展示され、館内には水が張られている。作品が水に濡れても成立するのはVRならではで、空間そのものが作品の一部となっている。パラオ共和国大使館後援のもと運営されている。`,
-    bodyEn: `A VR museum inspired by the seas of the Republic of Palau. Paintings drift along the shore, and the interior is filled with water — artworks that would be impossible to display in a physical gallery. Operated under the patronage of the Embassy of the Republic of Palau in Japan. / Ng diak el mo mesaod er a blai el museum — el mo er ngii a oba dellomel er a Belau.`,
-    url: 'https://vrchat.com/home/launch?worldId=wrld_5b5a1ca5-4c71-401a-b004-f7d58c6f7a65',
-    status: 'open',
-  },
-  {
-    num: '03',
-    ja: '森美術館',
-    en: 'Forest Museum',
-    img: 'forest_museum.jpg',
-    since: null,
-    body: `森の中に作品を置くのではなく、森そのものを美術館として設計した空間。主に植物や果物をモチーフとした作品が展示され、展示空間と作品が互いに呼応している。作品に合わせて展示環境をつくれることは、VR美術館ならではの自由さのひとつ。`,
-    url: 'https://vrchat.com/home/launch?worldId=wrld_cc87c364-530e-4c1b-b7ee-8982310d6be9',
-    status: 'open',
-  },
-  {
-    num: '04',
-    ja: '雨降る美術館',
-    en: 'Rain Museum',
-    img: 'rain_museum.jpg',
-    since: null,
-    body: `雨が静かに降り続ける空間に、作品が展示される美術館。現在も観覧可能だが、今後リニューアルを予定している。`,
-    url: 'https://vrchat.com/home/launch?worldId=wrld_ae3b767b-c661-469a-a0f5-3441fa826e64',
-    status: 'renovation',
-  },
-];
+const museums = museumsData;
 ---
 
 <BaseLayout
@@ -112,8 +70,8 @@ const museums = [
             <span class="accent-line"></span>
             <h2 id={`museum-heading-${m.num}`} class="museum-ja">{m.ja}</h2>
             <p class="museum-en mono-label">{m.en}{m.since && ` — Est. ${m.since}`}</p>
-            <p class="museum-body">{m.body}</p>
-            {'bodyEn' in m && (
+            <p class="museum-body">{m.bodyJa}</p>
+            {m.bodyPau && (
               <p class="museum-body-en" lang="en">{m.bodyEn}</p>
             )}
 
@@ -384,22 +342,6 @@ const museums = [
   .btn-icon {
     font-size: var(--text-sm);
     color: var(--color-main);
-  }
-
-  .btn-disabled {
-    display: inline-flex;
-    align-items: center;
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    letter-spacing: var(--tracking-widest);
-    text-transform: uppercase;
-    padding: var(--space-3) var(--space-8);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-subtle);
-    cursor: not-allowed;
-    align-self: flex-start;
-    margin-top: var(--space-2);
   }
 
   /* ================================================================

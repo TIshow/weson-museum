@@ -5,14 +5,16 @@ interface Props {
   date: string;
   type: 'web' | 'print';
   url?: string;
+  lang?: 'ja' | 'en';
 }
 
-const { outlet, title, date, type, url } = Astro.props;
+const { outlet, title, date, type, url, lang = 'ja' } = Astro.props;
 
-const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
+const formattedDate = new Date(date).toLocaleDateString(lang === 'en' ? 'en-US' : 'ja-JP', {
   year: 'numeric',
   month: 'long',
 });
+const printLabel = lang === 'en' ? 'Print' : '紙媒体';
 ---
 
 <article class="media-card">
@@ -22,7 +24,7 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
         <span class="media-outlet mono-label">{outlet}</span>
         <div class="media-card-tags">
           <span class={`media-type-badge media-type-badge--${type}`}>
-            {type === 'web' ? 'Web' : '紙媒体'}
+            {type === 'web' ? 'Web' : printLabel}
           </span>
           <span class="mono-label media-date">{formattedDate}</span>
         </div>
@@ -36,7 +38,7 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
         <span class="media-outlet mono-label">{outlet}</span>
         <div class="media-card-tags">
           <span class={`media-type-badge media-type-badge--${type}`}>
-            {type === 'web' ? 'Web' : '紙媒体'}
+            {type === 'web' ? 'Web' : printLabel}
           </span>
           <span class="mono-label media-date">{formattedDate}</span>
         </div>
