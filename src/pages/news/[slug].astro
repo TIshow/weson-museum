@@ -26,12 +26,32 @@ const updatedDate = post.data.updatedDate
       day: 'numeric',
     })
   : null;
+
+const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  ...(post.data.updatedDate && { dateModified: post.data.updatedDate.toISOString() }),
+  url: `https://weson-museum.com/news/${post.slug}/`,
+  publisher: {
+    '@type': 'Organization',
+    '@id': 'https://weson-museum.com/#organization',
+    name: 'WESON MUSEUM',
+    url: 'https://weson-museum.com/',
+  },
+  inLanguage: 'ja',
+  keywords: post.data.tags.join(', '),
+};
 ---
 
 <BaseLayout
   title={`${post.data.title} — WESON MUSEUM`}
   description={post.data.description}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+
   <article class="container article-wrap">
 
     <nav class="breadcrumb" aria-label="パンくずリスト">
