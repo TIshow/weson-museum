@@ -42,8 +42,9 @@ const museums = museumsData;
   <div class="museums">
     {museums.map((m, i) => (
       <section
+        id={`museum-${m.num}`}
         class={`museum-section${i % 2 === 1 ? ' museum-section--alt' : ''}`}
-        aria-labelledby={`museum-${m.num}`}
+        aria-labelledby={`museum-heading-${m.num}`}
       >
         <div class="container museum-layout">
 
@@ -67,7 +68,7 @@ const museums = museumsData;
           <div class="museum-text-col">
             <div class="museum-num mono-label">{m.num}</div>
             <span class="accent-line"></span>
-            <h2 id={`museum-${m.num}`} class="museum-name">{m.en}</h2>
+            <h2 id={`museum-heading-${m.num}`} class="museum-name">{m.en}</h2>
             <p class="museum-ja mono-label">{m.ja}{m.since && ` — Est. ${m.since}`}</p>
             <p class="museum-body">{m.bodyEn}</p>
             {m.bodyPau && (
