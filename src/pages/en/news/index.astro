@@ -2,10 +2,10 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-const allNews = await getCollection('news', ({ data }: any) => !data.draft);
+const allNews = await getCollection('news', ({ data }) => !data.draft);
 
 const sorted = allNews.sort(
-  (a: any, b: any) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
 );
 ---
 
