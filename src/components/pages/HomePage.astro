@@ -1,0 +1,678 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Gallery from '@components/Gallery.astro';
+import MediaCard from '@components/MediaCard.astro';
+import mediaData from '../../data/media.json';
+import museumsData from '../../data/museums.json';
+import siteConfig from '../../data/config.json';
+
+interface Props { lang: 'ja' | 'en' }
+const { lang } = Astro.props;
+const isEn = lang === 'en';
+const p = isEn ? '/en' : '';
+
+const base = import.meta.env.BASE_URL;
+
+const featuredMedia = mediaData
+  .filter(m => m.featured)
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, siteConfig.maxFeaturedMedia);
+
+const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
+  const m = museumsData.find(x => x.num === num)!;
+  return { ...m, displayNum: String(i + 1).padStart(2, '0'), anchor: `museum-${m.num}` };
+});
+---
+
+<BaseLayout
+  title={isEn
+    ? 'WESON MUSEUM | VR Museum & Metaverse Art Gallery on VRChat'
+    : 'WESON MUSEUM | VR美術館・VRChat・メタバース美術館'}
+  description={isEn
+    ? 'WESON MUSEUM is a VR museum and metaverse art gallery on VRChat. Explore four permanent galleries — Sky, Forest, Palau, and Rain — join weekly guided tours every Saturday, and discover the annual ARTLINK group exhibition.'
+    : 'WESON MUSEUMは、VRChat上に開かれたVR美術館です。天空・森・パラオ・雨降る、4つの常設館と年次企画展ARTLINKを開催。毎週土曜21時よりギャラリーツアーを実施しています。'}
+  descriptionEn={isEn ? undefined
+    : 'WESON MUSEUM is a VR museum on VRChat. Explore four permanent galleries, join weekly guided tours every Saturday, and discover the annual ARTLINK group exhibition.'}
+  lang={isEn ? 'en' : undefined}
+>
+
+{!isEn && (
+  <script is:inline>
+    if (!sessionStorage.getItem('weson-lang')) {
+      sessionStorage.setItem('weson-lang', '1');
+      const lang = navigator.language || '';
+      if (lang.startsWith('en')) {
+        location.replace('/en/');
+      }
+    }
+  </script>
+)}
+
+  <!-- ================================================================
+       Hero
+       ================================================================ -->
+  <section class="hero">
+    <div class="container hero-content">
+      <p class="hero-eyebrow mono-label">Virtual Reality Art Museum</p>
+      <h1 class="hero-title">
+        <span class="hero-title-w">W</span>ESON<br />
+        <span class="hero-title-sub">MUSEUM</span>
+      </h1>
+      <p class="hero-description">
+        {isEn
+          ? 'A VR museum on VRChat. Discover contemporary art across four permanent galleries in the metaverse.'
+          : 'VRChat上に開かれたVR美術館。4つの常設館でアートを体験できます。'}
+      </p>
+      <div class="hero-actions">
+        <a href="#gallery" class="btn btn-primary">Enter Exhibition</a>
+        <a href={`${p}/about/`} class="btn btn-outline">About Museum</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       3D Gallery
+       ================================================================ -->
+  <section id="gallery" aria-label={isEn ? 'Gallery' : '作品ギャラリー'}>
+    <Gallery />
+  </section>
+
+  <!-- ================================================================
+       Permanent Exhibitions
+       ================================================================ -->
+  <section class="section-museums">
+    <div class="container">
+      <div class="section-header">
+        <span class="accent-line"></span>
+        <div>
+          <h2>Permanent Exhibitions</h2>
+        </div>
+      </div>
+
+      <div class="museums-grid">
+        {museums.map((m) => (
+          <a href={`${p}/exhibitions/#${m.anchor}`} class="museum-card">
+            <div class="museum-img-wrap">
+              <img
+                src={`${base}images/museums/${m.img}`}
+                alt={isEn ? m.en : m.ja}
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="museum-overlay">
+                <span class="museum-num mono-label">{m.displayNum}</span>
+                <div class="museum-names">
+                  <span class="museum-name-primary">{isEn ? m.en : m.ja}</span>
+                  <span class={`museum-name-secondary mono-label`}>{isEn ? m.ja : m.en}</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <div class="museums-footer">
+        <a href={`${p}/exhibitions/`} class="museums-all-link mono-label">
+          {isEn ? 'View all permanent galleries' : 'すべての常設館を見る'}
+          <span class="museums-all-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       ARTLINK 2025
+       ================================================================ -->
+  <section class="section-artlink">
+    <div class="container">
+      <div class="artlink-banner">
+        <img
+          src={`${base}images/artlink2025.jpg`}
+          alt="ARTLINK 2025"
+          loading="lazy"
+          decoding="async"
+          class="artlink-img"
+        />
+        <div class="artlink-overlay">
+          <div class="artlink-meta">
+            <span class="tag">Special Exhibition</span>
+            <span class="artlink-year mono-label">2025</span>
+          </div>
+          <h2 class="artlink-title">ARTLINK</h2>
+          <p class="artlink-desc">
+            {isEn ? 'Group VR Art Exhibition' : '複数作家による VR 総合美術展'}
+          </p>
+          <a href={`${p}/artlink/`} class="btn btn-accent">
+            View Exhibition
+          </a>
+        </div>
+        <div class="artlink-corner artlink-corner--tl" aria-hidden="true"></div>
+        <div class="artlink-corner artlink-corner--br" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Media
+       ================================================================ -->
+  {featuredMedia.length > 0 && (
+    <section class="section-media">
+      <div class="container">
+        <div class="section-header">
+          <span class="accent-line"></span>
+          <div>
+            <h2>Press &amp; Media</h2>
+          </div>
+        </div>
+
+        <div class="media-grid">
+          {featuredMedia.map(item => (
+            <MediaCard
+              outlet={item.outlet}
+              title={item.title}
+              date={item.date}
+              type={item.type}
+              url={item.url}
+              lang={isEn ? 'en' : undefined}
+            />
+          ))}
+        </div>
+
+        <div class="media-more">
+          <a href={`${p}/media/`} class="btn btn-outline">
+            {isEn ? 'View all coverage' : '掲載一覧をすべて見る'}
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ================================================================
+       VR Gallery Tour
+       ================================================================ -->
+  <section class="section-tour">
+    <div class="container">
+      <div class="tour-layout">
+
+        <div class="tour-info">
+          <span class="accent-line" style="background:var(--color-accent);box-shadow:0 0 12px var(--color-accent);"></span>
+          <h2>VR Gallery Tour</h2>
+
+          <div class="tour-schedule glass">
+            <span class="mono-label">
+              {isEn ? 'Every Saturday / 21:00 — 22:00' : 'Every Saturday'}
+            </span>
+            <div class="tour-time-block">
+              <span class="tour-time">21:00</span>
+              <span class="tour-time-sep">—</span>
+              <span class="tour-time">22:00</span>
+            </div>
+            <div class="tour-badge">
+              <span class="status-dot" aria-hidden="true"></span>
+              <span class="mono-label">VRChat · Free</span>
+            </div>
+          </div>
+
+          <p class="tour-desc">
+            {isEn
+              ? 'A guided tour of the VRChat exhibition space with the artist. Hear directly about the creative process behind each work while experiencing full immersion.'
+              : 'VRChat 上の展示空間をアーティストと一緒に巡るガイドツアー。作品の制作背景や意図を直接聞きながら、没入感あふれる体験を。'}
+          </p>
+        </div>
+
+        <div class="tour-video-wrap">
+          <video
+            class="tour-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            controls
+            aria-label={isEn ? 'VR Gallery Tour' : 'VR在廊ツアーの様子'}
+          >
+            <source src={`${base}video/tour_movie.mp4`} type="video/mp4" />
+            {isEn
+              ? 'Your browser does not support video playback.'
+              : 'お使いのブラウザは動画再生をサポートしていません。'}
+          </video>
+          <div class="tour-video-frame" aria-hidden="true"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-24) var(--space-8);
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    color: var(--color-main);
+    margin-bottom: var(--space-6);
+  }
+
+  .hero-title {
+    font-size: var(--text-hero);
+    font-weight: 200;
+    letter-spacing: var(--tracking-widest);
+    line-height: 0.9;
+    margin-bottom: var(--space-8);
+  }
+
+  .hero-title-w {
+    color: var(--color-accent);
+    font-weight: 700;
+    text-shadow: 0 0 40px rgba(252, 250, 10, 0.5), 0 0 80px rgba(252, 250, 10, 0.2);
+  }
+
+  .hero-title-sub {
+    display: block;
+    font-size: 0.52em;
+    letter-spacing: 0.42em;
+    color: var(--color-text-muted);
+    margin-top: var(--space-3);
+  }
+
+  .hero-description {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+  }
+
+  .section-header h2 {
+    font-size: var(--text-2xl);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wider);
+  }
+
+  .section-museums {
+    padding-block: var(--space-16);
+  }
+
+  .museums-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  @media (max-width: 640px) {
+    .hero { padding-block: var(--space-16) var(--space-6); }
+    .hero-description { font-size: var(--text-base); }
+    .museums-grid { grid-template-columns: 1fr; }
+    .section-museums { padding-block: var(--space-12); }
+    .section-artlink { padding-block: var(--space-6) var(--space-12); }
+    .section-media { padding-block: var(--space-6) var(--space-12); }
+    .section-tour { padding-block: var(--space-6) var(--space-16); }
+  }
+
+  .museum-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  }
+
+  .museums-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--space-6);
+  }
+
+  .museums-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-main);
+    text-decoration: none;
+    transition: color var(--transition-base), gap var(--transition-base);
+  }
+
+  .museums-all-link:hover {
+    color: var(--color-text);
+    gap: var(--space-3);
+  }
+
+  .museums-all-arrow {
+    display: inline-block;
+    transition: transform var(--transition-base);
+  }
+
+  .museums-all-link:hover .museums-all-arrow {
+    transform: translateX(4px);
+  }
+
+  .museum-card:hover {
+    border-color: var(--color-border-bright);
+    box-shadow: var(--glow-main);
+  }
+
+  .museum-img-wrap {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  .museum-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transition-slow);
+    filter: brightness(0.75) saturate(0.9);
+  }
+
+  .museum-card:hover .museum-img-wrap img {
+    transform: scale(1.04);
+    filter: brightness(0.85) saturate(1.05);
+  }
+
+  .museum-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        to top,
+        rgba(5, 11, 10, 0.92) 0%,
+        rgba(5, 11, 10, 0.4) 50%,
+        rgba(5, 11, 10, 0.1) 100%
+      );
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--space-6);
+    transition: background var(--transition-base);
+  }
+
+  .museum-card:hover .museum-overlay {
+    background:
+      linear-gradient(
+        to top,
+        rgba(5, 11, 10, 0.96) 0%,
+        rgba(5, 11, 10, 0.45) 50%,
+        rgba(5, 11, 10, 0.05) 100%
+      );
+  }
+
+  .museum-num {
+    color: var(--color-main);
+    align-self: flex-end;
+    opacity: 0.7;
+  }
+
+  .museum-names {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .museum-name-primary {
+    font-size: var(--text-xl);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wider);
+    color: var(--color-text);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  }
+
+  .museum-name-secondary {
+    color: var(--color-main);
+    opacity: 0.8;
+    transition: opacity var(--transition-base);
+  }
+
+  .museum-card:hover .museum-name-secondary {
+    opacity: 1;
+  }
+
+  .section-artlink {
+    padding-block: var(--space-8) var(--space-16);
+  }
+
+  .artlink-banner {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    aspect-ratio: 16 / 6;
+    min-height: 260px;
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  }
+
+  .artlink-banner:hover {
+    border-color: var(--color-border-accent);
+    box-shadow: var(--glow-accent);
+  }
+
+  .artlink-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.55) saturate(0.8);
+    transition: transform var(--transition-slow), filter var(--transition-slow);
+  }
+
+  .artlink-banner:hover .artlink-img {
+    transform: scale(1.03);
+    filter: brightness(0.65) saturate(0.9);
+  }
+
+  .artlink-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-12);
+    background: linear-gradient(to right, rgba(5, 11, 10, 0.85) 40%, transparent 100%);
+  }
+
+  .artlink-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  .artlink-year { color: var(--color-accent); }
+
+  .artlink-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 200;
+    letter-spacing: var(--tracking-widest);
+    margin-bottom: var(--space-3);
+    line-height: 1;
+  }
+
+  .artlink-desc {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+    font-size: var(--text-base);
+  }
+
+  .artlink-corner {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    pointer-events: none;
+  }
+
+  .artlink-corner--tl {
+    top: var(--space-4);
+    left: var(--space-4);
+    border-top: 1px solid var(--color-accent);
+    border-left: 1px solid var(--color-accent);
+    opacity: 0.6;
+  }
+
+  .artlink-corner--br {
+    bottom: var(--space-4);
+    right: var(--space-4);
+    border-bottom: 1px solid var(--color-accent);
+    border-right: 1px solid var(--color-accent);
+    opacity: 0.6;
+  }
+
+  @media (max-width: 640px) {
+    .artlink-overlay { padding: var(--space-6); }
+    .artlink-banner { aspect-ratio: 4 / 3; }
+  }
+
+  .section-media {
+    padding-block: var(--space-8) var(--space-16);
+  }
+
+  .media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+  }
+
+  @media (max-width: 900px) {
+    .media-grid { grid-template-columns: 1fr; }
+  }
+
+  .media-more {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .section-tour {
+    padding-block: var(--space-8) var(--space-24);
+  }
+
+  .tour-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: var(--space-12);
+    align-items: center;
+  }
+
+  @media (max-width: 900px) {
+    .tour-layout { grid-template-columns: 1fr; }
+  }
+
+  .tour-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .tour-info h2 {
+    font-size: var(--text-2xl);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wider);
+  }
+
+  .tour-schedule {
+    padding: var(--space-6);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .tour-time-block {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+
+  .tour-time {
+    font-size: var(--text-3xl);
+    font-weight: 200;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-accent);
+    text-shadow: 0 0 24px rgba(252, 250, 10, 0.3);
+  }
+
+  .tour-time-sep {
+    color: var(--color-text-muted);
+    font-size: var(--text-xl);
+  }
+
+  .tour-badge {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .tour-badge .mono-label { color: var(--color-main); }
+
+  .status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 8px var(--color-accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .tour-desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 2;
+  }
+
+  .tour-video-wrap {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  }
+
+  .tour-video-wrap:hover {
+    border-color: var(--color-border-bright);
+    box-shadow: var(--glow-main);
+  }
+
+  .tour-video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: var(--color-bg-1);
+  }
+
+  .tour-video-frame {
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    width: 48px;
+    height: 48px;
+    border-bottom: 2px solid var(--color-main);
+    border-right: 2px solid var(--color-main);
+    box-shadow: var(--glow-main);
+    border-radius: 0 0 var(--radius-md) 0;
+    pointer-events: none;
+  }
+</style>
