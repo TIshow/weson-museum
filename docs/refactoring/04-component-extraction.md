@@ -1,137 +1,80 @@
 # [Refactor] 共通 Astro コンポーネントの抽出
 
+**ステータス**: 🔲 未着手（GitHub #7）
 **優先度**: MEDIUM
 **難易度**: 中
-**影響ファイル数**: 4〜8ファイル
 
-## 何が問題か
+## 現状（Issue #4 完了後の更新）
 
-複数ページで同一の HTML 構造が inline で繰り返されており、
-コンポーネント化されていない。
+Issue #4（ja/en ページ統合）の完了により、MuseumCard の重複は解消された。
+各共有コンポーネント（`src/components/pages/`）の中にはまだ繰り返しパターンが残っており、
+それらをさらに個別コンポーネントに切り出すことが本 Issue の対象。
 
-### パターン1：MuseumCard
+## 残っている繰り返しパターン
 
-`src/pages/index.astro` と `src/pages/en/index.astro` の両方で
-美術館カードグリッドのロジックと HTML が重複している。
+### パターン1：ValueCard グリッド
 
-```js
-// ロジック（両ファイルで同一）
-const topPageOrder = ['01', '03', '02', '04'];
-const museums = topPageOrder.map((num, i) => {
-  const m = museumsData.find(x => x.num === num)!;
-  return { ...m, displayNum: String(i + 1).padStart(2, '0'), anchor: `museum-${m.num}` };
-});
-```
+`AboutPage.astro` の "What we value" と `ArtlinkPage.astro` の "ARTLINKがつなぐもの" で
+同一構造のカードグリッドが使われている。
 
 ```html
-<!-- HTML（両ファイルで同一、リンク先パスのみ異なる）-->
-<a href={`/exhibitions/#${m.anchor}`} class="museum-card">
-  <div class="museum-img-wrap">
-    <img src={...} alt={m.ja} loading="lazy" decoding="async" />
-    <div class="museum-overlay">
-      <span class="museum-num mono-label">{m.displayNum}</span>
-      <div class="museum-names">
-        <span class="museum-name-ja">{m.ja}</span>
-        <span class="museum-name-en mono-label">{m.en}</span>
-      </div>
-    </div>
-  </div>
-</a>
+<li class="value-item / connect-item">
+  <span class="value-num / connect-num mono-label">{v.num}</span>
+  <h3 class="value-en / connect-en">{v.en}</h3>
+  <p class="value-ja / connect-ja mono-label">{v.ja}</p>
+  <p class="value-body / connect-body">{v.body}</p>
+</li>
 ```
+
+クラス名だけ違うが CSS は同一。共通の `ValueCard.astro` にまとめられる。
 
 ### パターン2：SectionHeader（アクセントライン + 見出し）
 
-5ページ以上で以下の構造が繰り返されている。
+複数のページコンポーネントで以下の構造が繰り返されている。
 
 ```html
 <div class="section-header">
   <span class="accent-line"></span>
   <div>
-    <h2 class="section-title">{title}</h2>
-    <p class="section-sub mono-label">{subtitle}</p>
+    <h2>...</h2>
   </div>
 </div>
 ```
 
-### パターン3：ValueCard グリッド
+`SectionHeader.astro` として抽出し、`title` prop を渡す形にできる。
+ただし sticky の `section-aside` パターンと混在しているため注意が必要。
 
-`about.astro` と `artlink.astro` の両方で以下のカードパターンが使われている。
+### パターン3：MuseumCard（HomePage 内）
 
-```html
-<ul class="value-list">
-  {values.map(v => (
-    <li class="value-item">
-      <span class="value-num mono-label">{v.num}</span>
-      <h3 class="value-en">{v.en}</h3>
-      <p class="value-ja mono-label">{v.ja}</p>
-      <p class="value-body">{v.body}</p>
-    </li>
-  ))}
-</ul>
-```
+`HomePage.astro` の museum-card HTML はコンポーネント化されていない。
+現状は1ファイル内に閉じているため緊急度は低いが、将来的には抽出したい。
 
-## なぜ問題か
+## 解決方針
 
-- カードの見た目を変えたい場合、複数ファイルを手動で同期修正する必要がある
-- `MuseumCard` のリンク先パスが ja/en で異なり、バグの温床になっている
-  （実際に `exhibitions.astro` の anchor ID が ja/en で不一致になっている）
-- テストや Storybook 等でコンポーネント単体を確認できない
-
-## どう解決するか
-
-### 1. `src/components/MuseumCard.astro`
+### `src/components/ValueCard.astro`
 
 ```astro
 ---
 interface Props {
-  museum: { num: string; ja: string; en: string };
-  displayNum: string;
-  lang: 'ja' | 'en';
+  num: string;
+  en: string;
+  ja: string;
+  body: string;
 }
-const { museum, displayNum, lang } = Astro.props;
-const base = import.meta.env.BASE_URL;
-const prefix = lang === 'en' ? '/en' : '';
+const { num, en, ja, body } = Astro.props;
 ---
-<a href={`${prefix}/exhibitions/#museum-${museum.num}`} class="museum-card">
-  <div class="museum-img-wrap">
-    <img
-      src={`${base}images/museums/museum${museum.num}.jpg`}
-      alt={museum.ja}
-      loading="lazy"
-      decoding="async"
-    />
-    <div class="museum-overlay">
-      <span class="museum-num mono-label">{displayNum}</span>
-      <div class="museum-names">
-        <span class="museum-name-ja">{museum.ja}</span>
-        <span class="museum-name-en mono-label">{museum.en}</span>
-      </div>
-    </div>
-  </div>
-</a>
+<li class="value-card">
+  <span class="value-num mono-label">{num}</span>
+  <h3 class="value-en">{en}</h3>
+  <p class="value-ja mono-label">{ja}</p>
+  <p class="value-body">{body}</p>
+</li>
 ```
 
-### 2. `src/components/SectionHeader.astro`
-
-```astro
----
-interface Props {
-  title: string;
-  sub?: string;
-}
-const { title, sub } = Astro.props;
----
-<div class="section-header">
-  <span class="accent-line"></span>
-  <div>
-    <h2 class="section-title">{title}</h2>
-    {sub && <p class="section-sub mono-label">{sub}</p>}
-  </div>
-</div>
-```
+CSS は `global.css` に `.value-card` として統合。
 
 ### 注意点
 
-- `MuseumCard` を先に作ることで、Issue #1（ja/en 統合）の実装がしやすくなる
-- Issue #3（CSS 統合）と合わせて、カードの CSS も `MuseumCard.astro` 内の `<style>` に集約する
-- `SectionHeader` は汎用性が高いため、prop の設計を慎重に行う
+- CSS クラス名の統一が必要（`value-item` と `connect-item` を一本化）
+- `SectionHeader` は sticky／non-sticky の両パターンがあるため、prop か slot で吸収する
+- 無理にすべてコンポーネント化しなくてもよい。繰り返しが3箇所以上あるものを優先する
