@@ -260,31 +260,6 @@ const ahead = [
     border-bottom: 1px solid var(--color-border);
   }
 
-  .breadcrumb ol {
-    list-style: none;
-    display: flex;
-    gap: var(--space-2);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    letter-spacing: var(--tracking-wide);
-    color: var(--color-text-subtle);
-    margin-bottom: var(--space-12);
-  }
-
-  .breadcrumb li + li::before {
-    content: '/';
-    margin-right: var(--space-2);
-    color: var(--color-border-bright);
-  }
-
-  .breadcrumb a {
-    color: var(--color-text-subtle);
-  }
-
-  .breadcrumb a:hover {
-    color: var(--color-main);
-  }
-
   .about-eyebrow {
     color: var(--color-main);
     margin-bottom: var(--space-8);
@@ -367,20 +342,7 @@ const ahead = [
     background: var(--color-bg-1);
   }
 
-  /* 2カラムレイアウト（aside + body） */
-  .section-layout {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: var(--space-16);
-    align-items: start;
-  }
-
   @media (max-width: 768px) {
-    .section-layout {
-      grid-template-columns: 1fr;
-      gap: var(--space-8);
-    }
-
     .about-section {
       padding-block: var(--space-16);
     }
@@ -591,25 +553,6 @@ const ahead = [
     padding-block: var(--space-24);
   }
 
-  .cta-divider {
-    width: 40px;
-    height: 1px;
-    background: var(--color-main);
-    box-shadow: var(--glow-main);
-    margin-bottom: var(--space-8);
-  }
-
-  .cta-lead {
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-8);
-  }
-
-  .cta-links {
-    list-style: none;
-    display: flex;
-    gap: var(--space-4);
-    flex-wrap: wrap;
-  }
 
   .btn {
     display: inline-flex;
