@@ -1,0 +1,16 @@
+---
+interface Props {
+  num: string;
+  en: string;
+  ja: string;
+  body: string;
+}
+const { num, en, ja, body } = Astro.props;
+---
+
+<li class="value-card">
+  <span class="value-card-num mono-label">{num}</span>
+  <h3 class="value-card-en">{en}</h3>
+  <p class="value-card-ja mono-label">{ja}</p>
+  <p class="value-card-body">{body}</p>
+</li>

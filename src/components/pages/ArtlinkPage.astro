@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import artlinkData from '../../data/artlink.json';
+import ValueCard from '@components/ValueCard.astro';
 
 interface Props { lang: 'ja' | 'en' }
 const { lang } = Astro.props;
@@ -226,14 +227,9 @@ const archives    = artlinkData.archives.map(a => ({
         </h2>
       </header>
 
-      <ol class="connects-grid" aria-label={isEn ? 'What ARTLINK connects' : 'ARTLINKがつなぐもの'}>
+      <ol class="value-card-grid" aria-label={isEn ? 'What ARTLINK connects' : 'ARTLINKがつなぐもの'}>
         {connections.map(c => (
-          <li class="connect-item">
-            <span class="connect-num mono-label">{c.num}</span>
-            <h3 class="connect-en">{c.en}</h3>
-            <p class="connect-ja mono-label">{c.ja}</p>
-            <p class="connect-body">{c.body}</p>
-          </li>
+          <ValueCard num={c.num} en={c.en} ja={c.ja} body={c.body} />
         ))}
       </ol>
     </div>
@@ -552,52 +548,6 @@ const archives    = artlinkData.archives.map(a => ({
 
   .prose p + p { margin-top: var(--space-6); }
   .prose p { line-height: 2; color: var(--color-text-muted); }
-
-  .connects-grid {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-1);
-  }
-
-  @media (max-width: 640px) {
-    .connects-grid { grid-template-columns: 1fr; }
-  }
-
-  .connect-item {
-    padding: var(--space-8);
-    border: 1px solid var(--color-border);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    transition: background var(--transition-base), border-color var(--transition-base);
-  }
-
-  .connect-item:hover {
-    background: var(--color-bg-glass);
-    border-color: var(--color-border-bright);
-  }
-
-  .connect-num { color: var(--color-main); }
-
-  .connect-en {
-    font-size: var(--text-lg);
-    font-weight: 300;
-    letter-spacing: var(--tracking-wide);
-    line-height: 1.3;
-  }
-
-  .connect-ja {
-    color: var(--color-text-muted);
-    letter-spacing: var(--tracking-wider);
-  }
-
-  .connect-body {
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-    line-height: 1.9;
-    margin-top: var(--space-2);
-  }
 
   .archive-intro {
     font-size: var(--text-sm);
