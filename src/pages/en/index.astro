@@ -4,18 +4,16 @@ import Gallery from '@components/Gallery.astro';
 import MediaCard from '@components/MediaCard.astro';
 import mediaData from '../../data/media.json';
 import museumsData from '../../data/museums.json';
+import siteConfig from '../../data/config.json';
 
 const base = import.meta.env.BASE_URL;
 
-// featured: true media items, newest first, max 3
-const featuredMedia = (mediaData as any[])
-  .filter((m) => m.featured)
+const featuredMedia = mediaData
+  .filter(m => m.featured)
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-  .slice(0, 3);
+  .slice(0, siteConfig.maxFeaturedMedia);
 
-// Top page display order: Sky(01) → Forest(03) → Palau(02) → Rain(04)
-const topPageOrder = ['01', '03', '02', '04'];
-const museums = topPageOrder.map((num, i) => {
+const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
   const m = museumsData.find(x => x.num === num)!;
   return { ...m, displayNum: String(i + 1).padStart(2, '0'), anchor: `museum-${m.num}` };
 });

@@ -1,0 +1,58 @@
+{
+  "values": [
+    {
+      "num": "01",
+      "en": "Art in virtual space",
+      "ja": "VR空間での展示",
+      "bodyJa": "WESON MUSEUM は、VRChat 上に構築された美術館です。天空・森・パラオ・雨といった、それぞれ固有の空気と光を持つ空間で、作品は展示されます。",
+      "bodyEn": "WESON MUSEUM is a museum built in VRChat. Works are exhibited in four spaces — Sky, Forest, Palau, and Rain — each with its own distinct atmosphere and light."
+    },
+    {
+      "num": "02",
+      "en": "Dialogue around artworks",
+      "ja": "作品をめぐる対話",
+      "bodyJa": "毎週土曜日の在廊ツアーをはじめ、作家・作品・鑑賞者が同じ場に立つ機会を大切にしています。作品の前で生まれる言葉や問いを、美術館の核にしたいと考えています。",
+      "bodyEn": "We value the opportunity for artists, works, and viewers to stand in the same place — through the weekly Saturday tours and beyond. We want to place the words and questions that arise in front of a work at the very center of what this museum is."
+    },
+    {
+      "num": "03",
+      "en": "Openness across distance",
+      "ja": "距離を越えた開かれ",
+      "bodyJa": "場所・身体・移動の制約を越えて、アートと出会える環境を育てたいと思っています。VR上の美術館は、誰でも、どこからでも入ることができます。",
+      "bodyEn": "We want to cultivate an environment where people can encounter art beyond the constraints of location, body, and travel. A VR museum is open to anyone, from anywhere."
+    },
+    {
+      "num": "04",
+      "en": "Connection between virtual and physical",
+      "ja": "仮想と現実の接続",
+      "bodyJa": "WESON MUSEUM は、VR空間の中だけで完結しません。現実での鑑賞・購入・展示との接続を意識しながら、アートの循環を支える場でありたいと考えています。",
+      "bodyEn": "WESON MUSEUM does not exist only within VR. We aim to be a foundation that supports the circulation of art — connecting to real-world viewing, purchasing, and exhibition."
+    }
+  ],
+  "ahead": [
+    {
+      "labelJa": "展示アーカイブ",
+      "labelEn": "Exhibition Archive",
+      "bodyJa": "これまでの展示記録を蓄積・公開し、時間を越えて作品と出会える場をつくります。",
+      "bodyEn": "We will accumulate and publish records of past exhibitions, creating a place to encounter works across time."
+    },
+    {
+      "labelJa": "作家紹介",
+      "labelEn": "Artist Profiles",
+      "bodyJa": "WESON MUSEUM に関わるアーティストのプロフィールや活動を紹介します。",
+      "bodyEn": "Profiles and activities of artists involved with WESON MUSEUM will be introduced."
+    },
+    {
+      "labelJa": "ワールド案内",
+      "labelEn": "Gallery Guide",
+      "bodyJa": "各常設館の空間設計や見どころを、テキストと映像で伝えます。",
+      "bodyEn": "The spatial design and highlights of each permanent gallery will be conveyed through text and video."
+    },
+    {
+      "labelJa": "記事・レポート発信",
+      "labelEn": "Articles & Reports",
+      "bodyJa": "展示の背景、制作過程、対話の記録をアーカイブとして発信します。",
+      "bodyEn": "Backgrounds of exhibitions, creative processes, and records of dialogue will be published as archive."
+    }
+  ]
+}

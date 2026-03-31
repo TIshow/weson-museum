@@ -1,0 +1,36 @@
+{
+  "connections": [
+    {
+      "num": "01",
+      "en": "Art and those yet to encounter it",
+      "ja": "美術と、まだ出会っていない人",
+      "bodyJa": "普段、美術館には行かない。作品の見方がわからない。そういった人が、偶然 VR 空間に迷い込み、作品の前で立ち止まる。その偶然の出会いを、ARTLINK は大切にしています。",
+      "bodyEn": "People who don't usually go to museums, who don't know how to look at works — when they wander into a VR space and stop in front of a work, that chance encounter is something ARTLINK values."
+    },
+    {
+      "num": "02",
+      "en": "Works and dialogue",
+      "ja": "作品と、対話の時間",
+      "bodyJa": "毎週土曜の在廊イベントでは、作家本人が空間に在席し、鑑賞者と言葉を交わします。作品について直接話を聞ける環境は、鑑賞をより深く、より個人的なものにします。",
+      "bodyEn": "At the weekly Saturday tours, the artist joins the space in person and talks with visitors. Being able to hear directly about the work makes the experience of viewing deeper and more personal."
+    },
+    {
+      "num": "03",
+      "en": "Artists and new audiences",
+      "ja": "作家と、新しい鑑賞者",
+      "bodyJa": "VR という回路を通じて、作家はこれまでリーチできなかった層と出会います。テクノロジーに詳しくない作家でも、展示を続ける中で、予想外の場所からファンが生まれています。",
+      "bodyEn": "Through the VR channel, artists encounter audiences they couldn't reach before. Even artists unfamiliar with technology have found, through continued exhibition, that fans emerge from unexpected places."
+    },
+    {
+      "num": "04",
+      "en": "Virtual encounters, real movements",
+      "ja": "バーチャルでの出会いが、リアルを動かす",
+      "bodyJa": "VR での観覧をきっかけに、作家の個展へ足を運ぶ鑑賞者が実際に生まれています。仮想空間での接点は、現実の行動や関係へと続いていく入口にもなります。",
+      "bodyEn": "Viewers who first encountered an artist through VR have gone on to attend their physical exhibitions. A connection in virtual space can become a door to real-world action and ongoing relationships."
+    }
+  ],
+  "archives": [
+    { "year": "2025", "newsSlug": "artlink-2025-report", "noteJa": "最新回", "noteEn": "Latest" },
+    { "year": "2024", "newsSlug": "artlink-2024-report", "noteJa": "",     "noteEn": "" }
+  ]
+}

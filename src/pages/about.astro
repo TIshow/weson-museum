@@ -1,39 +1,9 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import aboutData from '../data/about.json';
 
-const values = [
-  {
-    num: '01',
-    en: 'Art in virtual space',
-    ja: 'VR空間での展示',
-    body: 'WESON MUSEUM は、VRChat 上に構築された美術館です。天空・森・パラオ・雨といった、それぞれ固有の空気と光を持つ空間で、作品は展示されます。',
-  },
-  {
-    num: '02',
-    en: 'Dialogue around artworks',
-    ja: '作品をめぐる対話',
-    body: '毎週土曜日の在廊ツアーをはじめ、作家・作品・鑑賞者が同じ場に立つ機会を大切にしています。作品の前で生まれる言葉や問いを、美術館の核にしたいと考えています。',
-  },
-  {
-    num: '03',
-    en: 'Openness across distance',
-    ja: '距離を越えた開かれ',
-    body: '場所・身体・移動の制約を越えて、アートと出会える環境を育てたいと思っています。VR上の美術館は、誰でも、どこからでも入ることができます。',
-  },
-  {
-    num: '04',
-    en: 'Connection between virtual and physical',
-    ja: '仮想と現実の接続',
-    body: 'WESON MUSEUM は、VR空間の中だけで完結しません。現実での鑑賞・購入・展示との接続を意識しながら、アートの循環を支える場でありたいと考えています。',
-  },
-];
-
-const ahead = [
-  { label: '展示アーカイブ',   body: 'これまでの展示記録を蓄積・公開し、時間を越えて作品と出会える場をつくります。' },
-  { label: '作家紹介',         body: 'WESON MUSEUM に関わるアーティストのプロフィールや活動を紹介します。' },
-  { label: 'ワールド案内',     body: '各常設館の空間設計や見どころを、テキストと映像で伝えます。' },
-  { label: '記事・レポート発信', body: '展示の背景、制作過程、対話の記録をアーカイブとして発信します。' },
-];
+const values = aboutData.values.map(v => ({ ...v, body: v.bodyJa }));
+const ahead  = aboutData.ahead.map(a => ({ label: a.labelJa, body: a.bodyJa }));
 ---
 
 <BaseLayout

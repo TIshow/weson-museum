@@ -1,39 +1,9 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import aboutData from '../../data/about.json';
 
-const values = [
-  {
-    num: '01',
-    en: 'Art in virtual space',
-    ja: 'VR空間での展示',
-    body: 'WESON MUSEUM is a museum built in VRChat. Works are exhibited in four spaces — Sky, Forest, Palau, and Rain — each with its own distinct atmosphere and light.',
-  },
-  {
-    num: '02',
-    en: 'Dialogue around artworks',
-    ja: '作品をめぐる対話',
-    body: 'We value the opportunity for artists, works, and viewers to stand in the same place — through the weekly Saturday tours and beyond. We want to place the words and questions that arise in front of a work at the very center of what this museum is.',
-  },
-  {
-    num: '03',
-    en: 'Openness across distance',
-    ja: '距離を越えた開かれ',
-    body: 'We want to cultivate an environment where people can encounter art beyond the constraints of location, body, and travel. A VR museum is open to anyone, from anywhere.',
-  },
-  {
-    num: '04',
-    en: 'Connection between virtual and physical',
-    ja: '仮想と現実の接続',
-    body: 'WESON MUSEUM does not exist only within VR. We aim to be a foundation that supports the circulation of art — connecting to real-world viewing, purchasing, and exhibition.',
-  },
-];
-
-const ahead = [
-  { label: 'Exhibition Archive', body: 'We will accumulate and publish records of past exhibitions, creating a place to encounter works across time.' },
-  { label: 'Artist Profiles',    body: 'Profiles and activities of artists involved with WESON MUSEUM will be introduced.' },
-  { label: 'Gallery Guide',      body: 'The spatial design and highlights of each permanent gallery will be conveyed through text and video.' },
-  { label: 'Articles & Reports', body: 'Backgrounds of exhibitions, creative processes, and records of dialogue will be published as archive.' },
-];
+const values = aboutData.values.map(v => ({ ...v, body: v.bodyEn }));
+const ahead  = aboutData.ahead.map(a => ({ label: a.labelEn, body: a.bodyEn }));
 ---
 
 <BaseLayout

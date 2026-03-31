@@ -1,39 +1,11 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import artlinkData from '../../data/artlink.json';
 
 const base = import.meta.env.BASE_URL;
 
-const connections = [
-  {
-    num: '01',
-    en: 'Art and those yet to encounter it',
-    ja: '美術と、まだ出会っていない人',
-    body: "People who don't usually go to museums, who don't know how to look at works — when they wander into a VR space and stop in front of a work, that chance encounter is something ARTLINK values.",
-  },
-  {
-    num: '02',
-    en: 'Works and dialogue',
-    ja: '作品と、対話の時間',
-    body: 'At the weekly Saturday tours, the artist joins the space in person and talks with visitors. Being able to hear directly about the work makes the experience of viewing deeper and more personal.',
-  },
-  {
-    num: '03',
-    en: 'Artists and new audiences',
-    ja: '作家と、新しい鑑賞者',
-    body: "Through the VR channel, artists encounter audiences they couldn't reach before. Even artists unfamiliar with technology have found, through continued exhibition, that fans emerge from unexpected places.",
-  },
-  {
-    num: '04',
-    en: 'Virtual encounters, real movements',
-    ja: 'バーチャルでの出会いが、リアルを動かす',
-    body: 'Viewers who first encountered an artist through VR have gone on to attend their physical exhibitions. A connection in virtual space can become a door to real-world action and ongoing relationships.',
-  },
-];
-
-const archives = [
-  { year: '2025', path: `${base}news/artlink-2025-report/`, note: 'Latest' },
-  { year: '2024', path: `${base}news/artlink-2024-report/`, note: '' },
-];
+const connections = artlinkData.connections.map(c => ({ ...c, body: c.bodyEn }));
+const archives    = artlinkData.archives.map(a => ({ ...a, path: `${base}news/${a.newsSlug}/`, note: a.noteEn }));
 ---
 
 <BaseLayout

@@ -4,18 +4,16 @@ import Gallery from '@components/Gallery.astro';
 import MediaCard from '@components/MediaCard.astro';
 import mediaData from '../data/media.json';
 import museumsData from '../data/museums.json';
+import siteConfig from '../data/config.json';
 
 const base = import.meta.env.BASE_URL;
 
-// featured: true の掲載情報を新しい順に最大3件取得
 const featuredMedia = mediaData
   .filter(m => m.featured)
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-  .slice(0, 3);
+  .slice(0, siteConfig.maxFeaturedMedia);
 
-// トップページの表示順: 天空(01) → 森(03) → パラオ(02) → 雨(04)
-const topPageOrder = ['01', '03', '02', '04'];
-const museums = topPageOrder.map((num, i) => {
+const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
   const m = museumsData.find(x => x.num === num)!;
   return { ...m, displayNum: String(i + 1).padStart(2, '0'), anchor: `museum-${m.num}` };
 });
