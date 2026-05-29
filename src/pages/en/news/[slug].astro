@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
-import { getCollection, getEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getCollection('news', ({ data }) => !data.draft);
@@ -13,14 +13,14 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await post.render();
 
-const pubDate = post.data.pubDate.toLocaleDateString('ja-JP', {
+const pubDate = post.data.pubDate.toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
 });
 
 const updatedDate = post.data.updatedDate
-  ? post.data.updatedDate.toLocaleDateString('ja-JP', {
+  ? post.data.updatedDate.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -34,7 +34,7 @@ const articleJsonLd = {
   description: post.data.description,
   datePublished: post.data.pubDate.toISOString(),
   ...(post.data.updatedDate && { dateModified: post.data.updatedDate.toISOString() }),
-  url: `https://weson-museum.com/news/${post.slug}/`,
+  url: `https://weson-museum.com/en/news/${post.slug}/`,
   publisher: {
     '@type': 'Organization',
     '@id': 'https://weson-museum.com/#organization',
@@ -50,15 +50,16 @@ const articleJsonLd = {
   title={`${post.data.title} — WESON MUSEUM`}
   description={post.data.description}
   ogImage={post.data.ogImage}
+  lang="en"
 >
   <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
 
   <article class="container article-wrap">
 
-    <nav class="breadcrumb" aria-label="パンくずリスト">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
       <ol>
-        <li><a href="/">Home</a></li>
-        <li><a href="/news/">News</a></li>
+        <li><a href="/en/">Home</a></li>
+        <li><a href="/en/news/">News</a></li>
         <li aria-current="page">{post.data.title}</li>
       </ol>
     </nav>
@@ -69,7 +70,7 @@ const articleJsonLd = {
           {pubDate}
         </time>
         {updatedDate && (
-          <span class="mono-label article-updated">更新: {updatedDate}</span>
+          <span class="mono-label article-updated">Updated: {updatedDate}</span>
         )}
         <div class="article-tags">
           {post.data.tags.map(tag => (
@@ -88,7 +89,7 @@ const articleJsonLd = {
     </div>
 
     <footer class="article-footer">
-      <a href="/news/" class="btn btn-outline">← News 一覧へ</a>
+      <a href="/en/news/" class="btn btn-outline">← Back to News</a>
     </footer>
 
   </article>
@@ -100,7 +101,6 @@ const articleJsonLd = {
     max-width: 860px;
   }
 
-  /* ---- Header ---- */
   .article-header {
     margin-bottom: var(--space-12);
   }
@@ -147,7 +147,6 @@ const articleJsonLd = {
     padding-left: var(--space-6);
   }
 
-  /* ---- Body ---- */
   .prose {
     border-top: 1px solid var(--color-border);
     padding-top: var(--space-12);
@@ -223,7 +222,6 @@ const articleJsonLd = {
     margin-block: var(--space-6);
   }
 
-  /* ---- Footer ---- */
   .article-footer {
     margin-top: var(--space-16);
     padding-top: var(--space-8);
