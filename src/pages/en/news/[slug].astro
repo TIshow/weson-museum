@@ -1,16 +1,19 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('news', ({ data }) => !data.draft);
-  return posts.map(post => ({
+  const jaPosts = await getCollection('news', ({ data }) => !data.draft);
+  return jaPosts.map(post => ({
     params: { slug: post.slug },
-    props: { post },
+    props: { slug: post.slug },
   }));
 }
 
-const { post } = Astro.props;
+const { slug } = Astro.props;
+const enPost = await getEntry('news-en', slug);
+const jaPost = await getEntry('news', slug);
+const post = (enPost ?? jaPost)!;
 const { Content } = await post.render();
 
 const pubDate = post.data.pubDate.toLocaleDateString('en-US', {

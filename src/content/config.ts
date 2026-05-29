@@ -1,18 +1,18 @@
 import { defineCollection, z } from 'astro:content';
 
 // ニュース記事のスキーマ
-const newsCollection = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    pubDate: z.date(),
-    updatedDate: z.date().optional(),
-    tags: z.array(z.string()).default([]),
-    draft: z.boolean().default(false),
-    ogImage: z.string().optional(),
-  }),
+const newsSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  pubDate: z.date(),
+  updatedDate: z.date().optional(),
+  tags: z.array(z.string()).default([]),
+  draft: z.boolean().default(false),
+  ogImage: z.string().optional(),
 });
+
+const newsCollection = defineCollection({ type: 'content', schema: newsSchema });
+const newsEnCollection = defineCollection({ type: 'content', schema: newsSchema });
 
 // 展示のスキーマ
 const exhibitionsCollection = defineCollection({
@@ -34,5 +34,6 @@ const exhibitionsCollection = defineCollection({
 
 export const collections = {
   news: newsCollection,
+  'news-en': newsEnCollection,
   exhibitions: exhibitionsCollection,
 };

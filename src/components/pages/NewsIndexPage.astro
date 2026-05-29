@@ -6,8 +6,18 @@ interface Props { lang: 'ja' | 'en' }
 const { lang } = Astro.props;
 const isEn = lang === 'en';
 
-const allNews = await getCollection('news', ({ data }) => !data.draft);
-const sorted = allNews.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+const jaNews = await getCollection('news', ({ data }) => !data.draft);
+
+let displayNews: { slug: string; data: (typeof jaNews)[0]['data'] }[];
+if (isEn) {
+  const enNews = await getCollection('news-en', ({ data }) => !data.draft);
+  const enMap = new Map(enNews.map(p => [p.slug, p]));
+  displayNews = jaNews.map(p => enMap.get(p.slug) ?? p);
+} else {
+  displayNews = jaNews;
+}
+
+const sorted = displayNews.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
 const locale = isEn ? 'en-US' : 'ja-JP';
 
@@ -59,7 +69,7 @@ const t = {
                   <span class="tag">{tag}</span>
                 ))}
               </div>
-              <a href={`/news/${post.slug}/`} class="news-title">
+              <a href={`${isEn ? '/en' : ''}/news/${post.slug}/`} class="news-title">
                 {post.data.title}
               </a>
               <p class="news-desc">{post.data.description}</p>
