@@ -124,7 +124,7 @@ const jsonLd = {
   <!-- ================================================================
        Hero
        ================================================================ -->
-  <section class="ad-hero">
+  <section class="artist-hero">
     <div class="container">
       <nav class="breadcrumb" aria-label={t.common.breadcrumbAria}>
         <ol>
@@ -134,34 +134,34 @@ const jsonLd = {
         </ol>
       </nav>
 
-      <div class="ad-hero-layout">
-        <div class="ad-portrait-wrap">
+      <div class="artist-hero-layout">
+        <div class="artist-portrait-wrap">
           {portrait ? (
-            <img src={portrait} alt={name} class="ad-portrait" loading="eager" decoding="async" />
+            <img src={portrait} alt={name} class="artist-portrait" loading="eager" decoding="async" />
           ) : (
-            <div class="ad-portrait ad-portrait--empty" aria-hidden="true"></div>
+            <div class="artist-portrait artist-portrait--empty" aria-hidden="true"></div>
           )}
         </div>
 
-        <div class="ad-hero-body">
-          <p class="ad-eyebrow mono-label">{a.eyebrow}</p>
-          <h1 class="ad-h1">{name}</h1>
+        <div class="artist-hero-body">
+          <p class="artist-eyebrow mono-label">{a.eyebrow}</p>
+          <h1 class="artist-h1">{name}</h1>
 
-          <dl class="ad-meta">
+          <dl class="artist-meta">
             {based && (
-              <div class="ad-meta-row">
+              <div class="artist-meta-row">
                 <dt class="mono-label">{a.based}</dt>
                 <dd>{based}</dd>
               </div>
             )}
             {disciplines.length > 0 && (
-              <div class="ad-meta-row">
+              <div class="artist-meta-row">
                 <dt class="mono-label">{a.disciplines}</dt>
                 <dd>{disciplines.join(' / ')}</dd>
               </div>
             )}
             {affiliations.length > 0 && (
-              <div class="ad-meta-row">
+              <div class="artist-meta-row">
                 <dt class="mono-label">{a.affiliations}</dt>
                 <dd>{affiliations.join(' / ')}</dd>
               </div>
@@ -169,9 +169,9 @@ const jsonLd = {
           </dl>
 
           {d.vrResidency && (
-            <p class="ad-vr">
-              <span class="ad-vr-badge mono-label">{a.vrResidency}</span>
-              <span class="ad-vr-note">{a.vrResidencyNote}</span>
+            <p class="artist-vr">
+              <span class="artist-vr-badge mono-label">{a.vrResidency}</span>
+              <span class="artist-vr-note">{a.vrResidencyNote}</span>
             </p>
           )}
         </div>
@@ -183,17 +183,17 @@ const jsonLd = {
        Statement / Bio
        ================================================================ -->
   {(statement || bio) && (
-    <section class="ad-section" aria-labelledby="sec-statement">
+    <section class="artist-section" aria-labelledby="sec-statement">
       <div class="container">
         <div class="section-layout">
           <div class="section-aside">
             <span class="accent-line"></span>
-            <h2 id="sec-statement" class="ad-section-heading">{a.sectionStatement}</h2>
+            <h2 id="sec-statement" class="artist-section-heading">{a.sectionStatement}</h2>
           </div>
           <div class="section-body prose">
             {toParagraphs(statement).map(p => <p>{p}</p>)}
-            {bio && statement && <hr class="ad-rule" />}
-            {toParagraphs(bio).map(p => <p class="ad-bio">{p}</p>)}
+            {bio && statement && <hr class="artist-rule" />}
+            {toParagraphs(bio).map(p => <p class="artist-bio">{p}</p>)}
           </div>
         </div>
       </div>
@@ -204,15 +204,15 @@ const jsonLd = {
        Works
        ================================================================ -->
   {works.length > 0 && (
-    <section class="ad-section ad-section--tinted" aria-labelledby="sec-works">
+    <section class="artist-section artist-section--tinted" aria-labelledby="sec-works">
       <div class="container">
         <div class="section-layout">
           <div class="section-aside">
             <span class="accent-line"></span>
-            <h2 id="sec-works" class="ad-section-heading">{a.sectionWorks}</h2>
+            <h2 id="sec-works" class="artist-section-heading">{a.sectionWorks}</h2>
           </div>
           <div class="section-body">
-            <ul class="ad-works" role="list">
+            <ul class="artist-works" role="list">
               {works.map(work => (
                 <WorkCard
                   title={work.displayTitle}
@@ -229,7 +229,7 @@ const jsonLd = {
                 />
               ))}
             </ul>
-            <p class="ad-works-note">{a.worksNote}</p>
+            <p class="artist-works-note">{a.worksNote}</p>
           </div>
         </div>
       </div>
@@ -240,25 +240,25 @@ const jsonLd = {
        Upcoming
        ================================================================ -->
   {upcoming.length > 0 && (
-    <section class="ad-section" aria-labelledby="sec-upcoming">
+    <section class="artist-section" aria-labelledby="sec-upcoming">
       <div class="container">
         <div class="section-layout">
           <div class="section-aside">
             <span class="accent-line" style="background:var(--color-main);box-shadow:var(--glow-main);"></span>
-            <h2 id="sec-upcoming" class="ad-section-heading">{a.sectionUpcoming}</h2>
+            <h2 id="sec-upcoming" class="artist-section-heading">{a.sectionUpcoming}</h2>
           </div>
           <div class="section-body">
-            <ul class="ad-upcoming" role="list">
+            <ul class="artist-upcoming" role="list">
               {upcoming.map(entry => (
-                <li class="ad-upcoming-row">
-                  {entry.period && <p class="ad-upcoming-period mono-label">{entry.period}</p>}
-                  <h3 class="ad-upcoming-title">
+                <li class="artist-upcoming-row">
+                  {entry.period && <p class="artist-upcoming-period mono-label">{entry.period}</p>}
+                  <h3 class="artist-upcoming-title">
                     {entry.url ? (
                       <a href={entry.url} target="_blank" rel="noopener noreferrer">{entry.title}</a>
                     ) : entry.title}
                   </h3>
-                  {entry.venue && <p class="ad-upcoming-venue">{entry.venue}</p>}
-                  {entry.note && <p class="ad-upcoming-note">{entry.note}</p>}
+                  {entry.venue && <p class="artist-upcoming-venue">{entry.venue}</p>}
+                  {entry.note && <p class="artist-upcoming-note">{entry.note}</p>}
                 </li>
               ))}
             </ul>
@@ -271,29 +271,29 @@ const jsonLd = {
   <!-- ================================================================
        Exhibition history
        ================================================================ -->
-  <section class="ad-section ad-section--tinted" aria-labelledby="sec-history">
+  <section class="artist-section artist-section--tinted" aria-labelledby="sec-history">
     <div class="container">
       <div class="section-layout">
         <div class="section-aside">
           <span class="accent-line"></span>
-          <h2 id="sec-history" class="ad-section-heading">{a.sectionExhibitions}</h2>
+          <h2 id="sec-history" class="artist-section-heading">{a.sectionExhibitions}</h2>
         </div>
         <div class="section-body">
           {history.length > 0 ? (
-            <ul class="ad-history" role="list">
+            <ul class="artist-history" role="list">
               {history.map(entry => (
-                <li class="ad-history-row">
-                  <span class="ad-history-year mono-label">{entry.year}</span>
-                  <span class="ad-history-main">
-                    <span class="ad-history-title">{entry.title}</span>
-                    {entry.venue && <span class="ad-history-venue">{entry.venue}</span>}
+                <li class="artist-history-row">
+                  <span class="artist-history-year mono-label">{entry.year}</span>
+                  <span class="artist-history-main">
+                    <span class="artist-history-title">{entry.title}</span>
+                    {entry.venue && <span class="artist-history-venue">{entry.venue}</span>}
                   </span>
-                  <span class="tag ad-history-kind">{entry.kindLabel}</span>
+                  <span class="tag artist-history-kind">{entry.kindLabel}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p class="ad-empty">{a.exhibitionsEmpty}</p>
+            <p class="artist-empty">{a.exhibitionsEmpty}</p>
           )}
         </div>
       </div>
@@ -304,20 +304,20 @@ const jsonLd = {
        Links
        ================================================================ -->
   {links.length > 0 && (
-    <section class="ad-section" aria-labelledby="sec-links">
+    <section class="artist-section" aria-labelledby="sec-links">
       <div class="container">
         <div class="section-layout">
           <div class="section-aside">
             <span class="accent-line"></span>
-            <h2 id="sec-links" class="ad-section-heading">{a.sectionLinks}</h2>
+            <h2 id="sec-links" class="artist-section-heading">{a.sectionLinks}</h2>
           </div>
           <div class="section-body">
-            <ul class="ad-links" role="list">
+            <ul class="artist-links" role="list">
               {links.map(([key, url]) => (
                 <li>
-                  <a href={url} target="_blank" rel="noopener noreferrer" class="ad-link">
-                    <span class="mono-label ad-link-key">{key}</span>
-                    <span class="ad-link-url">{url.replace(/^https?:\/\//, '')}</span>
+                  <a href={url} target="_blank" rel="noopener noreferrer" class="artist-link">
+                    <span class="mono-label artist-link-key">{key}</span>
+                    <span class="artist-link-url">{url.replace(/^https?:\/\//, '')}</span>
                   </a>
                 </li>
               ))}
@@ -331,8 +331,8 @@ const jsonLd = {
   <!-- ================================================================
        Actions — 問い合わせの受け口は contact ページに集約する
        ================================================================ -->
-  <section class="ad-actions" aria-label={a.sectionInquiry}>
-    <div class="container ad-actions-inner">
+  <section class="artist-actions" aria-label={a.sectionInquiry}>
+    <div class="container artist-actions-inner">
       <a href={contactHref} class="btn btn-primary">{a.inquiryButton}</a>
       <a href={indexHref} class="btn btn-outline">{a.backToIndex}</a>
     </div>
@@ -342,42 +342,42 @@ const jsonLd = {
 
 <style>
   /* ---- Hero ---- */
-  .ad-hero {
+  .artist-hero {
     padding-block: var(--space-12) var(--space-16);
     border-bottom: 1px solid var(--color-border);
   }
 
-  .ad-hero-layout {
+  .artist-hero-layout {
     display: grid;
     grid-template-columns: 320px 1fr;
     gap: var(--space-16);
     align-items: start;
   }
 
-  .ad-portrait-wrap {
+  .artist-portrait-wrap {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     overflow: hidden;
     background: var(--color-bg-1);
   }
 
-  .ad-portrait {
+  .artist-portrait {
     width: 100%;
     aspect-ratio: 3 / 4;
     object-fit: cover;
     display: block;
   }
 
-  .ad-portrait--empty {
+  .artist-portrait--empty {
     background: linear-gradient(135deg, var(--color-bg-2) 0%, var(--color-bg-1) 100%);
   }
 
-  .ad-eyebrow {
+  .artist-eyebrow {
     color: var(--color-main);
     margin-bottom: var(--space-4);
   }
 
-  .ad-h1 {
+  .artist-h1 {
     font-size: clamp(2rem, 5vw, 3.2rem);
     font-weight: 200;
     letter-spacing: var(--tracking-wider);
@@ -386,7 +386,7 @@ const jsonLd = {
   }
 
   /* ---- Meta ---- */
-  .ad-meta {
+  .artist-meta {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
@@ -394,24 +394,24 @@ const jsonLd = {
     padding-top: var(--space-6);
   }
 
-  .ad-meta-row {
+  .artist-meta-row {
     display: grid;
     grid-template-columns: 96px 1fr;
     gap: var(--space-4);
     align-items: baseline;
   }
 
-  .ad-meta-row dt {
+  .artist-meta-row dt {
     color: var(--color-text-subtle);
   }
 
-  .ad-meta-row dd {
+  .artist-meta-row dd {
     color: var(--color-text-muted);
     font-size: var(--text-sm);
     line-height: 1.8;
   }
 
-  .ad-vr {
+  .artist-vr {
     display: flex;
     align-items: baseline;
     gap: var(--space-3);
@@ -421,7 +421,7 @@ const jsonLd = {
     border-top: 1px solid var(--color-border);
   }
 
-  .ad-vr-badge {
+  .artist-vr-badge {
     color: var(--color-text-on-accent);
     background: var(--color-accent);
     padding: 2px var(--space-3);
@@ -429,21 +429,21 @@ const jsonLd = {
     flex-shrink: 0;
   }
 
-  .ad-vr-note {
+  .artist-vr-note {
     font-size: var(--text-sm);
     color: var(--color-text-muted);
     line-height: 1.8;
   }
 
   /* ---- Sections ---- */
-  .ad-section {
+  .artist-section {
     padding-block: var(--space-24);
     border-bottom: 1px solid var(--color-border);
   }
 
-  .ad-section--tinted { background: var(--color-bg-1); }
+  .artist-section--tinted { background: var(--color-bg-1); }
 
-  .ad-section-heading {
+  .artist-section-heading {
     font-size: var(--text-xl);
     font-weight: 300;
     letter-spacing: var(--tracking-wider);
@@ -453,25 +453,25 @@ const jsonLd = {
   .prose p { line-height: 2; color: var(--color-text-muted); }
   .prose p + p { margin-top: var(--space-6); }
 
-  .ad-rule {
+  .artist-rule {
     border: none;
     border-top: 1px solid var(--color-border);
     margin-block: var(--space-8);
   }
 
-  .ad-bio {
+  .artist-bio {
     font-size: var(--text-sm);
   }
 
   /* ---- Works ---- */
-  .ad-works {
+  .artist-works {
     list-style: none;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: var(--space-6);
   }
 
-  .ad-works-note {
+  .artist-works-note {
     margin-top: var(--space-8);
     font-size: var(--text-sm);
     color: var(--color-text-subtle);
@@ -479,7 +479,7 @@ const jsonLd = {
   }
 
   /* ---- Upcoming ---- */
-  .ad-upcoming {
+  .artist-upcoming {
     list-style: none;
     display: flex;
     flex-direction: column;
@@ -487,17 +487,17 @@ const jsonLd = {
     max-width: var(--content-width);
   }
 
-  .ad-upcoming-row {
+  .artist-upcoming-row {
     border-left: 2px solid var(--color-main);
     padding-left: var(--space-6);
   }
 
-  .ad-upcoming-period {
+  .artist-upcoming-period {
     color: var(--color-main);
     margin-bottom: var(--space-2);
   }
 
-  .ad-upcoming-title {
+  .artist-upcoming-title {
     font-size: var(--text-lg);
     font-weight: 300;
     letter-spacing: var(--tracking-wide);
@@ -505,21 +505,21 @@ const jsonLd = {
     margin-bottom: var(--space-2);
   }
 
-  .ad-upcoming-venue,
-  .ad-upcoming-note {
+  .artist-upcoming-venue,
+  .artist-upcoming-note {
     font-size: var(--text-sm);
     color: var(--color-text-muted);
     line-height: 1.8;
   }
 
   /* ---- History ---- */
-  .ad-history {
+  .artist-history {
     list-style: none;
     border-top: 1px solid var(--color-border);
     max-width: var(--content-width);
   }
 
-  .ad-history-row {
+  .artist-history-row {
     display: grid;
     grid-template-columns: 72px 1fr auto;
     gap: var(--space-4);
@@ -529,40 +529,40 @@ const jsonLd = {
   }
 
   /* 年号は展示歴の主要な情報なので、装飾用の subtle ではなく muted を使う */
-  .ad-history-year {
+  .artist-history-year {
     color: var(--color-text-muted);
   }
 
-  .ad-history-main {
+  .artist-history-main {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
   }
 
-  .ad-history-title {
+  .artist-history-title {
     color: var(--color-text);
     font-size: var(--text-sm);
     line-height: 1.7;
   }
 
-  .ad-history-venue {
+  .artist-history-venue {
     color: var(--color-text-muted);
     font-size: var(--text-sm);
   }
 
-  .ad-history-kind {
+  .artist-history-kind {
     font-size: var(--text-xs);
     white-space: nowrap;
   }
 
-  .ad-empty {
+  .artist-empty {
     color: var(--color-text-subtle);
     font-family: var(--font-mono);
     font-size: var(--text-sm);
   }
 
   /* ---- Links ---- */
-  .ad-links {
+  .artist-links {
     list-style: none;
     display: flex;
     flex-direction: column;
@@ -570,7 +570,7 @@ const jsonLd = {
     max-width: var(--content-width);
   }
 
-  .ad-link {
+  .artist-link {
     display: grid;
     grid-template-columns: 110px 1fr;
     gap: var(--space-4);
@@ -579,25 +579,25 @@ const jsonLd = {
     text-decoration: none;
   }
 
-  .ad-link-key { color: var(--color-text-subtle); }
+  .artist-link-key { color: var(--color-text-subtle); }
 
-  .ad-link-url {
+  .artist-link-url {
     color: var(--color-main);
     font-size: var(--text-sm);
     word-break: break-all;
   }
 
-  .ad-link:hover .ad-link-url {
+  .artist-link:hover .artist-link-url {
     color: var(--color-main-light);
     text-decoration: underline;
   }
 
   /* ---- Actions ---- */
-  .ad-actions {
+  .artist-actions {
     padding-block: var(--space-12);
   }
 
-  .ad-actions-inner {
+  .artist-actions-inner {
     display: flex;
     gap: var(--space-4);
     flex-wrap: wrap;
@@ -606,31 +606,31 @@ const jsonLd = {
 
   /* ---- Responsive ---- */
   @media (max-width: 900px) {
-    .ad-hero-layout {
+    .artist-hero-layout {
       grid-template-columns: 240px 1fr;
       gap: var(--space-8);
     }
   }
 
   @media (max-width: 640px) {
-    .ad-hero { padding-block: var(--space-8) var(--space-12); }
+    .artist-hero { padding-block: var(--space-8) var(--space-12); }
 
-    .ad-hero-layout {
+    .artist-hero-layout {
       grid-template-columns: 1fr;
       gap: var(--space-8);
     }
 
-    .ad-portrait-wrap { max-width: 220px; }
+    .artist-portrait-wrap { max-width: 220px; }
 
-    .ad-section { padding-block: var(--space-16); }
-    .ad-actions { padding-block: var(--space-8); }
+    .artist-section { padding-block: var(--space-16); }
+    .artist-actions { padding-block: var(--space-8); }
 
-    .ad-history-row {
+    .artist-history-row {
       grid-template-columns: 1fr auto;
     }
 
-    .ad-history-year { grid-column: 1 / -1; }
+    .artist-history-year { grid-column: 1 / -1; }
 
-    .ad-link { grid-template-columns: 1fr; gap: var(--space-1); }
+    .artist-link { grid-template-columns: 1fr; gap: var(--space-1); }
   }
 </style>
