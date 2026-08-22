@@ -25,43 +25,72 @@ affiliations:
 
 statement:
   ja: |
-    学生時代にパラオ人と出会ったことをきっかけに、2016年にパラオ共和国を訪問。
-    以来、その滞在で得た経験を主題として、絵画制作に取り組んでいる。
+    幼少期から独学で絵を学び、2014年に作家としての活動を本格化させた。
 
-    近年の「岩壁」シリーズは、香川県の大串石切場跡をモデルとしている。
+    学生時代にパラオ人と出会ったことがきっかけで、2016年にパラオ共和国を訪問。
+    パラオでの滞在経験を制作テーマとして絵画制作に打ち込む。
 
-    現在は大阪市北区のアトリエで制作を続けている。
+    また、近年の「岩壁」シリーズは、香川県の大串石切場跡がモデルとなっている。
+
+    現在は春陽会に所属し、大阪市北区のアトリエで制作に打ち込む。
   en: |
+    Self-taught in painting from early childhood, and began working in earnest as an artist in 2014.
+
     A meeting with a Palauan during university years led to a first visit to the Republic of Palau in 2016.
-    Since then, the experience of that stay has remained the central subject of the painting.
+    The experience of that stay has been the central subject of the painting ever since.
 
     The recent "Iwakabe (Rock Face)" series takes the former Ogushi quarry site in Kagawa Prefecture as its model.
 
-    Currently working from a studio in Kita-ku, Osaka.
+    Currently a member of Shunyokai, working from a studio in Kita-ku, Osaka.
 
-bio:
-  ja: |
-    小学生の頃から独学で絵を学ぶ。2013年に青山学院大学総合文化政策学部を卒業し、2014年に作家としての活動を始める。
-    2023年の第100回春陽展から4年連続で受賞し、2026年に春陽会会員に推挙された。
-    春陽会会員、日本美術家連盟会員。
-  en: |
-    Self-taught in painting since elementary school. Graduated from the School of Cultural and Creative Studies,
-    Aoyama Gakuin University, in 2013, and began working as an artist in 2014.
-    Received awards at the Shunyo Exhibition for four consecutive years from the 100th edition in 2023,
-    and was elected a member of Shunyokai in 2026.
-    Member of Shunyokai and of the Japan Artists Association.
-
-# VR在廊の可否は未確認。在廊に立てる場合は true にすると一覧・詳細にバッジが出る。
+# VR在廊の可否は未確認。在廊に立てる場合は true にするとバッジが出る。
 vrResidency: false
 
 # 作品データは未入稿。作品名・制作年・技法・寸法・画像・販売可否が揃った時点で追加する。
 works: []
+upcoming: []
 
+# 表示は kind で3区分にまとめられる。
+#   経歴          = award / other
+#   個展          = solo
+#   団体・グループ展 = group / vr
+# 並びは作家履歴書の慣例にあわせて古い順。
 exhibitionHistory:
-  - year: '2026'
+  # ---- 経歴 ----
+  - year: '2013'
     title:
-      ja: 春陽会 会員推挙
-      en: Elected Member, Shunyokai
+      ja: 青山学院大学 総合文化政策学部 卒業
+      en: Graduated, School of Cultural and Creative Studies, Aoyama Gakuin University
+    kind: other
+
+  - year: '2022'
+    title:
+      ja: 春陽会全国研究会選抜展 研究賞
+      en: Shunyokai National Study Group Selected Exhibition — Research Prize
+    kind: award
+
+  # 賞名の読みが未確認のため英訳は保留し、ja にフォールバックさせている
+  - year: '2023'
+    title:
+      ja: 第100回春陽展 南大路一賞
+    kind: award
+
+  - year: '2023'
+    title:
+      ja: フランス研修旅行
+      en: Study trip to France
+    kind: other
+
+  - year: '2024'
+    title:
+      ja: 第101回春陽展 春陽会賞
+      en: 101st Shunyo Exhibition — Shunyokai Prize
+    kind: award
+
+  - year: '2025'
+    title:
+      ja: 第102回春陽展 春陽会賞
+      en: 102nd Shunyo Exhibition — Shunyokai Prize
     kind: award
 
   - year: '2026'
@@ -70,45 +99,36 @@ exhibitionHistory:
       en: 103rd Shunyo Exhibition — Shunyokai Prize
     kind: award
 
+  # 賞名の読みが未確認のため英訳は保留
   - year: '2026'
     title:
-      ja: 植村友哉展
-      en: Tomoya Uemura
+      ja: 春陽会若手作家支援助成 南大路一記念個展賞
+    kind: award
+
+  - year: '2026'
+    title:
+      ja: 春陽会 会員推挙
+      en: Elected Member, Shunyokai
+    kind: award
+
+  # ---- 個展 ----
+  - year: '2018'
+    title:
+      ja: JAPAN FAIR 植村友哉 個展
+      en: JAPAN FAIR — Tomoya Uemura Solo Exhibition
     venue:
-      ja: GalleryQ
-      en: GalleryQ
+      ja: パラオ・ガラマヨンカルチャーセンター
+      en: Ngarachamayong Cultural Center, Palau
     kind: solo
 
-  - year: '2025'
+  - year: '2019'
     title:
-      ja: 第102回春陽展 春陽会賞
-      en: 102nd Shunyo Exhibition — Shunyokai Prize
-    kind: award
-
-  - year: '2024'
-    title:
-      ja: 第101回春陽展 春陽会賞
-      en: 101st Shunyo Exhibition — Shunyokai Prize
-    kind: award
-
-  # 賞名は入稿テキストのまま。読みが確認できていないため英訳は保留し、ja にフォールバックさせている。
-  - year: '2023'
-    title:
-      ja: 第100回春陽展 南大路一賞
-    kind: award
-
-  # 展覧会名は入稿テキストが OCR 由来で崩れていたため要確認（「全固研究会選技展」→「全国研究会選抜展」と解釈）。
-  - year: '2022'
-    title:
-      ja: 春陽会 全国研究会選抜展 研究賞
-      en: Shunyokai National Study Group Selected Exhibition — Research Prize
-    kind: award
-
-  - year: '2022'
-    title:
-      ja: SHUNYO NEW ARTISTS WAVE 2022
-      en: SHUNYO NEW ARTISTS WAVE 2022
-    kind: group
+      ja: 植村友哉 個展
+      en: Tomoya Uemura — Solo Exhibition
+    venue:
+      ja: パラオ・Palau Pacific Resort
+      en: Palau Pacific Resort, Palau
+    kind: solo
 
   - year: '2020–26'
     title:
@@ -119,23 +139,54 @@ exhibitionHistory:
       en: UEMURA GALLERY
     kind: solo
 
-  - year: '2019'
+  - year: '2026'
     title:
-      ja: 植村友哉 個展
-      en: Tomoya Uemura — Solo Exhibition
+      ja: 植村友哉 展
+      en: Tomoya Uemura
     venue:
-      ja: Palau Pacific Resort（パラオ）
-      en: Palau Pacific Resort, Palau
+      ja: GalleryQ
+      en: GalleryQ
     kind: solo
 
-  # 会場名は入稿テキストのまま。パラオ・コロールの Ngarachamayong Cultural Center を指す可能性が高く、要確認。
+  # ---- 団体・グループ展 ----
+  - year: '2016–26'
+    title:
+      ja: 春陽会関西研究会展
+      en: Shunyokai Kansai Study Group Exhibition
+    kind: group
+
+  - year: '2017–26'
+    title:
+      ja: 第94回春陽展
+      en: 94th Shunyo Exhibition
+    venue:
+      ja: 国立新美術館
+      en: The National Art Center, Tokyo
+    kind: group
+
   - year: '2018'
     title:
-      ja: JAPAN FAIR 植村友哉 個展
-      en: JAPAN FAIR — Tomoya Uemura Solo Exhibition
+      ja: 第2回春陽会全国研究会選抜展
+      en: 2nd Shunyokai National Study Group Selected Exhibition
     venue:
-      ja: ガラマヨンカルチャーセンター（パラオ）
-      en: Ngarachamayong Cultural Center, Palau
-    kind: solo
+      ja: INOAC銀座並木通りギャラリー
+      en: INOAC Ginza Namiki-dori Gallery
+    kind: group
 
-upcoming: []
+  - year: '2022'
+    title:
+      ja: SHUNYO NEW ARTISTS WAVE 2022
+      en: SHUNYO NEW ARTISTS WAVE 2022
+    venue:
+      ja: 東京都美術館
+      en: Tokyo Metropolitan Art Museum
+    kind: group
+
+  - year: '2023–25'
+    title:
+      ja: 春陽会受賞作家展
+      en: Shunyokai Prize Winners Exhibition
+    venue:
+      ja: 東京都美術館
+      en: Tokyo Metropolitan Art Museum
+    kind: group
