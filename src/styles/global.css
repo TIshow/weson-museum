@@ -120,7 +120,7 @@ html {
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
+  /* scroll-behavior はここに置かない。理由は下の @media を参照 */
   /* サイバーパンク: 微細なグリッドテクスチャ */
   background-image:
     linear-gradient(rgba(52, 178, 170, 0.015) 1px, transparent 1px),
@@ -131,6 +131,20 @@ html {
 body {
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+/* ---- Smooth scroll ----
+   `html { scroll-behavior: smooth }` を無条件に指定すると、ブラウザによる
+   スクロール位置の復元（リロード・戻る操作・タブ復帰）まで滑らかスクロールの
+   対象になる。復元アニメーションが途中で止まると、ページの中ほどで開いた
+   ように見える。長いページほど起きやすい。
+
+   アンカー遷移（:target が存在する場合）に限定し、
+   「視差効果を減らす」設定を選んでいる利用者には適用しない。 */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(:target) {
+    scroll-behavior: smooth;
+  }
 }
 
 /* ------------------------------------------------------------
