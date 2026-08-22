@@ -79,8 +79,7 @@ export interface UIStrings {
     ctaInquiryBody: string;
     ctaInquiryButton: string;
 
-    /** 詳細ページの問い合わせブロック */
-    inquiryBody: string;
+    /** 詳細ページの問い合わせボタン（遷移先は contact ページ） */
     inquiryButton: string;
   };
 }
@@ -161,8 +160,6 @@ const ja: UIStrings = {
       '個人での購入、店舗や宿泊施設への設置、企業コレクション、展示企画など、目的に応じて作家と作品をご紹介します。',
     ctaInquiryButton: '作品について問い合わせる',
 
-    inquiryBody:
-      'この作家の作品の購入、制作依頼、展示への招へい、取材のご相談を承ります。お問い合わせの際に作家名をお知らせください。',
     inquiryButton: 'この作家について問い合わせる',
   },
 };
@@ -244,8 +241,6 @@ const en: UIStrings = {
       'Private purchases, installations for shops and hotels, corporate collections, curated shows — tell us the purpose and we will introduce the artists and the work.',
     ctaInquiryButton: 'Inquire about works',
 
-    inquiryBody:
-      'We handle inquiries about purchasing, commissioning, exhibiting, and press coverage for this artist. Please include the artist’s name in your message.',
     inquiryButton: 'Inquire about this artist',
   },
 };

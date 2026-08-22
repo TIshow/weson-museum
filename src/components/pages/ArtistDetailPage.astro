@@ -329,17 +329,12 @@ const jsonLd = {
   )}
 
   <!-- ================================================================
-       Inquiry
+       Actions — 問い合わせの受け口は contact ページに集約する
        ================================================================ -->
-  <section class="ad-inquiry" aria-labelledby="sec-inquiry">
-    <div class="container">
-      <div class="cta-divider" aria-hidden="true"></div>
-      <h2 id="sec-inquiry" class="ad-inquiry-title">{a.sectionInquiry}</h2>
-      <p class="ad-inquiry-body">{a.inquiryBody}</p>
-      <div class="ad-inquiry-actions">
-        <a href={contactHref} class="btn btn-primary">{a.inquiryButton}</a>
-        <a href={indexHref} class="btn btn-outline">{a.backToIndex}</a>
-      </div>
+  <section class="ad-actions" aria-label={a.sectionInquiry}>
+    <div class="container ad-actions-inner">
+      <a href={contactHref} class="btn btn-primary">{a.inquiryButton}</a>
+      <a href={indexHref} class="btn btn-outline">{a.backToIndex}</a>
     </div>
   </section>
 
@@ -533,8 +528,9 @@ const jsonLd = {
     border-bottom: 1px solid var(--color-border);
   }
 
+  /* 年号は展示歴の主要な情報なので、装飾用の subtle ではなく muted を使う */
   .ad-history-year {
-    color: var(--color-text-subtle);
+    color: var(--color-text-muted);
   }
 
   .ad-history-main {
@@ -596,30 +592,16 @@ const jsonLd = {
     text-decoration: underline;
   }
 
-  /* ---- Inquiry ---- */
-  .ad-inquiry {
-    padding-block: var(--space-24);
+  /* ---- Actions ---- */
+  .ad-actions {
+    padding-block: var(--space-12);
   }
 
-  .ad-inquiry-title {
-    font-size: var(--text-2xl);
-    font-weight: 200;
-    letter-spacing: var(--tracking-widest);
-    margin-bottom: var(--space-6);
-  }
-
-  .ad-inquiry-body {
-    font-size: var(--text-base);
-    line-height: 2;
-    color: var(--color-text-muted);
-    max-width: var(--content-width);
-    margin-bottom: var(--space-8);
-  }
-
-  .ad-inquiry-actions {
+  .ad-actions-inner {
     display: flex;
     gap: var(--space-4);
     flex-wrap: wrap;
+    align-items: center;
   }
 
   /* ---- Responsive ---- */
@@ -640,8 +622,8 @@ const jsonLd = {
 
     .ad-portrait-wrap { max-width: 220px; }
 
-    .ad-section,
-    .ad-inquiry { padding-block: var(--space-16); }
+    .ad-section { padding-block: var(--space-16); }
+    .ad-actions { padding-block: var(--space-8); }
 
     .ad-history-row {
       grid-template-columns: 1fr auto;
