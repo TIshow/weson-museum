@@ -99,11 +99,17 @@ name:
 パリ・ドバイ・上海に向けて仏語・アラビア語・中国語を足す場合の手順。
 **実際に相手が現れてから足すこと**。翻訳の維持コストは言語ごとに継続的に発生する。
 
-1. `src/i18n/config.ts` の `LOCALES` と `LOCALE_META` に追加（アラビア語は `dir: 'rtl'`）
-2. `src/i18n/ui.ts` の辞書に追加。埋め忘れは型エラーで落ちる
-3. `src/content/config.ts` の `i18nText` にキーを追加
-4. `src/pages/<locale>/` にページを追加（既存の `src/pages/en/` をそのまま複製し、`lang` を変えるだけ）
-5. `astro.config.mjs` の `i18n.locales` に追加
+1. `src/i18n/config.ts` の `LOCALES` に追加する
+2. `pnpm check` を走らせる。**更新が必要な箇所が型エラーとして列挙される**
+   - `src/i18n/config.ts` の `LOCALE_META`（アラビア語は `dir: 'rtl'`）
+   - `src/i18n/ui.ts` の辞書
+   - `src/content/config.ts` の `i18nShape`
+3. `src/pages/<locale>/` にページを追加（既存の `src/pages/en/` をそのまま複製し、`lang` を変えるだけ）
+4. `astro.config.mjs` の `i18n.locales` に追加
+5. 各作家 YAML の翻訳キーを埋める（未翻訳は ja にフォールバックするので段階的でよい）
+
+hreflang、`og:locale:alternate`、言語スイッチャー、nav・フッターのリンクは
+`LOCALES` から自動生成されるので、手を入れる必要はない。
 
 ページ本体に `isEn ? A : B` を書かないこと。書くと言語追加のたびに全ページを触ることになる。
 文字列は必ず `useTranslations(lang)` 経由で取る。

@@ -1,14 +1,12 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
-import mediaData from '../../data/media.json';
+import { sortedMedia } from '@lib/media';
 
 interface Props { lang: 'ja' | 'en' }
 const { lang } = Astro.props;
 const isEn = lang === 'en';
 
-const sorted = mediaData
-  .slice()
-  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+const sorted = sortedMedia();
 
 const webCount   = sorted.filter(m => m.type === 'web').length;
 const printCount = sorted.filter(m => m.type === 'print').length;

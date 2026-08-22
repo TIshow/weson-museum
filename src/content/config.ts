@@ -1,4 +1,5 @@
 import { defineCollection, z } from 'astro:content';
+import type { Locale } from '../i18n/config';
 
 // ニュース記事のスキーマ
 const newsSchema = z.object({
@@ -38,12 +39,16 @@ const exhibitionsCollection = defineCollection({
 
 /**
  * 多言語テキスト。ja のみ必須で、未翻訳のロケールは ja にフォールバックする。
- * 言語を追加するときはここにキーを足す（src/i18n/config.ts の LOCALES と対応させる）。
+ *
+ * `satisfies Record<Locale, ...>` により、src/i18n/config.ts の LOCALES に
+ * 言語を足してここを更新し忘れると型エラーになる（`pnpm check` で検出）。
  */
-const i18nText = z.object({
+const i18nShape = {
   ja: z.string(),
   en: z.string().optional(),
-});
+} satisfies Record<Locale, z.ZodType<string | undefined>>;
+
+const i18nText = z.object(i18nShape);
 
 /** 販売ステータス。価格を出すかどうかとは独立して持つ。 */
 const availability = z.enum(['available', 'reserved', 'sold', 'not-for-sale', 'inquire']);

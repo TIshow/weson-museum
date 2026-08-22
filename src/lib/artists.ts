@@ -3,6 +3,8 @@ import { localizedPath, type I18nText, type Locale } from '@i18n/config';
 
 export type Artist = CollectionEntry<'artists'>;
 export type Work = Artist['data']['works'][number];
+/** 販売ステータス。スキーマの enum から導出するので、値を増やしても定義箇所は1つのまま。 */
+export type Availability = Work['availability'];
 
 /** 作家をまたいだ作品の横断リスト。買い手側の一覧（Phase 2）で使う。 */
 export interface WorkWithArtist extends Work {
@@ -49,11 +51,6 @@ export function worksOf(artist: Artist): WorkWithArtist[] {
 export async function getAllWorks(): Promise<WorkWithArtist[]> {
   const artists = await getPublishedArtists();
   return artists.flatMap(worksOf);
-}
-
-/** 購入・商談の対象になりうる作品だけを絞り込む。 */
-export function purchasable<T extends { availability: Work['availability'] }>(works: T[]): T[] {
-  return works.filter(work => work.availability === 'available' || work.availability === 'inquire');
 }
 
 /** 価格の表示文字列。非公開・未設定なら undefined を返す。 */

@@ -40,6 +40,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # astro build は型チェックをしないので、別ステップで走らせる。
+      # i18n 辞書の翻訳漏れ検出（src/i18n/ui.ts の UIStrings）はこのステップに依存している。
+      - name: Type check
+        run: pnpm check
+
       - name: Build
         run: pnpm build
 

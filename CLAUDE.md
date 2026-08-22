@@ -22,9 +22,14 @@ WESON MUSEUM の公式 Web サイト。VRChat 上に開かれた美術館のサ�
 
 ```bash
 pnpm dev      # 開発サーバー起動（http://localhost:4321）
+pnpm check    # 型チェック（astro check）
 pnpm build    # 本番ビルド（dist/ に出力）
 pnpm preview  # ビルド結果のプレビュー
 ```
+
+**`pnpm build` は型チェックをしない。** 型エラーはビルドを素通りするので、
+`pnpm check` を別途走らせること。CI では build の前段で実行している。
+i18n 辞書の翻訳漏れ検出はこのステップに依存しているため、外すと保証が消える。
 
 ## アーキテクチャの重要事項
 
@@ -75,7 +80,11 @@ const t = useTranslations(lang);
 ```
 
 新規ページに `isEn ? A : B` を書かないこと。書くと言語追加のたびに全ページを触ることになる。
-`UIStrings` にキーを足せば、未翻訳のロケールは型エラーで検出される。
+`UIStrings` にキーを足せば、未翻訳のロケールは `pnpm check` で型エラーとして検出される。
+
+`LOCALES` にロケールを1つ足すと、更新が必要な箇所が型エラーで列挙される
+（`LOCALE_META` / `ui.ts` の辞書 / `content/config.ts` の `i18nText`）。
+hreflang・`og:locale:alternate`・言語スイッチャー・nav は `LOCALES` から自動生成されるので手当て不要。
 
 既存ページ（Home / About / Exhibitions / ARTLINK / Media / News）はまだ `isEn` 三項が残っている。
 コピー刷新のタイミングで `src/i18n/ui.ts` へ移すこと。
@@ -102,7 +111,11 @@ draft: false
 { "outlet": "媒体名", "title": "...", "date": "2025-01-01", "type": "web", "url": "https://...", "featured": false }
 ```
 
-`featured: true` にするとトップページの Press & Media セクションに最大3件表示される。
+`featured: true` にするとトップページの Press & Media セクションに最大3件表示される（件数は `config.json` の `maxFeaturedMedia`）。
+
+読み出しは `src/lib/media.ts` の `sortedMedia()` / `featuredMedia(n)` を使う。
+media.json は Content Collections ではなく zod 検証が走らないため、
+このモジュールが `type` の値をビルド時に検証している。JSON を直接 import しないこと。
 
 **作家（ARTLINK ARTISTS）**: `src/content/artists/*.yaml`（Content Collections、`type: 'data'`）
 
