@@ -222,3 +222,25 @@ works:
 - artists は news と違い `type: 'data'` の YAML（Markdown ではない）。作品も同じファイルに入れる
 - 作家画像は `portrait`（3:4 縦）と `coverImage`（4:3 横）の**両方**を用意する。片方だけだと一覧か詳細のどちらかで切れる
 - Three.js の dynamic import パスは相対パス `'./three/GalleryScene'` を使う（絶対パス不可）
+
+### CSS クラス名と広告ブロッカー
+
+**`ad-` で始まるクラス名は絶対に使わない。** EasyList（uBlock Origin / AdBlock / AdGuard /
+Brave の標準フィルタ）が `##.ad-hero` `##.ad-section` `##.ad-links` などを汎用ルールとして
+持っており、該当する要素は**利用者の画面から消える**。HTML には存在するので curl や
+拡張機能なしのブラウザでは再現せず、原因の特定が難しい。
+
+過去に作家詳細ページで `ad-`（artist detail の略）を使い、本番でプロフィールが
+丸ごと非表示になる不具合を起こしている。現在は `artist-` に統一済み。
+
+`ads-` `advert` `sponsor` `banner` `promo` なども同種のリスクがある。
+新しいプレフィックスを導入するときは、ビルド後に照合すること。
+
+```bash
+curl -s https://easylist.to/easylist/easylist.txt -o /tmp/easylist.txt
+grep -rhoE 'class="[^"]*"' dist --include='*.html' \
+  | sed 's/class="//; s/"//' | tr ' ' '\n' | sed 's/^\s*//' \
+  | grep -E '^[a-zA-Z]' | sort -u > /tmp/site-classes.txt
+grep -E '^##\.[a-zA-Z0-9_-]+$' /tmp/easylist.txt | sed 's/^##\.//' | sort -u > /tmp/el.txt
+comm -12 /tmp/site-classes.txt /tmp/el.txt   # 出力があれば衝突
+```
