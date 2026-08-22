@@ -39,12 +39,24 @@ const works = d.works.map(work => ({
   priceOnRequestLabel: work.priceOnRequest ? a.priceOnRequest : undefined,
 }));
 
-const history = d.exhibitionHistory.map(entry => ({
-  year: entry.year,
-  title: pick(entry.title, lang),
-  venue: pick(entry.venue, lang),
-  kindLabel: a.exhibitionKind[entry.kind],
-}));
+// 作家履歴書の慣例にあわせて 経歴 / 個展 / 団体・グループ展 の3区分で出す。
+// 各区分の中では入稿順（古い順）をそのまま保つ。
+const HISTORY_GROUPS = [
+  { key: 'career', label: a.sectionCareer, kinds: ['other', 'award'] },
+  { key: 'solo', label: a.sectionSolo, kinds: ['solo'] },
+  { key: 'group', label: a.sectionGroup, kinds: ['group', 'vr'] },
+];
+
+const historyGroups = HISTORY_GROUPS.map(group => ({
+  ...group,
+  rows: d.exhibitionHistory
+    .filter(entry => group.kinds.includes(entry.kind))
+    .map(entry => ({
+      year: entry.year,
+      title: pick(entry.title, lang),
+      venue: pick(entry.venue, lang),
+    })),
+})).filter(group => group.rows.length > 0);
 
 const upcoming = d.upcoming.map(entry => ({
   title: pick(entry.title, lang),
@@ -183,12 +195,12 @@ const jsonLd = {
        Statement / Bio
        ================================================================ -->
   {(statement || bio) && (
-    <section class="artist-section" aria-labelledby="sec-statement">
+    <section class="artist-section" aria-labelledby="sec-profile">
       <div class="container">
         <div class="section-layout">
           <div class="section-aside">
             <span class="accent-line"></span>
-            <h2 id="sec-statement" class="artist-section-heading">{a.sectionStatement}</h2>
+            <h2 id="sec-profile" class="artist-section-heading">{a.sectionProfile}</h2>
           </div>
           <div class="section-body prose">
             {toParagraphs(statement).map(p => <p>{p}</p>)}
@@ -271,34 +283,34 @@ const jsonLd = {
   <!-- ================================================================
        Exhibition history
        ================================================================ -->
-  <section class="artist-section artist-section--tinted" aria-labelledby="sec-history">
-    <div class="container">
-      <div class="section-layout">
-        <div class="section-aside">
-          <span class="accent-line"></span>
-          <h2 id="sec-history" class="artist-section-heading">{a.sectionExhibitions}</h2>
-        </div>
-        <div class="section-body">
-          {history.length > 0 ? (
+  {historyGroups.map((group, i) => (
+    <section
+      class={`artist-section${i % 2 === 0 ? ' artist-section--tinted' : ''}`}
+      aria-labelledby={`sec-${group.key}`}
+    >
+      <div class="container">
+        <div class="section-layout">
+          <div class="section-aside">
+            <span class="accent-line"></span>
+            <h2 id={`sec-${group.key}`} class="artist-section-heading">{group.label}</h2>
+          </div>
+          <div class="section-body">
             <ul class="artist-history" role="list">
-              {history.map(entry => (
+              {group.rows.map(row => (
                 <li class="artist-history-row">
-                  <span class="artist-history-year mono-label">{entry.year}</span>
+                  <span class="artist-history-year mono-label">{row.year}</span>
                   <span class="artist-history-main">
-                    <span class="artist-history-title">{entry.title}</span>
-                    {entry.venue && <span class="artist-history-venue">{entry.venue}</span>}
+                    <span class="artist-history-title">{row.title}</span>
+                    {row.venue && <span class="artist-history-venue">{row.venue}</span>}
                   </span>
-                  <span class="tag artist-history-kind">{entry.kindLabel}</span>
                 </li>
               ))}
             </ul>
-          ) : (
-            <p class="artist-empty">{a.exhibitionsEmpty}</p>
-          )}
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  ))}
 
   <!-- ================================================================
        Links
@@ -443,10 +455,12 @@ const jsonLd = {
 
   .artist-section--tinted { background: var(--color-bg-1); }
 
+  /* 見出しは 220px の aside 幅に収める。tracking-wider だと
+     「団体・グループ展」が「展」だけ次行に落ちるため一段詰める。 */
   .artist-section-heading {
     font-size: var(--text-xl);
     font-weight: 300;
-    letter-spacing: var(--tracking-wider);
+    letter-spacing: var(--tracking-wide);
     line-height: 1.5;
   }
 
@@ -521,7 +535,7 @@ const jsonLd = {
 
   .artist-history-row {
     display: grid;
-    grid-template-columns: 72px 1fr auto;
+    grid-template-columns: 92px 1fr;
     gap: var(--space-4);
     align-items: baseline;
     padding-block: var(--space-4);
@@ -548,11 +562,6 @@ const jsonLd = {
   .artist-history-venue {
     color: var(--color-text-muted);
     font-size: var(--text-sm);
-  }
-
-  .artist-history-kind {
-    font-size: var(--text-xs);
-    white-space: nowrap;
   }
 
   .artist-empty {
@@ -626,10 +635,9 @@ const jsonLd = {
     .artist-actions { padding-block: var(--space-8); }
 
     .artist-history-row {
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
     }
-
-    .artist-history-year { grid-column: 1 / -1; }
 
     .artist-link { grid-template-columns: 1fr; gap: var(--space-1); }
   }

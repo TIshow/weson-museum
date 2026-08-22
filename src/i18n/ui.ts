@@ -41,15 +41,17 @@ export interface UIStrings {
     vrResidencyNote: string;
 
     /** 詳細ページのセクション見出し */
-    sectionStatement: string;
+    sectionProfile: string;
     sectionWorks: string;
-    sectionExhibitions: string;
+    /** 履歴は作家履歴書の慣例にあわせて3区分で出す */
+    sectionCareer: string;
+    sectionSolo: string;
+    sectionGroup: string;
     sectionUpcoming: string;
     sectionLinks: string;
     sectionInquiry: string;
 
     worksNote: string;
-    exhibitionsEmpty: string;
     backToIndex: string;
 
     /** 販売ステータス */
@@ -62,14 +64,6 @@ export interface UIStrings {
     };
     priceOnRequest: string;
 
-    /** 展示歴の種別 */
-    exhibitionKind: {
-      solo: string;
-      group: string;
-      vr: string;
-      award: string;
-      other: string;
-    };
 
     /** 一覧ページ末尾の導線 */
     ctaArtistTitle: string;
@@ -123,15 +117,16 @@ const ja: UIStrings = {
     vrResidency: 'VR在廊あり',
     vrResidencyNote: 'VR空間での在廊に立ち、鑑賞者と直接話す機会を設けています。',
 
-    sectionStatement: '制作について',
+    sectionProfile: 'プロフィール',
     sectionWorks: '作品',
-    sectionExhibitions: '展示歴',
+    sectionCareer: '経歴',
+    sectionSolo: '個展',
+    sectionGroup: '団体・グループ展',
     sectionUpcoming: '今後の展示',
     sectionLinks: 'リンク',
     sectionInquiry: 'お問い合わせ',
 
     worksNote: '購入・制作依頼のご相談は、下記よりご連絡ください。',
-    exhibitionsEmpty: '記録を準備中です。',
     backToIndex: '← 参加作家一覧へ',
 
     availability: {
@@ -143,13 +138,6 @@ const ja: UIStrings = {
     },
     priceOnRequest: '価格応相談',
 
-    exhibitionKind: {
-      solo: '個展',
-      group: 'グループ展',
-      vr: 'VR展示',
-      award: '受賞',
-      other: 'その他',
-    },
 
     ctaArtistTitle: '作家の方へ',
     ctaArtistBody:
@@ -204,15 +192,16 @@ const en: UIStrings = {
     vrResidencyNote:
       'This artist attends the VR space in person, speaking directly with visitors in front of the work.',
 
-    sectionStatement: 'On the work',
+    sectionProfile: 'Profile',
     sectionWorks: 'Works',
-    sectionExhibitions: 'Exhibitions',
+    sectionCareer: 'Career',
+    sectionSolo: 'Solo Exhibitions',
+    sectionGroup: 'Group Exhibitions',
     sectionUpcoming: 'Upcoming',
     sectionLinks: 'Links',
     sectionInquiry: 'Inquiries',
 
     worksNote: 'For purchases and commissions, please get in touch below.',
-    exhibitionsEmpty: 'Records are being compiled.',
     backToIndex: '← All artists',
 
     availability: {
@@ -224,13 +213,6 @@ const en: UIStrings = {
     },
     priceOnRequest: 'Price on request',
 
-    exhibitionKind: {
-      solo: 'Solo',
-      group: 'Group',
-      vr: 'VR',
-      award: 'Award',
-      other: 'Other',
-    },
 
     ctaArtistTitle: 'For artists',
     ctaArtistBody:
