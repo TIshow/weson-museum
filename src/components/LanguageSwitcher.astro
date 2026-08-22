@@ -1,33 +1,39 @@
 ---
-const { pathname } = Astro.url;
-const isEn = pathname.startsWith('/en/') || pathname === '/en';
-const relativePath = pathname; // e.g. '/about/' or '/en/about/'
+import {
+  LOCALES,
+  LOCALE_META,
+  getLangFromUrl,
+  localizedPath,
+  stripLocale,
+} from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
 
-const jaUrl = isEn
-  ? relativePath.replace(/^\/en/, '') || '/'
-  : pathname;
+// ロケールは LOCALES から生成する。言語を足してもこのファイルは触らなくてよい。
+const current = getLangFromUrl(Astro.url);
+const t = useTranslations(current);
+const canonicalPath = stripLocale(Astro.url.pathname);
 
-const enUrl = isEn
-  ? pathname
-  : '/en' + relativePath;
+const options = LOCALES.map(locale => ({
+  locale,
+  meta: LOCALE_META[locale],
+  href: localizedPath(locale, canonicalPath),
+  isActive: locale === current,
+}));
 ---
 
-<nav class="lang-switcher" aria-label="Language / 言語">
-  <a
-    href={jaUrl}
-    class={`lang-btn${!isEn ? ' lang-btn--active' : ''}`}
-    lang="ja"
-    hreflang="ja"
-    aria-current={!isEn ? 'true' : undefined}
-  >JA</a>
-  <span class="lang-sep" aria-hidden="true">|</span>
-  <a
-    href={enUrl}
-    class={`lang-btn${isEn ? ' lang-btn--active' : ''}`}
-    lang="en"
-    hreflang="en"
-    aria-current={isEn ? 'true' : undefined}
-  >EN</a>
+<nav class="lang-switcher" aria-label={t.common.langAria}>
+  {options.map(({ locale, meta, href, isActive }, i) => (
+    <>
+      {i > 0 && <span class="lang-sep" aria-hidden="true">|</span>}
+      <a
+        href={href}
+        class={`lang-btn${isActive ? ' lang-btn--active' : ''}`}
+        lang={meta.htmlLang}
+        hreflang={locale}
+        aria-current={isActive ? 'true' : undefined}
+      >{meta.label}</a>
+    </>
+  ))}
 </nav>
 
 <style>

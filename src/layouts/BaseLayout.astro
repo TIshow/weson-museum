@@ -1,6 +1,8 @@
 ---
 import BaseHead from '@components/BaseHead.astro';
 import LanguageSwitcher from '@components/LanguageSwitcher.astro';
+import { LOCALE_META, localizedPath, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
 import '@styles/global.css';
 
 interface Props {
@@ -8,7 +10,7 @@ interface Props {
   description?: string;
   descriptionEn?: string;
   ogImage?: string;
-  lang?: 'ja' | 'en';
+  lang?: Locale;
 }
 
 const {
@@ -19,29 +21,39 @@ const {
   lang = 'ja',
 } = Astro.props;
 
-const base = '';
-const langBase = lang === 'en' ? `${base}/en` : base;
+const t = useTranslations(lang);
+const meta = LOCALE_META[lang];
+
+// ナビ項目はここだけで定義する。ページを増やすときは 1 行足せばヘッダ・フッター両方に反映される。
+const navItems = [
+  { label: t.nav.artists, path: '/artists/' },
+  { label: t.nav.exhibitions, path: '/exhibitions/' },
+  { label: t.nav.news, path: '/news/' },
+  { label: t.nav.media, path: '/media/' },
+  { label: t.nav.about, path: '/about/' },
+  { label: t.nav.contact, path: '/contact/' },
+].map(item => ({ ...item, href: localizedPath(lang, item.path) }));
+
+const homeHref = localizedPath(lang, '/');
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={meta.htmlLang} dir={meta.dir}>
   <head>
     <BaseHead title={title} description={description} descriptionEn={descriptionEn} ogImage={ogImage} lang={lang} />
   </head>
   <body>
     <header class="site-header">
       <nav class="container site-nav">
-        <a href={`${langBase}/`} class="site-logo" aria-label="WESON MUSEUM ホームへ">
+        <a href={homeHref} class="site-logo" aria-label={t.nav.homeAria}>
           <span class="logo-mark">W</span>
           <span class="logo-text">ESON MUSEUM</span>
         </a>
 
         <ul class="nav-links" role="list">
-          <li><a href={`${langBase}/exhibitions/`}>Exhibitions</a></li>
-          <li><a href={`${langBase}/news/`}>News</a></li>
-          <li><a href={`${langBase}/media/`}>Media</a></li>
-          <li><a href={`${langBase}/about/`}>About</a></li>
-          <li><a href={`${langBase}/contact/`}>Contact</a></li>
+          {navItems.map(item => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
           <li><LanguageSwitcher /></li>
         </ul>
 
@@ -59,9 +71,9 @@ const langBase = lang === 'en' ? `${base}/en` : base;
         <!-- ブランド + ソーシャル -->
         <div class="footer-brand">
           <span class="logo-text">WESON MUSEUM</span>
-          <p class="footer-tagline mono-label">Virtual Reality Art Museum</p>
+          <p class="footer-tagline mono-label">{t.nav.tagline}</p>
 
-          <div class="footer-social" aria-label="SNS・外部リンク">
+          <div class="footer-social" aria-label={t.nav.socialAria}>
             <!-- X (Twitter) -->
             <a href="https://x.com/WESON_MUSEUM" target="_blank" rel="noopener noreferrer"
                class="social-link" aria-label="X (Twitter)">
@@ -92,19 +104,17 @@ const langBase = lang === 'en' ? `${base}/en` : base;
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M6 2a1 1 0 0 0-1 1v1H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1V3a1 1 0 1 0-2 0v1H7V3a1 1 0 0 0-1-1zm0 7a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1z"/>
               </svg>
-              <span class="mono-label">Official Goods</span>
+              <span class="mono-label">{t.nav.goods}</span>
             </a>
           </div>
         </div>
 
         <!-- サイト内ナビ -->
-        <nav class="footer-nav" aria-label="フッターナビゲーション">
+        <nav class="footer-nav" aria-label={t.nav.footerAria}>
           <ul role="list">
-            <li><a href={`${langBase}/exhibitions/`}>Exhibitions</a></li>
-            <li><a href={`${langBase}/news/`}>News</a></li>
-            <li><a href={`${langBase}/media/`}>Media</a></li>
-            <li><a href={`${langBase}/about/`}>About</a></li>
-            <li><a href={`${langBase}/contact/`}>Contact</a></li>
+            {navItems.map(item => (
+              <li><a href={item.href}>{item.label}</a></li>
+            ))}
           </ul>
         </nav>
       </div>

@@ -15,6 +15,15 @@ WESON MUSEUM の公式 Web サイト。VRChat 上に開かれた美術館のサ�
 - **Astro v5** — 静的サイト生成、Content Collections、Islands Architecture
 - **pnpm** — パッケージマネージャ（`npm` は使わない）
 - **asdf** — Node.js バージョン管理（`.tool-versions` 参照）
+
+pnpm のバージョンは `package.json` の `packageManager` で固定している（**単一の情報源**）。
+pnpm 10 以降は自身がこの値を読んで自動的にそのバージョンへ切り替えるため、
+グローバルに別のメジャーバージョンが入っていても揃う。
+CI の `pnpm/action-setup` も同じ値を読むので、ワークフロー側に `version:` は書かない。
+
+- バージョンを上げるときは `packageManager` を書き換えるだけでよい
+- ただし **lockfileVersion が変わるメジャーバージョンへ上げるときは `pnpm-lock.yaml` の再生成が要る**（現在 9.0）
+- Node 25 は corepack を同梱していないため、corepack 経由の強制はかからない
 - **Three.js** — トップページの3Dギャラリー（dynamic import で遅延ロード）
 - **@astrojs/sitemap** — サイトマップ自動生成
 
@@ -22,9 +31,14 @@ WESON MUSEUM の公式 Web サイト。VRChat 上に開かれた美術館のサ�
 
 ```bash
 pnpm dev      # 開発サーバー起動（http://localhost:4321）
+pnpm check    # 型チェック（astro check）
 pnpm build    # 本番ビルド（dist/ に出力）
 pnpm preview  # ビルド結果のプレビュー
 ```
+
+**`pnpm build` は型チェックをしない。** 型エラーはビルドを素通りするので、
+`pnpm check` を別途走らせること。CI では build の前段で実行している。
+i18n 辞書の翻訳漏れ検出はこのステップに依存しているため、外すと保証が消える。
 
 ## アーキテクチャの重要事項
 
@@ -48,12 +62,43 @@ Astro i18n を使用。`defaultLocale: 'ja'`、`prefixDefaultLocale: false`。
 - 日本語ページ: `src/pages/*.astro` → URL `/`
 - 英語ページ: `src/pages/en/*.astro` → URL `/en/`
 - `BaseLayout` に `lang="en"` を渡すことで HTML lang・nav リンク・フッターリンクが自動切り替え
-- 言語スイッチャーは `LanguageSwitcher.astro` が URL を自動変換して生成
+- 言語スイッチャーは `LanguageSwitcher.astro` が `LOCALES` から自動生成
 
 ```astro
 <!-- 英語ページは必ず lang="en" を渡す -->
 <BaseLayout title="..." lang="en">
 ```
+
+**ロケール定義と UI 文字列は `src/i18n/` に集約する。**
+
+| ファイル | 役割 |
+|---|---|
+| `src/i18n/config.ts` | `LOCALES` / `LOCALE_META` / `localizedPath()` / `pick()` / `formatDate()` |
+| `src/i18n/ui.ts` | UI 文字列の辞書（`UIStrings` 型）と `useTranslations(lang)` |
+
+```astro
+---
+import { localizedPath, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+<a href={localizedPath(lang, '/artists/')}>{t.nav.artists}</a>
+```
+
+新規ページに `isEn ? A : B` を書かないこと。書くと言語追加のたびに全ページを触ることになる。
+`UIStrings` にキーを足せば、未翻訳のロケールは `pnpm check` で型エラーとして検出される。
+
+`LOCALES` にロケールを1つ足すと、更新が必要な箇所が型エラーで列挙される
+（`LOCALE_META` / `ui.ts` の辞書 / `content/config.ts` の `i18nText`）。
+hreflang・`og:locale:alternate`・言語スイッチャー・nav は `LOCALES` から自動生成されるので手当て不要。
+
+既存ページ（Home / About / Exhibitions / ARTLINK / Media / News）はまだ `isEn` 三項が残っている。
+コピー刷新のタイミングで `src/i18n/ui.ts` へ移すこと。
+
+言語を増やす手順は `docs/artists-content.md` の「言語を追加する」を参照。
 
 ### コンテンツ管理
 
@@ -75,7 +120,33 @@ draft: false
 { "outlet": "媒体名", "title": "...", "date": "2025-01-01", "type": "web", "url": "https://...", "featured": false }
 ```
 
-`featured: true` にするとトップページの Press & Media セクションに最大3件表示される。
+`featured: true` にするとトップページの Press & Media セクションに最大3件表示される（件数は `config.json` の `maxFeaturedMedia`）。
+
+読み出しは `src/lib/media.ts` の `sortedMedia()` / `featuredMedia(n)` を使う。
+media.json は Content Collections ではなく zod 検証が走らないため、
+このモジュールが `type` の値をビルド時に検証している。JSON を直接 import しないこと。
+
+**作家（ARTLINK ARTISTS）**: `src/content/artists/*.yaml`（Content Collections、`type: 'data'`）
+
+作家1人＝1ファイル。作品は同ファイルの `works` 配列に持たせる。
+翻訳が必要なフィールドは `{ ja: '...', en: '...' }` の形で書き、`ja` のみ必須。
+
+```yaml
+name:
+  ja: 田中 花子
+  en: Hanako Tanaka
+draft: false
+works:
+  - id: w01
+    title: { ja: 作品名, en: Title }
+    availability: available
+    price: 380000
+```
+
+- 呼称は **`ARTLINK ARTISTS` / 「参加作家」** で統一する。契約条件が確定するまで「所属作家」は使わない
+- `draft` の既定は `true`。実データを確認してから `false` にする
+- 価格は静的サイトの出力に載る。公開したくない価格は `price` に書かず `priceOnRequest: true` を使う
+- スキーマ全体と運用手順は `docs/artists-content.md` を参照
 
 ### Three.js ギャラリー
 
@@ -109,6 +180,8 @@ draft: false
 | ファイル | URL | 内容 |
 |---|---|---|
 | `pages/index.astro` | `/` | トップ（ja）。英語ブラウザ → `/en/` 自動リダイレクト |
+| `pages/artists/index.astro` | `/artists/` | 参加作家一覧（ARTLINK ARTISTS） |
+| `pages/artists/[slug].astro` | `/artists/[slug]/` | 作家詳細（Content Collections から自動生成） |
 | `pages/exhibitions.astro` | `/exhibitions/` | 常設4館詳細・VRChatリンク |
 | `pages/artlink.astro` | `/artlink/` | ARTLINK 企画展 |
 | `pages/news/index.astro` | `/news/` | ニュース一覧 |
@@ -146,4 +219,6 @@ draft: false
 - 英語ページの内部リンクは必ず `/en/*` を向けること
 - `BaseLayout` に `lang="en"` を渡し忘れると nav リンクが日本語パスになる
 - news の Content Collections は配列 JSON ではなく 1ファイル = 1記事の Markdown 形式
+- artists は news と違い `type: 'data'` の YAML（Markdown ではない）。作品も同じファイルに入れる
+- 作家画像は `portrait`（3:4 縦）と `coverImage`（4:3 横）の**両方**を用意する。片方だけだと一覧か詳細のどちらかで切れる
 - Three.js の dynamic import パスは相対パス `'./three/GalleryScene'` を使う（絶対パス不可）

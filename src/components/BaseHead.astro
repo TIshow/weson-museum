@@ -1,22 +1,36 @@
 ---
+import {
+  DEFAULT_LOCALE,
+  LOCALES,
+  LOCALE_META,
+  localizedPath,
+  stripLocale,
+  type Locale,
+} from '@i18n/config';
+
 interface Props {
   title: string;
   description: string;
   descriptionEn?: string;
   ogImage?: string;
-  lang?: 'ja' | 'en';
+  lang?: Locale;
 }
 
-const { title, description, descriptionEn, ogImage, lang = 'ja' } = Astro.props;
+const { title, description, descriptionEn, ogImage, lang = DEFAULT_LOCALE } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = ogImage
   ? new URL(ogImage, Astro.site)
   : new URL(`${base}images/favicon-og.svg`, Astro.site);
 
-const jaUrl = new URL(Astro.url.pathname.replace('/en/', '/').replace(/\/en$/, '/'), Astro.site);
-const enUrl = new URL(Astro.url.pathname.includes('/en/') ? Astro.url.pathname : '/en' + Astro.url.pathname, Astro.site);
-const ogLocale = lang === 'en' ? 'en_US' : 'ja_JP';
+// hreflang と og:locale:alternate は LOCALES から生成する。言語を足せば自動で増える。
+const canonicalPath = stripLocale(Astro.url.pathname);
+const alternates = LOCALES.map(locale => ({
+  locale,
+  href: new URL(localizedPath(locale, canonicalPath), Astro.site).toString(),
+}));
+const defaultHref = alternates.find(a => a.locale === DEFAULT_LOCALE)!.href;
+const ogLocale = LOCALE_META[lang].ogLocale;
 
 // JSON-LD: Organization + VirtualLocation schema (English for international indexing)
 const jsonLd = {
@@ -84,10 +98,9 @@ const jsonLd = {
 <!-- Canonical -->
 <link rel="canonical" href={canonicalURL} />
 
-<!-- hreflang: ja/en bilingual routing -->
-<link rel="alternate" hreflang="ja" href={jaUrl} />
-<link rel="alternate" hreflang="en" href={enUrl} />
-<link rel="alternate" hreflang="x-default" href={jaUrl} />
+<!-- hreflang: 対応ロケール分を自動生成 -->
+{alternates.map(alt => <link rel="alternate" hreflang={alt.locale} href={alt.href} />)}
+<link rel="alternate" hreflang="x-default" href={defaultHref} />
 
 <!-- Primary Meta -->
 <title>{title}</title>
@@ -105,8 +118,9 @@ const jsonLd = {
 <meta property="og:image" content={ogImageURL} />
 <meta property="og:site_name" content="WESON MUSEUM" />
 <meta property="og:locale" content={ogLocale} />
-{lang === 'ja' && <meta property="og:locale:alternate" content="en_US" />}
-{lang === 'en' && <meta property="og:locale:alternate" content="ja_JP" />}
+{LOCALES.filter(l => l !== lang).map(l => (
+  <meta property="og:locale:alternate" content={LOCALE_META[l].ogLocale} />
+))}
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />

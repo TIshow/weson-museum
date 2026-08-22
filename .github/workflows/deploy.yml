@@ -26,10 +26,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # バージョンは package.json の packageManager から読まれる。
+      # ここに version を書くとそちらが優先され、二重管理になるので書かない。
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -39,6 +39,11 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      # astro build は型チェックをしないので、別ステップで走らせる。
+      # i18n 辞書の翻訳漏れ検出（src/i18n/ui.ts の UIStrings）はこのステップに依存している。
+      - name: Type check
+        run: pnpm check
 
       - name: Build
         run: pnpm build

@@ -1,0 +1,16 @@
+---
+import ArtistDetailPage from '@components/pages/ArtistDetailPage.astro';
+import { getPublishedArtists } from '@lib/artists';
+
+export async function getStaticPaths() {
+  const artists = await getPublishedArtists();
+  return artists.map(artist => ({
+    params: { slug: artist.id },
+    props: { artist },
+  }));
+}
+
+const { artist } = Astro.props;
+---
+
+<ArtistDetailPage lang="ja" artist={artist} />

@@ -18,6 +18,8 @@ dist/
 # エディタ
 .vscode/*
 !.vscode/extensions.json
+.claude/*
+!.claude/settings.json
 .idea/
 *.suo
 *.ntvs*
