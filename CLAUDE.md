@@ -15,6 +15,15 @@ WESON MUSEUM の公式 Web サイト。VRChat 上に開かれた美術館のサ�
 - **Astro v5** — 静的サイト生成、Content Collections、Islands Architecture
 - **pnpm** — パッケージマネージャ（`npm` は使わない）
 - **asdf** — Node.js バージョン管理（`.tool-versions` 参照）
+
+pnpm のバージョンは `package.json` の `packageManager` で固定している（**単一の情報源**）。
+pnpm 10 以降は自身がこの値を読んで自動的にそのバージョンへ切り替えるため、
+グローバルに別のメジャーバージョンが入っていても揃う。
+CI の `pnpm/action-setup` も同じ値を読むので、ワークフロー側に `version:` は書かない。
+
+- バージョンを上げるときは `packageManager` を書き換えるだけでよい
+- ただし **lockfileVersion が変わるメジャーバージョンへ上げるときは `pnpm-lock.yaml` の再生成が要る**（現在 9.0）
+- Node 25 は corepack を同梱していないため、corepack 経由の強制はかからない
 - **Three.js** — トップページの3Dギャラリー（dynamic import で遅延ロード）
 - **@astrojs/sitemap** — サイトマップ自動生成
 
