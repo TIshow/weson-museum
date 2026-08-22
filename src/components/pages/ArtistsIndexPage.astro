@@ -1,0 +1,211 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ArtistCard from '@components/ArtistCard.astro';
+import { localizedPath, pick, pickAll, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { artistPath, getPublishedArtists } from '@lib/artists';
+import { assetUrl } from '@lib/assets';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const a = t.artists;
+
+const artists = await getPublishedArtists();
+
+const cards = artists.map(artist => ({
+  href: artistPath(lang, artist.id),
+  name: pick(artist.data.name, lang),
+  // カードは 4:3。横位置のカバー画像を最優先し、無ければポートレート → 最初の作品画像で代替する
+  image: assetUrl(
+    artist.data.coverImage ?? artist.data.portrait ?? artist.data.works[0]?.image
+  ),
+  based: pick(artist.data.based, lang),
+  disciplines: pickAll(artist.data.disciplines, lang),
+  vrResidency: artist.data.vrResidency,
+}));
+
+const contactHref = localizedPath(lang, '/contact/');
+---
+
+<BaseLayout title={a.metaTitle} description={a.metaDescription} lang={lang}>
+
+  <!-- ================================================================
+       Hero
+       ================================================================ -->
+  <section class="ar-hero">
+    <div class="container">
+      <nav class="breadcrumb" aria-label={t.common.breadcrumbAria}>
+        <ol>
+          <li><a href={localizedPath(lang, '/')}>{t.common.home}</a></li>
+          <li aria-current="page">{a.title}</li>
+        </ol>
+      </nav>
+
+      <p class="ar-eyebrow mono-label">{a.eyebrow}</p>
+      <h1 class="ar-h1">{a.title}</h1>
+      <p class="ar-subline">{a.subline}</p>
+
+      <div class="ar-lead">
+        {a.lead.map(paragraph => <p>{paragraph}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Artists
+       ================================================================ -->
+  <section class="ar-section">
+    <div class="container">
+      {cards.length > 0 ? (
+        <ul class="ar-grid" role="list" aria-label={a.gridAria}>
+          {cards.map(card => (
+            <ArtistCard
+              href={card.href}
+              name={card.name}
+              image={card.image}
+              based={card.based}
+              disciplines={card.disciplines}
+              vrResidency={card.vrResidency}
+              vrLabel={a.vrResidency}
+            />
+          ))}
+        </ul>
+      ) : (
+        <p class="ar-empty">{a.empty}</p>
+      )}
+    </div>
+  </section>
+
+  <!-- ================================================================
+       CTA — 供給側（作家）と需要側（購入検討者）の両方に入口を出す
+       ================================================================ -->
+  <section class="ar-cta" aria-label={a.sectionInquiry}>
+    <div class="container">
+      <div class="ar-cta-grid">
+        <div class="ar-cta-block">
+          <span class="accent-line"></span>
+          <h2 class="ar-cta-title">{a.ctaArtistTitle}</h2>
+          <p class="ar-cta-body">{a.ctaArtistBody}</p>
+          <a href={contactHref} class="btn btn-outline">{a.ctaArtistButton}</a>
+        </div>
+
+        <div class="ar-cta-block">
+          <span class="accent-line" style="background:var(--color-main);box-shadow:var(--glow-main);"></span>
+          <h2 class="ar-cta-title">{a.ctaInquiryTitle}</h2>
+          <p class="ar-cta-body">{a.ctaInquiryBody}</p>
+          <a href={contactHref} class="btn btn-primary">{a.ctaInquiryButton}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .ar-hero {
+    padding-block: var(--space-16) var(--space-24);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ar-eyebrow {
+    color: var(--color-main);
+    margin-bottom: var(--space-6);
+  }
+
+  .ar-h1 {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-weight: 200;
+    letter-spacing: var(--tracking-widest);
+    line-height: 1.05;
+    margin-bottom: var(--space-6);
+  }
+
+  .ar-subline {
+    font-size: var(--text-lg);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-12);
+  }
+
+  .ar-lead {
+    max-width: var(--content-width);
+  }
+
+  .ar-lead p {
+    font-size: var(--text-base);
+    line-height: 2;
+    color: var(--color-text-muted);
+  }
+
+  .ar-lead p + p {
+    margin-top: var(--space-6);
+  }
+
+  .ar-section {
+    padding-block: var(--space-24);
+  }
+
+  .ar-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .ar-empty {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wider);
+  }
+
+  .ar-cta {
+    padding-block: var(--space-16) var(--space-24);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .ar-cta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-12);
+  }
+
+  .ar-cta-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .ar-cta-title {
+    font-size: var(--text-xl);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wider);
+  }
+
+  .ar-cta-body {
+    font-size: var(--text-sm);
+    line-height: 2;
+    color: var(--color-text-muted);
+    max-width: 48ch;
+    margin-bottom: var(--space-2);
+  }
+
+  @media (max-width: 768px) {
+    .ar-cta-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-16);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .ar-hero { padding-block: var(--space-12) var(--space-16); }
+    .ar-section { padding-block: var(--space-16); }
+    .ar-subline { font-size: var(--text-base); }
+  }
+</style>

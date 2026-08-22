@@ -1,0 +1,653 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import WorkCard from '@components/WorkCard.astro';
+import { formatDate, localizedPath, pick, pickAll, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { artistPath, artistsIndexPath, formatPrice, type Artist } from '@lib/artists';
+import { assetUrl } from '@lib/assets';
+
+interface Props {
+  lang: Locale;
+  artist: Artist;
+}
+
+const { lang, artist } = Astro.props;
+const t = useTranslations(lang);
+const a = t.artists;
+const d = artist.data;
+
+const name = pick(d.name, lang);
+const based = pick(d.based, lang);
+const disciplines = pickAll(d.disciplines, lang);
+const affiliations = pickAll(d.affiliations, lang);
+const statement = pick(d.statement, lang);
+const bio = pick(d.bio, lang);
+
+/** 空行区切りのテキストを段落に割る。 */
+const toParagraphs = (text?: string) =>
+  text ? text.trim().split(/\n\s*\n/).map(p => p.trim()).filter(Boolean) : [];
+
+const portrait = assetUrl(d.portrait ?? d.coverImage);
+
+const works = d.works.map(work => ({
+  ...work,
+  displayTitle: pick(work.title, lang),
+  displayMedium: pick(work.medium, lang),
+  image: assetUrl(work.image),
+  availabilityLabel: a.availability[work.availability],
+  formattedPrice: formatPrice(work, lang),
+  priceOnRequestLabel: work.priceOnRequest ? a.priceOnRequest : undefined,
+}));
+
+const history = d.exhibitionHistory.map(entry => ({
+  year: entry.year,
+  title: pick(entry.title, lang),
+  venue: pick(entry.venue, lang),
+  kindLabel: a.exhibitionKind[entry.kind],
+}));
+
+const upcoming = d.upcoming.map(entry => ({
+  title: pick(entry.title, lang),
+  venue: pick(entry.venue, lang),
+  note: pick(entry.note, lang),
+  url: entry.url,
+  period: [entry.startDate, entry.endDate]
+    .filter((x): x is Date => x instanceof Date)
+    .map(date => formatDate(date, lang))
+    .join(' – '),
+}));
+
+const links = Object.entries(d.links).filter(([, url]) => Boolean(url)) as [string, string][];
+
+const contactHref = localizedPath(lang, '/contact/');
+const indexHref = artistsIndexPath(lang);
+
+// ---- SEO ----
+const summary = bio ?? statement;
+const metaDescription = summary
+  ? summary.replace(/\s+/g, ' ').slice(0, 150)
+  : `${name} — ${a.metaTitle}`;
+
+const pageUrl = new URL(artistPath(lang, artist.id), Astro.site).toString();
+const personId = `${pageUrl}#person`;
+const absolute = (path?: string) => (path ? new URL(path, Astro.site).toString() : undefined);
+
+const offerAvailability: Partial<Record<typeof d.works[number]['availability'], string>> = {
+  available: 'https://schema.org/InStock',
+  reserved: 'https://schema.org/PreOrder',
+  sold: 'https://schema.org/SoldOut',
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': personId,
+      name,
+      url: pageUrl,
+      jobTitle: 'Artist',
+      ...(portrait && { image: absolute(portrait) }),
+      ...(summary && { description: summary.replace(/\s+/g, ' ') }),
+      ...(d.birthYear && { birthDate: String(d.birthYear) }),
+      ...(affiliations.length > 0 && {
+        affiliation: affiliations.map(org => ({ '@type': 'Organization', name: org })),
+      }),
+      ...(links.length > 0 && { sameAs: links.map(([, url]) => url) }),
+      memberOf: { '@id': 'https://weson-museum.com/#organization' },
+    },
+    ...works.map(work => ({
+      '@type': 'VisualArtwork',
+      '@id': `${pageUrl}#work-${work.id}`,
+      name: work.displayTitle,
+      creator: { '@id': personId },
+      ...(work.year && { dateCreated: work.year }),
+      ...(work.displayMedium && { artMedium: work.displayMedium }),
+      ...(work.image && { image: absolute(work.image) }),
+      ...(offerAvailability[work.availability] && {
+        offers: {
+          '@type': 'Offer',
+          availability: offerAvailability[work.availability],
+          ...(work.price !== undefined &&
+            !work.priceOnRequest && { price: work.price, priceCurrency: 'JPY' }),
+        },
+      }),
+    })),
+  ],
+};
+---
+
+<BaseLayout title={`${name} — WESON MUSEUM`} description={metaDescription} lang={lang}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <!-- ================================================================
+       Hero
+       ================================================================ -->
+  <section class="ad-hero">
+    <div class="container">
+      <nav class="breadcrumb" aria-label={t.common.breadcrumbAria}>
+        <ol>
+          <li><a href={localizedPath(lang, '/')}>{t.common.home}</a></li>
+          <li><a href={indexHref}>{a.title}</a></li>
+          <li aria-current="page">{name}</li>
+        </ol>
+      </nav>
+
+      <div class="ad-hero-layout">
+        <div class="ad-portrait-wrap">
+          {portrait ? (
+            <img src={portrait} alt={name} class="ad-portrait" loading="eager" decoding="async" />
+          ) : (
+            <div class="ad-portrait ad-portrait--empty" aria-hidden="true"></div>
+          )}
+        </div>
+
+        <div class="ad-hero-body">
+          <p class="ad-eyebrow mono-label">{a.eyebrow}</p>
+          <h1 class="ad-h1">{name}</h1>
+
+          <dl class="ad-meta">
+            {based && (
+              <div class="ad-meta-row">
+                <dt class="mono-label">{a.based}</dt>
+                <dd>{based}</dd>
+              </div>
+            )}
+            {disciplines.length > 0 && (
+              <div class="ad-meta-row">
+                <dt class="mono-label">{a.disciplines}</dt>
+                <dd>{disciplines.join(' / ')}</dd>
+              </div>
+            )}
+            {affiliations.length > 0 && (
+              <div class="ad-meta-row">
+                <dt class="mono-label">{a.affiliations}</dt>
+                <dd>{affiliations.join(' / ')}</dd>
+              </div>
+            )}
+          </dl>
+
+          {d.vrResidency && (
+            <p class="ad-vr">
+              <span class="ad-vr-badge mono-label">{a.vrResidency}</span>
+              <span class="ad-vr-note">{a.vrResidencyNote}</span>
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Statement / Bio
+       ================================================================ -->
+  {(statement || bio) && (
+    <section class="ad-section" aria-labelledby="sec-statement">
+      <div class="container">
+        <div class="section-layout">
+          <div class="section-aside">
+            <span class="accent-line"></span>
+            <h2 id="sec-statement" class="ad-section-heading">{a.sectionStatement}</h2>
+          </div>
+          <div class="section-body prose">
+            {toParagraphs(statement).map(p => <p>{p}</p>)}
+            {bio && statement && <hr class="ad-rule" />}
+            {toParagraphs(bio).map(p => <p class="ad-bio">{p}</p>)}
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ================================================================
+       Works
+       ================================================================ -->
+  {works.length > 0 && (
+    <section class="ad-section ad-section--tinted" aria-labelledby="sec-works">
+      <div class="container">
+        <div class="section-layout">
+          <div class="section-aside">
+            <span class="accent-line"></span>
+            <h2 id="sec-works" class="ad-section-heading">{a.sectionWorks}</h2>
+          </div>
+          <div class="section-body">
+            <ul class="ad-works" role="list">
+              {works.map(work => (
+                <WorkCard
+                  title={work.displayTitle}
+                  year={work.year}
+                  medium={work.displayMedium}
+                  dimensions={work.dimensions}
+                  image={work.image}
+                  edition={work.edition}
+                  exhibitedAt={work.exhibitedAt}
+                  availability={work.availability}
+                  availabilityLabel={work.availabilityLabel}
+                  price={work.formattedPrice}
+                  priceOnRequestLabel={work.priceOnRequestLabel}
+                />
+              ))}
+            </ul>
+            <p class="ad-works-note">{a.worksNote}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ================================================================
+       Upcoming
+       ================================================================ -->
+  {upcoming.length > 0 && (
+    <section class="ad-section" aria-labelledby="sec-upcoming">
+      <div class="container">
+        <div class="section-layout">
+          <div class="section-aside">
+            <span class="accent-line" style="background:var(--color-main);box-shadow:var(--glow-main);"></span>
+            <h2 id="sec-upcoming" class="ad-section-heading">{a.sectionUpcoming}</h2>
+          </div>
+          <div class="section-body">
+            <ul class="ad-upcoming" role="list">
+              {upcoming.map(entry => (
+                <li class="ad-upcoming-row">
+                  {entry.period && <p class="ad-upcoming-period mono-label">{entry.period}</p>}
+                  <h3 class="ad-upcoming-title">
+                    {entry.url ? (
+                      <a href={entry.url} target="_blank" rel="noopener noreferrer">{entry.title}</a>
+                    ) : entry.title}
+                  </h3>
+                  {entry.venue && <p class="ad-upcoming-venue">{entry.venue}</p>}
+                  {entry.note && <p class="ad-upcoming-note">{entry.note}</p>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ================================================================
+       Exhibition history
+       ================================================================ -->
+  <section class="ad-section ad-section--tinted" aria-labelledby="sec-history">
+    <div class="container">
+      <div class="section-layout">
+        <div class="section-aside">
+          <span class="accent-line"></span>
+          <h2 id="sec-history" class="ad-section-heading">{a.sectionExhibitions}</h2>
+        </div>
+        <div class="section-body">
+          {history.length > 0 ? (
+            <ul class="ad-history" role="list">
+              {history.map(entry => (
+                <li class="ad-history-row">
+                  <span class="ad-history-year mono-label">{entry.year}</span>
+                  <span class="ad-history-main">
+                    <span class="ad-history-title">{entry.title}</span>
+                    {entry.venue && <span class="ad-history-venue">{entry.venue}</span>}
+                  </span>
+                  <span class="tag ad-history-kind">{entry.kindLabel}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="ad-empty">{a.exhibitionsEmpty}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       Links
+       ================================================================ -->
+  {links.length > 0 && (
+    <section class="ad-section" aria-labelledby="sec-links">
+      <div class="container">
+        <div class="section-layout">
+          <div class="section-aside">
+            <span class="accent-line"></span>
+            <h2 id="sec-links" class="ad-section-heading">{a.sectionLinks}</h2>
+          </div>
+          <div class="section-body">
+            <ul class="ad-links" role="list">
+              {links.map(([key, url]) => (
+                <li>
+                  <a href={url} target="_blank" rel="noopener noreferrer" class="ad-link">
+                    <span class="mono-label ad-link-key">{key}</span>
+                    <span class="ad-link-url">{url.replace(/^https?:\/\//, '')}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ================================================================
+       Inquiry
+       ================================================================ -->
+  <section class="ad-inquiry" aria-labelledby="sec-inquiry">
+    <div class="container">
+      <div class="cta-divider" aria-hidden="true"></div>
+      <h2 id="sec-inquiry" class="ad-inquiry-title">{a.sectionInquiry}</h2>
+      <p class="ad-inquiry-body">{a.inquiryBody}</p>
+      <div class="ad-inquiry-actions">
+        <a href={contactHref} class="btn btn-primary">{a.inquiryButton}</a>
+        <a href={indexHref} class="btn btn-outline">{a.backToIndex}</a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* ---- Hero ---- */
+  .ad-hero {
+    padding-block: var(--space-12) var(--space-16);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ad-hero-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: var(--space-16);
+    align-items: start;
+  }
+
+  .ad-portrait-wrap {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-bg-1);
+  }
+
+  .ad-portrait {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ad-portrait--empty {
+    background: linear-gradient(135deg, var(--color-bg-2) 0%, var(--color-bg-1) 100%);
+  }
+
+  .ad-eyebrow {
+    color: var(--color-main);
+    margin-bottom: var(--space-4);
+  }
+
+  .ad-h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 200;
+    letter-spacing: var(--tracking-wider);
+    line-height: 1.2;
+    margin-bottom: var(--space-8);
+  }
+
+  /* ---- Meta ---- */
+  .ad-meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-6);
+  }
+
+  .ad-meta-row {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: var(--space-4);
+    align-items: baseline;
+  }
+
+  .ad-meta-row dt {
+    color: var(--color-text-subtle);
+  }
+
+  .ad-meta-row dd {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    line-height: 1.8;
+  }
+
+  .ad-vr {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .ad-vr-badge {
+    color: var(--color-text-on-accent);
+    background: var(--color-accent);
+    padding: 2px var(--space-3);
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+  }
+
+  .ad-vr-note {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.8;
+  }
+
+  /* ---- Sections ---- */
+  .ad-section {
+    padding-block: var(--space-24);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ad-section--tinted { background: var(--color-bg-1); }
+
+  .ad-section-heading {
+    font-size: var(--text-xl);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wider);
+    line-height: 1.5;
+  }
+
+  .prose p { line-height: 2; color: var(--color-text-muted); }
+  .prose p + p { margin-top: var(--space-6); }
+
+  .ad-rule {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin-block: var(--space-8);
+  }
+
+  .ad-bio {
+    font-size: var(--text-sm);
+  }
+
+  /* ---- Works ---- */
+  .ad-works {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .ad-works-note {
+    margin-top: var(--space-8);
+    font-size: var(--text-sm);
+    color: var(--color-text-subtle);
+    line-height: 1.8;
+  }
+
+  /* ---- Upcoming ---- */
+  .ad-upcoming {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    max-width: var(--content-width);
+  }
+
+  .ad-upcoming-row {
+    border-left: 2px solid var(--color-main);
+    padding-left: var(--space-6);
+  }
+
+  .ad-upcoming-period {
+    color: var(--color-main);
+    margin-bottom: var(--space-2);
+  }
+
+  .ad-upcoming-title {
+    font-size: var(--text-lg);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wide);
+    line-height: 1.5;
+    margin-bottom: var(--space-2);
+  }
+
+  .ad-upcoming-venue,
+  .ad-upcoming-note {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.8;
+  }
+
+  /* ---- History ---- */
+  .ad-history {
+    list-style: none;
+    border-top: 1px solid var(--color-border);
+    max-width: var(--content-width);
+  }
+
+  .ad-history-row {
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    gap: var(--space-4);
+    align-items: baseline;
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ad-history-year {
+    color: var(--color-text-subtle);
+  }
+
+  .ad-history-main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .ad-history-title {
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    line-height: 1.7;
+  }
+
+  .ad-history-venue {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .ad-history-kind {
+    font-size: var(--text-xs);
+    white-space: nowrap;
+  }
+
+  .ad-empty {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  /* ---- Links ---- */
+  .ad-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: var(--content-width);
+  }
+
+  .ad-link {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: var(--space-4);
+    align-items: baseline;
+    padding-block: var(--space-2);
+    text-decoration: none;
+  }
+
+  .ad-link-key { color: var(--color-text-subtle); }
+
+  .ad-link-url {
+    color: var(--color-main);
+    font-size: var(--text-sm);
+    word-break: break-all;
+  }
+
+  .ad-link:hover .ad-link-url {
+    color: var(--color-main-light);
+    text-decoration: underline;
+  }
+
+  /* ---- Inquiry ---- */
+  .ad-inquiry {
+    padding-block: var(--space-24);
+  }
+
+  .ad-inquiry-title {
+    font-size: var(--text-2xl);
+    font-weight: 200;
+    letter-spacing: var(--tracking-widest);
+    margin-bottom: var(--space-6);
+  }
+
+  .ad-inquiry-body {
+    font-size: var(--text-base);
+    line-height: 2;
+    color: var(--color-text-muted);
+    max-width: var(--content-width);
+    margin-bottom: var(--space-8);
+  }
+
+  .ad-inquiry-actions {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 900px) {
+    .ad-hero-layout {
+      grid-template-columns: 240px 1fr;
+      gap: var(--space-8);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .ad-hero { padding-block: var(--space-8) var(--space-12); }
+
+    .ad-hero-layout {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+
+    .ad-portrait-wrap { max-width: 220px; }
+
+    .ad-section,
+    .ad-inquiry { padding-block: var(--space-16); }
+
+    .ad-history-row {
+      grid-template-columns: 1fr auto;
+    }
+
+    .ad-history-year { grid-column: 1 / -1; }
+
+    .ad-link { grid-template-columns: 1fr; gap: var(--space-1); }
+  }
+</style>

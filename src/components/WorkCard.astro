@@ -1,0 +1,174 @@
+---
+type Availability = 'available' | 'reserved' | 'sold' | 'not-for-sale' | 'inquire';
+
+interface Props {
+  title: string;
+  year?: string;
+  medium?: string;
+  dimensions?: string;
+  image?: string;
+  edition?: string;
+  exhibitedAt?: string[];
+  availability: Availability;
+  availabilityLabel: string;
+  /** 整形済みの価格。非公開なら undefined。 */
+  price?: string;
+  /** price が無く priceOnRequest のときに出すラベル。 */
+  priceOnRequestLabel?: string;
+}
+
+const {
+  title,
+  year,
+  medium,
+  dimensions,
+  image,
+  edition,
+  exhibitedAt = [],
+  availability,
+  availabilityLabel,
+  price,
+  priceOnRequestLabel,
+} = Astro.props;
+
+// 素材・サイズ・エディションは1行にまとめる（美術作品のキャプション表記に合わせる）
+const caption = [medium, dimensions, edition].filter(Boolean).join(' / ');
+---
+
+<li class={`work-card work-card--${availability}`}>
+  <div class="work-card-media">
+    {image ? (
+      <img src={image} alt={title} loading="lazy" decoding="async" class="work-card-img" />
+    ) : (
+      <div class="work-card-placeholder" aria-hidden="true"></div>
+    )}
+    <span class="work-card-status mono-label">{availabilityLabel}</span>
+  </div>
+
+  <div class="work-card-body">
+    <h3 class="work-card-title">{title}{year && <span class="work-card-year">, {year}</span>}</h3>
+
+    {caption && <p class="work-card-caption">{caption}</p>}
+
+    {(price || priceOnRequestLabel) && (
+      <p class="work-card-price mono-label">{price ?? priceOnRequestLabel}</p>
+    )}
+
+    {exhibitedAt.length > 0 && (
+      <ul class="work-card-shown" role="list">
+        {exhibitedAt.map(e => <li class="mono-label">{e}</li>)}
+      </ul>
+    )}
+  </div>
+</li>
+
+<style>
+  .work-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-bg-1);
+    transition: border-color var(--transition-base);
+  }
+
+  .work-card:hover {
+    border-color: var(--color-border-bright);
+  }
+
+  .work-card-media {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: var(--color-bg-2);
+  }
+
+  .work-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* 売約済・非売品は少し落として、購入可の作品を目立たせる */
+  .work-card--sold .work-card-img,
+  .work-card--not-for-sale .work-card-img {
+    filter: brightness(0.6) saturate(0.7);
+  }
+
+  .work-card-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-bg-2) 0%, var(--color-bg-1) 100%);
+  }
+
+  .work-card-status {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-bright);
+    background: rgba(5, 11, 10, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  .work-card--available .work-card-status {
+    color: var(--color-text-on-accent);
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .work-card--reserved .work-card-status,
+  .work-card--inquire .work-card-status {
+    color: var(--color-main);
+    border-color: var(--color-border-bright);
+  }
+
+  .work-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-4) var(--space-6);
+  }
+
+  .work-card-title {
+    font-size: var(--text-base);
+    font-weight: 400;
+    letter-spacing: var(--tracking-normal);
+    line-height: 1.5;
+    color: var(--color-text);
+  }
+
+  .work-card-year {
+    color: var(--color-text-muted);
+    font-weight: 300;
+  }
+
+  .work-card-caption {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .work-card-price {
+    color: var(--color-main);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .work-card-shown {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-1);
+  }
+
+  .work-card-shown li {
+    color: var(--color-text-subtle);
+    font-size: var(--text-xs);
+  }
+</style>
