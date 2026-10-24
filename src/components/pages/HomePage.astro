@@ -572,13 +572,23 @@ const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
     opacity: 0.6;
   }
 
-  @media (max-width: 640px) {
-    /* 狭い画面ではボタンが2段になるので、固定比率をやめて中身の高さに合わせる。
-       写真は背景として敷いたまま、文字が読めるよう全面に暗幕をかける */
-    .artlink-banner { aspect-ratio: auto; min-height: 0; }
+  /* aspect-ratio と min-height を併用すると、min-height が比率を通じて最小幅
+     （260 × 16/6 ≒ 693px）に換算され、それより狭い画面でバナーがはみ出す。
+     16:6 で高さが 260px を下回る幅（約 760px 以下）では比率をやめて高さで指定する */
+  @media (max-width: 760px) {
+    .artlink-banner { aspect-ratio: auto; }
+    /* 高さは中身（最低 260px）に合わせる。ボタンが2段に折り返しても切れない */
     .artlink-overlay {
       position: relative;
       inset: auto;
+      min-height: 260px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    /* 狭い画面ではボタンが2段になるので、固定比率をやめて中身の高さに合わせる。
+       写真は背景として敷いたまま、文字が読めるよう全面に暗幕をかける */
+    .artlink-overlay {
       padding: var(--space-8) var(--space-6);
       background: linear-gradient(to bottom, rgba(5, 11, 10, 0.7), rgba(5, 11, 10, 0.9));
     }

@@ -1,7 +1,7 @@
 ---
 import BaseHead from '@components/BaseHead.astro';
 import LanguageSwitcher from '@components/LanguageSwitcher.astro';
-import { LOCALE_META, localizedPath, type Locale } from '@i18n/config';
+import { LOCALE_META, localizedPath, stripLocale, type Locale } from '@i18n/config';
 import { useTranslations } from '@i18n/ui';
 import '@styles/global.css';
 
@@ -26,14 +26,19 @@ const meta = LOCALE_META[lang];
 
 // ナビ項目はここだけで定義する。ページを増やすときは 1 行足せばヘッダ・フッター両方に反映される。
 const navItems = [
-  { label: t.nav.artists, path: '/artists/' },
-  { label: t.nav.artlink, path: '/artlink/' },
-  { label: t.nav.exhibitions, path: '/exhibitions/' },
-  { label: t.nav.news, path: '/news/' },
-  { label: t.nav.media, path: '/media/' },
-  { label: t.nav.about, path: '/about/' },
-  { label: t.nav.contact, path: '/contact/' },
-].map(item => ({ ...item, href: localizedPath(lang, item.path) }));
+  { label: t.nav.artists, sub: t.nav.sub.artists, path: '/artists/' },
+  { label: t.nav.artlink, sub: t.nav.sub.artlink, path: '/artlink/' },
+  { label: t.nav.exhibitions, sub: t.nav.sub.exhibitions, path: '/exhibitions/' },
+  { label: t.nav.news, sub: t.nav.sub.news, path: '/news/' },
+  { label: t.nav.media, sub: t.nav.sub.media, path: '/media/' },
+  { label: t.nav.about, sub: t.nav.sub.about, path: '/about/' },
+  { label: t.nav.contact, sub: t.nav.sub.contact, path: '/contact/' },
+].map(item => ({
+  ...item,
+  href: localizedPath(lang, item.path),
+  // 配下のページ（/artists/xxx/ や /artlink/2026/）でも、その項目を現在地として示す
+  current: stripLocale(Astro.url.pathname).startsWith(item.path),
+}));
 
 const homeHref = localizedPath(lang, '/');
 ---
@@ -45,7 +50,7 @@ const homeHref = localizedPath(lang, '/');
   </head>
   <body>
     <header class="site-header">
-      <nav class="container site-nav">
+      <nav class="container site-nav" aria-label={t.nav.mainAria}>
         <a href={homeHref} class="site-logo" aria-label={t.nav.homeAria}>
           <span class="logo-mark">W</span>
           <span class="logo-text">ESON MUSEUM</span>
@@ -53,14 +58,56 @@ const homeHref = localizedPath(lang, '/');
 
         <ul class="nav-links" role="list">
           {navItems.map(item => (
-            <li><a href={item.href}>{item.label}</a></li>
+            <li><a href={item.href} aria-current={item.current ? 'page' : undefined}>{item.label}</a></li>
           ))}
           <li><LanguageSwitcher /></li>
         </ul>
 
-        <!-- モバイル: ハンバーガーは将来実装 -->
+        <!-- スマホ用メニューの開閉ボタン。Popover API なので JS 不要（Escape・外側クリックで閉じ、フォーカスも戻る） -->
+        <button
+          type="button"
+          class="menu-toggle"
+          popovertarget="site-menu"
+          aria-controls="site-menu"
+          aria-label={t.nav.menuOpen}
+        >
+          <span class="menu-toggle-bar" aria-hidden="true"></span>
+          <span class="menu-toggle-bar" aria-hidden="true"></span>
+          <span class="menu-toggle-bar" aria-hidden="true"></span>
+        </button>
       </nav>
     </header>
+
+    <!-- スマホ用メニュー（640px 以下でのみ開ける） -->
+    <div id="site-menu" class="site-menu" popover>
+      <div class="site-menu-head">
+        <span class="site-menu-logo"><span class="logo-mark">W</span><span class="logo-text">ESON MUSEUM</span></span>
+        <button
+          type="button"
+          class="menu-close"
+          popovertarget="site-menu"
+          popovertargetaction="hide"
+          aria-label={t.nav.menuClose}
+          autofocus
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+
+      <nav aria-label={t.nav.menuAria}>
+        <ol class="site-menu-list" role="list">
+          {navItems.map((item, i) => (
+            <li>
+              <a href={item.href} class="site-menu-link" aria-current={item.current ? 'page' : undefined}>
+                <span class="site-menu-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span class="site-menu-label">{item.label}</span>
+                <span class="site-menu-sub">{item.sub}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </div>
 
     <main id="main-content">
       <slot />
@@ -257,6 +304,188 @@ const homeHref = localizedPath(lang, '/');
     display: none !important;
   }
 
+  /* 現在地 */
+  .nav-links a[aria-current='page'] {
+    color: var(--color-text);
+  }
+
+  .nav-links a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  /* ---- スマホ用メニュー ----
+     Popover API を使う。対応していないブラウザではボタンもメニューも出さず、
+     従来どおりフッターのナビで移動する（@supports で判定）。 */
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--color-border-bright);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .menu-toggle:hover {
+    border-color: var(--color-main);
+    box-shadow: var(--glow-main);
+  }
+
+  .menu-toggle-bar {
+    display: block;
+    width: 18px;
+    height: 1px;
+    background: var(--color-main);
+  }
+
+  /* 既定では出さない。開いたときだけ表示（未対応ブラウザでは常に非表示のまま） */
+  .site-menu {
+    display: none;
+  }
+
+  .site-menu:popover-open {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0 var(--space-4) var(--space-8);
+    border: none;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    color: var(--color-text);
+    background:
+      radial-gradient(ellipse at 100% 0%, var(--color-main-glow) 0%, transparent 50%),
+      rgba(5, 11, 10, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity var(--transition-base),
+      transform var(--transition-base),
+      overlay var(--transition-base) allow-discrete,
+      display var(--transition-base) allow-discrete;
+  }
+
+  @starting-style {
+    .site-menu:popover-open {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-menu:popover-open { transition: none; }
+  }
+
+  /* メニューを開いている間は背面のページをスクロールさせない */
+  :global(html:has(.site-menu:popover-open)) {
+    overflow: hidden;
+  }
+
+  .site-menu-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: var(--nav-height);
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .site-menu-logo {
+    display: flex;
+    align-items: baseline;
+  }
+
+  .site-menu-logo .logo-mark { font-size: 1.15rem; }
+  .site-menu-logo .logo-text { font-size: 0.75rem; letter-spacing: var(--tracking-wide); }
+
+  .menu-close {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--color-main);
+    background: transparent;
+    border: 1px solid var(--color-border-bright);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .site-menu-list {
+    list-style: none;
+    margin-top: var(--space-4);
+  }
+
+  .site-menu-list li {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .site-menu-link {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    grid-template-areas:
+      "num label"
+      "num sub";
+    align-items: baseline;
+    row-gap: 2px;
+    padding-block: var(--space-4);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .site-menu-link:hover,
+  .site-menu-link:focus-visible {
+    color: var(--color-main-light);
+    text-decoration: none;
+  }
+
+  .site-menu-num {
+    grid-area: num;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .site-menu-label {
+    grid-area: label;
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 300;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+  }
+
+  .site-menu-sub {
+    grid-area: sub;
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+  }
+
+  .site-menu-link[aria-current='page'] .site-menu-num,
+  .site-menu-link[aria-current='page'] .site-menu-label {
+    color: var(--color-accent);
+  }
+
+  /* 開いたまま画面を広げたときは閉じた扱いにする（ヘッダーのナビが出るため） */
+  @media (min-width: 641px) {
+    .site-menu:popover-open { display: none; }
+  }
+
   /* ---- Main ---- */
   #main-content {
     min-height: calc(100vh - var(--nav-height) - 160px);
@@ -401,6 +630,12 @@ const homeHref = localizedPath(lang, '/');
     .logo-text { font-size: 0.75rem; letter-spacing: var(--tracking-wide); }
   }
 
+  @supports selector(:popover-open) {
+    @media (max-width: 640px) {
+      .menu-toggle { display: inline-flex; }
+    }
+  }
+
   @media (max-width: 640px) {
     /* ---- Header mobile ---- */
     .logo-mark {
@@ -412,9 +647,13 @@ const homeHref = localizedPath(lang, '/');
       letter-spacing: var(--tracking-wide);
     }
 
-    /* テキストナビを非表示、言語スイッチャーのみ残す */
+    /* テキストナビを非表示、言語スイッチャーとメニューボタンを残す */
     .nav-links li:not(:last-child) {
       display: none;
+    }
+
+    .nav-links {
+      margin-left: auto;
     }
 
     .nav-links {

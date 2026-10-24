@@ -14,6 +14,22 @@ export interface UIStrings {
     about: string;
     contact: string;
     homeAria: string;
+    /** ヘッダーのナビ */
+    mainAria: string;
+    /** スマホ用メニュー */
+    menuOpen: string;
+    menuClose: string;
+    menuAria: string;
+    /** スマホ用メニューで各項目の下に添える説明 */
+    sub: {
+      artists: string;
+      artlink: string;
+      exhibitions: string;
+      news: string;
+      media: string;
+      about: string;
+      contact: string;
+    };
     footerAria: string;
     socialAria: string;
     goods: string;
@@ -150,6 +166,19 @@ const ja: UIStrings = {
     about: 'About',
     contact: 'Contact',
     homeAria: 'WESON MUSEUM ホームへ',
+    mainAria: 'メインナビゲーション',
+    menuOpen: 'メニューを開く',
+    menuClose: 'メニューを閉じる',
+    menuAria: 'サイトメニュー',
+    sub: {
+      artists: '参加作家',
+      artlink: 'VR 総合美術展',
+      exhibitions: '常設展示',
+      news: 'お知らせ',
+      media: 'メディア掲載',
+      about: '美術館について',
+      contact: 'お問い合わせ',
+    },
     footerAria: 'フッターナビゲーション',
     socialAria: 'SNS・外部リンク',
     goods: 'Official Goods',
@@ -280,6 +309,19 @@ const en: UIStrings = {
     about: 'About',
     contact: 'Contact',
     homeAria: 'WESON MUSEUM home',
+    mainAria: 'Main navigation',
+    menuOpen: 'Open menu',
+    menuClose: 'Close menu',
+    menuAria: 'Site menu',
+    sub: {
+      artists: 'Participating artists',
+      artlink: 'Group VR art exhibition',
+      exhibitions: 'Permanent galleries',
+      news: 'Announcements',
+      media: 'Press coverage',
+      about: 'About the museum',
+      contact: 'Get in touch',
+    },
     footerAria: 'Footer navigation',
     socialAria: 'Social and external links',
     goods: 'Official Goods',
