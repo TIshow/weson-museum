@@ -30,7 +30,7 @@
     }
   ],
   "archives": [
-    { "year": "2025", "newsSlug": "artlink-2025-report", "noteJa": "最新回", "noteEn": "Latest" },
+    { "year": "2025", "newsSlug": "artlink-2025-report", "noteJa": "",       "noteEn": "" },
     { "year": "2024", "newsSlug": "artlink-2024-report", "noteJa": "",     "noteEn": "" }
   ]
 }

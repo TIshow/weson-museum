@@ -2,6 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import artlinkData from '../../data/artlink.json';
 import ValueCard from '@components/ValueCard.astro';
+import ArtlinkEdition from '@components/ArtlinkEdition.astro';
 
 interface Props { lang: 'ja' | 'en' }
 const { lang } = Astro.props;
@@ -70,6 +71,11 @@ const archives    = artlinkData.archives.map(a => ({
       </p>
     </div>
   </section>
+
+  <!-- ================================================================
+       今回の開催（データは src/lib/artlink.ts）
+       ================================================================ -->
+  <ArtlinkEdition lang={lang} />
 
   <!-- ================================================================
        Image

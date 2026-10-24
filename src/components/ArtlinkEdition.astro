@@ -1,0 +1,267 @@
+---
+import { localizedPath, pick, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { artistPath, getPublishedArtists } from '@lib/artists';
+import {
+  currentEdition as edition,
+  formatPeriod,
+  formatTalk,
+  toJstIso,
+} from '@lib/artlink';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang).artlinkEdition;
+
+// slug があっても、公開中の作家ページが無ければリンクにしない（リンク切れ防止）
+const published = new Set((await getPublishedArtists()).map(a => a.id));
+const artists = edition.artists.map(artist => ({
+  name: pick(artist.name, lang),
+  href: artist.slug && published.has(artist.slug) ? artistPath(lang, artist.slug) : undefined,
+}));
+
+const title = `ARTLINK ${edition.year}`;
+const period = formatPeriod(edition, lang);
+const talks = edition.talks.map(talk => formatTalk(talk, lang));
+const newsHref = localizedPath(lang, `/news/${edition.announcementSlug}/`);
+
+// ---- 構造化データ（ExhibitionEvent） ----
+const pageUrl = new URL(localizedPath(lang, '/artlink/'), Astro.site).toString();
+const virtualLocation = { '@type': 'VirtualLocation', url: edition.worldUrl };
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ExhibitionEvent',
+  name: title,
+  url: pageUrl,
+  description: t.lead,
+  startDate: toJstIso(edition.startDate),
+  endDate: toJstIso(edition.endDate, '23:59'),
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
+  location: virtualLocation,
+  isAccessibleForFree: true,
+  offers: {
+    '@type': 'Offer',
+    price: 0,
+    priceCurrency: 'JPY',
+    availability: 'https://schema.org/InStock',
+    url: edition.worldUrl,
+  },
+  image: new URL('/images/artlink2025.jpg', Astro.site).toString(),
+  organizer: { '@id': 'https://weson-museum.com/#organization' },
+  subEvent: edition.talks.map(talk => ({
+    '@type': 'Event',
+    name: `${title} — ${t.talks}`,
+    startDate: toJstIso(talk.date, talk.start),
+    endDate: toJstIso(talk.date, talk.end),
+    eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
+    location: virtualLocation,
+  })),
+};
+---
+
+<section class="edition" aria-labelledby="edition-title">
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <div class="container edition-layout">
+    <div class="edition-main">
+      <p class="edition-eyebrow mono-label">{t.eyebrow}</p>
+      <h2 id="edition-title" class="edition-title">{title}</h2>
+      <p class="edition-period">{period}</p>
+      <p class="edition-lead">{t.lead}</p>
+
+      <div class="edition-actions">
+        <a href={edition.worldUrl} target="_blank" rel="noopener noreferrer" class="btn btn-accent">
+          {t.enterButton}
+        </a>
+        <a href={newsHref} class="btn btn-outline">{t.newsButton}</a>
+      </div>
+    </div>
+
+    <dl class="edition-facts">
+      <div class="edition-fact">
+        <dt class="mono-label">{t.period}</dt>
+        <dd>{period}</dd>
+      </div>
+      <div class="edition-fact">
+        <dt class="mono-label">{t.venue}</dt>
+        <dd>{pick(edition.venue, lang)}</dd>
+      </div>
+      <div class="edition-fact">
+        <dt class="mono-label">{t.hours}</dt>
+        <dd>{t.hoursValue}</dd>
+      </div>
+      <div class="edition-fact">
+        <dt class="mono-label">{t.admission}</dt>
+        <dd>{pick(edition.admission, lang)}</dd>
+      </div>
+      <div class="edition-fact">
+        <dt class="mono-label">{t.talks}</dt>
+        <dd>
+          <ul class="edition-talks" role="list">
+            {talks.map(talk => <li>{talk}</li>)}
+          </ul>
+        </dd>
+      </div>
+      <div class="edition-fact">
+        <dt class="mono-label">{t.organizer}</dt>
+        <dd>{pick(edition.organizer, lang)}</dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="container">
+    <div class="edition-artists">
+      <h3 class="edition-artists-heading mono-label">{t.artists}</h3>
+      <ul class="edition-artist-list" role="list">
+        {artists.map(artist => (
+          <li>
+            {artist.href ? <a href={artist.href}>{artist.name}</a> : <span>{artist.name}</span>}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <p class="edition-note">{t.note}</p>
+  </div>
+</section>
+
+<style>
+  .edition {
+    padding-block: var(--space-16) var(--space-24);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg-1);
+  }
+
+  .edition-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    align-items: start;
+  }
+
+  .edition-eyebrow {
+    color: var(--color-accent);
+    margin-bottom: var(--space-4);
+  }
+
+  .edition-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 200;
+    letter-spacing: var(--tracking-widest);
+    line-height: 1.1;
+    margin-bottom: var(--space-4);
+  }
+
+  .edition-period {
+    font-size: var(--text-lg);
+    font-weight: 300;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-main);
+    margin-bottom: var(--space-8);
+  }
+
+  .edition-lead {
+    font-size: var(--text-base);
+    line-height: 2;
+    color: var(--color-text-muted);
+    max-width: 44ch;
+    margin-bottom: var(--space-8);
+  }
+
+  .edition-actions {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  /* ---- 開催概要 ---- */
+  .edition-facts {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .edition-fact {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: var(--space-4);
+    align-items: baseline;
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .edition-fact dt {
+    color: var(--color-text-subtle);
+  }
+
+  .edition-fact dd {
+    font-size: var(--text-sm);
+    line-height: 1.8;
+    color: var(--color-text);
+  }
+
+  .edition-talks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  /* ---- 参加作家 ---- */
+  .edition-artists {
+    margin-top: var(--space-16);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .edition-artists-heading {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+  }
+
+  .edition-artist-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-8);
+  }
+
+  .edition-artist-list li {
+    font-size: var(--text-base);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text);
+  }
+
+  .edition-artist-list a {
+    color: var(--color-main);
+    border-bottom: 1px solid var(--color-border-bright);
+  }
+
+  .edition-artist-list a:hover {
+    color: var(--color-main-light);
+    border-color: var(--color-main);
+  }
+
+  .edition-note {
+    margin-top: var(--space-8);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    line-height: 1.8;
+  }
+
+  @media (max-width: 900px) {
+    .edition-layout {
+      grid-template-columns: 1fr;
+      gap: var(--space-12);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .edition { padding-block: var(--space-12) var(--space-16); }
+    .edition-period { font-size: var(--text-base); }
+    .edition-fact { grid-template-columns: 80px 1fr; }
+    .edition-artists { margin-top: var(--space-12); }
+  }
+</style>

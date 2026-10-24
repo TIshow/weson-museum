@@ -5,6 +5,7 @@ import MediaCard from '@components/MediaCard.astro';
 import museumsData from '../../data/museums.json';
 import siteConfig from '../../data/config.json';
 import { featuredMedia } from '@lib/media';
+import { currentEdition, formatPeriodCompact } from '@lib/artlink';
 
 interface Props { lang: 'ja' | 'en' }
 const { lang } = Astro.props;
@@ -118,14 +119,14 @@ const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
   </section>
 
   <!-- ================================================================
-       ARTLINK 2025
+       ARTLINK（年・会期は src/lib/artlink.ts の currentEdition）
        ================================================================ -->
   <section class="section-artlink">
     <div class="container">
       <div class="artlink-banner">
         <img
           src={`${base}images/artlink2025.jpg`}
-          alt="ARTLINK 2025"
+          alt={`ARTLINK ${currentEdition.year}`}
           loading="lazy"
           decoding="async"
           class="artlink-img"
@@ -133,9 +134,10 @@ const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
         <div class="artlink-overlay">
           <div class="artlink-meta">
             <span class="tag">Special Exhibition</span>
-            <span class="artlink-year mono-label">2025</span>
+            <span class="artlink-year mono-label">{currentEdition.year}</span>
           </div>
           <h2 class="artlink-title">ARTLINK</h2>
+          <p class="artlink-period mono-label">{formatPeriodCompact(currentEdition)}</p>
           <p class="artlink-desc">
             {isEn ? 'Group VR Art Exhibition' : '複数作家による VR 総合美術展'}
           </p>
@@ -500,6 +502,17 @@ const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
     letter-spacing: var(--tracking-widest);
     margin-bottom: var(--space-3);
     line-height: 1;
+  }
+
+  /* overlay は縦方向の flex なので、ボタンが横幅いっぱいに伸びないよう左寄せにする */
+  .artlink-overlay .btn {
+    align-self: flex-start;
+  }
+
+  .artlink-period {
+    color: var(--color-accent);
+    letter-spacing: var(--tracking-widest);
+    margin-bottom: var(--space-2);
   }
 
   .artlink-desc {

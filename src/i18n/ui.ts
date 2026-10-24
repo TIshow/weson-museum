@@ -76,6 +76,22 @@ export interface UIStrings {
     /** 詳細ページの問い合わせボタン（遷移先は contact ページ） */
     inquiryButton: string;
   };
+  /** ARTLINK の開催回ブロック。年・日付は src/lib/artlink.ts から埋めるので、ここには書かない */
+  artlinkEdition: {
+    eyebrow: string;
+    lead: string;
+    period: string;
+    venue: string;
+    hours: string;
+    hoursValue: string;
+    admission: string;
+    talks: string;
+    artists: string;
+    organizer: string;
+    enterButton: string;
+    newsButton: string;
+    note: string;
+  };
 }
 
 const ja: UIStrings = {
@@ -149,6 +165,21 @@ const ja: UIStrings = {
     ctaInquiryButton: '作品について問い合わせる',
 
     inquiryButton: 'この作家について問い合わせる',
+  },
+  artlinkEdition: {
+    eyebrow: 'Exhibition',
+    lead: 'VRChat 上の会場で開催します。会期中はいつでも入場でき、作家本人が会場に立つ在廊イベントも予定しています。',
+    period: '会期',
+    venue: '会場',
+    hours: '開場',
+    hoursValue: '会期中いつでも入場できます',
+    admission: '入場料',
+    talks: '作家在廊',
+    artists: '参加作家（50音順）',
+    organizer: '主催',
+    enterButton: 'VRChat で会場を開く',
+    newsButton: 'お知らせを読む',
+    note: '開催内容は変更になる場合があります。最新情報は公式 SNS でお知らせします。',
   },
 };
 
@@ -224,6 +255,21 @@ const en: UIStrings = {
     ctaInquiryButton: 'Inquire about works',
 
     inquiryButton: 'Inquire about this artist',
+  },
+  artlinkEdition: {
+    eyebrow: 'Exhibition',
+    lead: 'Held in a venue on VRChat, open at any time during the run. Participating artists will also be present in the venue for gallery talks.',
+    period: 'Dates',
+    venue: 'Venue',
+    hours: 'Hours',
+    hoursValue: 'Open at any time during the run',
+    admission: 'Admission',
+    talks: 'Artist talks',
+    artists: 'Artists',
+    organizer: 'Organizer',
+    enterButton: 'Open the venue in VRChat',
+    newsButton: 'Read the announcement',
+    note: 'Details may change. Updates are posted on our official social channels.',
   },
 };
 
