@@ -7,21 +7,24 @@ import {
   stripLocale,
   type Locale,
 } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { resolveOgImage } from '@lib/og';
 
 interface Props {
   title: string;
   description: string;
   descriptionEn?: string;
   ogImage?: string;
+  /** サムネイルの代替テキスト。省略時は既定の文言 */
+  ogImageAlt?: string;
   lang?: Locale;
 }
 
-const { title, description, descriptionEn, ogImage, lang = DEFAULT_LOCALE } = Astro.props;
+const { title, description, descriptionEn, ogImage, ogImageAlt, lang = DEFAULT_LOCALE } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const ogImageURL = ogImage
-  ? new URL(ogImage, Astro.site)
-  : new URL(`${base}images/favicon-og.svg`, Astro.site);
+// 実在しない・SNS が表示できない形式の画像はビルドで落とす（lib/og.ts）
+const og = resolveOgImage(ogImage, Astro.site!, ogImageAlt ?? useTranslations(lang).common.ogImageAlt);
 
 // hreflang と og:locale:alternate は LOCALES から生成する。言語を足せば自動で増える。
 const canonicalPath = stripLocale(Astro.url.pathname);
@@ -115,7 +118,11 @@ const jsonLd = {
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={ogImageURL} />
+<meta property="og:image" content={og.url} />
+{og.type && <meta property="og:image:type" content={og.type} />}
+{og.width && <meta property="og:image:width" content={String(og.width)} />}
+{og.height && <meta property="og:image:height" content={String(og.height)} />}
+<meta property="og:image:alt" content={og.alt} />
 <meta property="og:site_name" content="WESON MUSEUM" />
 <meta property="og:locale" content={ogLocale} />
 {LOCALES.filter(l => l !== lang).map(l => (
@@ -127,7 +134,8 @@ const jsonLd = {
 <meta name="twitter:site" content="@WESON_MUSEUM" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={descriptionEn ?? description} />
-<meta name="twitter:image" content={ogImageURL} />
+<meta name="twitter:image" content={og.url} />
+<meta name="twitter:image:alt" content={og.alt} />
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />

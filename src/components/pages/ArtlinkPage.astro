@@ -2,7 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import artlinkData from '../../data/artlink.json';
 import ValueCard from '@components/ValueCard.astro';
-import { fill } from '@i18n/config';
+import { fill, pick } from '@i18n/config';
 import { useTranslations } from '@i18n/ui';
 import {
   artistTotal,
@@ -23,7 +23,12 @@ const connections = artlinkData.connections.map(c => ({ ...c, body: isEn ? c.bod
 
 // 各回は src/content/artlink/<年>.yaml。一覧は新しい順で、各回のページへリンクする
 const te = useTranslations(lang).artlinkEdition;
-const editions = (await getEditions()).map(edition => {
+const allEditions = await getEditions();
+// SNS のサムネイルは最新回のキービジュアル（無ければ写真）
+const latestData = allEditions[0]?.data;
+const ogImage = latestData?.keyVisual?.src ?? latestData?.image;
+const ogImageAlt = pick(latestData?.keyVisual?.alt, lang) ?? 'ARTLINK';
+const editions = allEditions.map(edition => {
   const total = artistTotal(edition);
   return {
     title: editionTitle(edition),
@@ -44,6 +49,8 @@ const latest = editions[0];
     : 'ARTLINKは、WESON MUSEUMを基盤とした複数作家によるVR総合美術展です。美術とまだ出会っていない人、作家と新しい鑑賞者、バーチャルと現実をつなぐ展覧会として、年に数回開催されています。'}
   descriptionEn={isEn ? undefined
     : 'ARTLINK is a group VR art exhibition hosted on WESON MUSEUM. Held several times a year on VRChat, it connects artists with new audiences and bridges virtual and real-world art experiences.'}
+  ogImage={ogImage}
+  ogImageAlt={ogImageAlt}
   lang={isEn ? 'en' : undefined}
 >
 

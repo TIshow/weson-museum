@@ -225,6 +225,11 @@ works:
 - JSON-LD（Organization + Museum スキーマ）を全ページに埋め込み
 - `hreflang="ja"` / `hreflang="en"` / `hreflang="x-default"` を全ページに設定
 - `og:locale` は lang prop に応じて `ja_JP` / `en_US` を自動切り替え
+- **SNS 共有のサムネイル**（`og:image` / `twitter:image`）は `BaseLayout` の `ogImage` / `ogImageAlt` で指定する。省略時は既定画像 `public/images/og/default.jpg`（1200×630）
+  - 既定画像は `python3 -I scripts/generate-og-default.py` で再生成できる（macOS のフォントを使う）
+  - 作家ページは `coverImage`、ARTLINK の回はキービジュアル（無ければ `image`）、ニュースは frontmatter の `ogImage` が自動で使われる
+  - `src/lib/og.ts` がビルド時に画像の実在と形式を確かめ、寸法（`og:image:width` / `height`）を出す。**ファイルが無い・JPEG / PNG 以外（SVG など）だとビルドが止まる**。SVG は SNS でサムネイルとして表示されない
+  - 横長（1.91:1 前後）が望ましい。縦長の画像は X などで中央だけ切り抜かれる
 - サイトマップ: `/weson-museum/sitemap-index.xml`（@astrojs/sitemap で自動生成）
 
 ## デプロイ

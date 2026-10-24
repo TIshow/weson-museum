@@ -53,6 +53,7 @@ const articleJsonLd = {
   title={`${post.data.title} — WESON MUSEUM`}
   description={post.data.description}
   ogImage={post.data.ogImage}
+  ogImageAlt={post.data.title}
   lang="en"
 >
   <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
