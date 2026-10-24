@@ -7,6 +7,7 @@ import { DEFAULT_LOCALE, type Locale } from './config';
 export interface UIStrings {
   nav: {
     artists: string;
+    artlink: string;
     exhibitions: string;
     news: string;
     media: string;
@@ -142,6 +143,7 @@ export interface UIStrings {
 const ja: UIStrings = {
   nav: {
     artists: 'Artists',
+    artlink: 'ARTLINK',
     exhibitions: 'Exhibitions',
     news: 'News',
     media: 'Media',
@@ -271,6 +273,7 @@ const ja: UIStrings = {
 const en: UIStrings = {
   nav: {
     artists: 'Artists',
+    artlink: 'ARTLINK',
     exhibitions: 'Exhibitions',
     news: 'News',
     media: 'Media',

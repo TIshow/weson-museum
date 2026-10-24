@@ -201,7 +201,7 @@ works:
 | `pages/artists/index.astro` | `/artists/` | 参加作家一覧（ARTLINK ARTISTS） |
 | `pages/artists/[slug].astro` | `/artists/[slug]/` | 作家詳細（Content Collections から自動生成） |
 | `pages/exhibitions.astro` | `/exhibitions/` | 常設4館詳細・VRChatリンク |
-| `pages/artlink.astro` | `/artlink/` | ARTLINK 企画展 |
+| `pages/artlink.astro` | `/artlink/` | ARTLINK の企画全体の紹介（グローバルナビ・フッターに掲載） |
 | `pages/artlink/[year].astro` | `/artlink/[year]/` | ARTLINK の各回（会期・会場・参加作家・在廊・報告。Content Collections から自動生成） |
 | `pages/news/index.astro` | `/news/` | ニュース一覧 |
 | `pages/news/[slug].astro` | `/news/[slug]/` | ニュース詳細（Content Collections から自動生成） |
@@ -235,6 +235,7 @@ works:
 ## 注意事項
 
 - `--space-10` はデザイントークンに**存在しない**（`--space-8` または `--space-12` を使う）
+- ヘッダーのナビは7項目で、既定の間隔だと約 986px 必要。`BaseLayout.astro` で 1100px / 900px / 760px ごとに段階的に詰めて 641px 以上で1行に収めている。項目を増やすときは各幅ではみ出さないか確認する（640px 以下はテキストナビ非表示）
 - 英語ページの内部リンクは必ず `/en/*` を向けること
 - `BaseLayout` に `lang="en"` を渡し忘れると nav リンクが日本語パスになる
 - news の Content Collections は配列 JSON ではなく 1ファイル = 1記事の Markdown 形式
