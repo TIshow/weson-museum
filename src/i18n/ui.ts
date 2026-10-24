@@ -99,6 +99,34 @@ export interface UIStrings {
     previous: string;
     next: string;
     backToProgram: string;
+    /** 回のページのセクション（お祭りイベント風の構成） */
+    jumpSchedule: string;
+    sectionNavAria: string;
+    scheduleKicker: string;
+    scheduleHeading: string;
+    scheduleLead: string;
+    weekdays: string[];
+    legendPeriod: string;
+    legendTalk: string;
+    outsidePeriod: string;
+    talkLabel: string;
+    talkJoin: string;
+    /** 時刻の注記（en のみ JST を添える） */
+    timeZoneNote: string;
+    statusLive: string;
+    statusPast: string;
+    statusToday: string;
+    artistsKicker: string;
+    artistsHeading: string;
+    artistsOrder: string;
+    artistPage: string;
+    howtoKicker: string;
+    howtoHeading: string;
+    /** body の {search} にワールド検索名が入る */
+    howtoSteps: { title: string; body: string }[];
+    infoKicker: string;
+    infoHeading: string;
+    recordsKicker: string;
     /** /artlink/ の最新回案内とアーカイブ */
     latestEyebrow: string;
     /** {title} = 「ARTLINK 2026」 */
@@ -180,7 +208,7 @@ const ja: UIStrings = {
     inquiryButton: 'この作家について問い合わせる',
   },
   artlinkEdition: {
-    eyebrow: 'ARTLINK Archive',
+    eyebrow: 'Group VR Art Exhibition',
     period: '会期',
     venue: '会場',
     hours: '開場',
@@ -199,6 +227,35 @@ const ja: UIStrings = {
     previous: '前の回',
     next: '次の回',
     backToProgram: '← ARTLINK について',
+    jumpSchedule: 'スケジュールを見る',
+    sectionNavAria: 'このページの内容',
+    scheduleKicker: 'Schedule',
+    scheduleHeading: '作家在廊スケジュール',
+    scheduleLead: '会期中、参加作家が VR 会場に在廊して作品解説を行います。作品の前で、作家に直接質問できます。',
+    weekdays: ['日', '月', '火', '水', '木', '金', '土'],
+    legendPeriod: '会期',
+    legendTalk: '作家在廊',
+    outsidePeriod: '会期外',
+    talkLabel: '作家在廊・作品解説',
+    talkJoin: '会場へ',
+    timeZoneNote: '',
+    statusLive: '開催中',
+    statusPast: '終了',
+    statusToday: '本日',
+    artistsKicker: 'Artists',
+    artistsHeading: '参加作家',
+    artistsOrder: '50音順',
+    artistPage: '作家ページ',
+    howtoKicker: 'How to Join',
+    howtoHeading: '参加方法',
+    howtoSteps: [
+      { title: 'VRChat にログイン', body: 'VRChat（無料）をインストールし、アカウントでログインします。' },
+      { title: '会場ワールドを開く', body: '「VRChat で会場を開く」から開くか、ワールド検索で「{search}」と検索します。' },
+      { title: '会場を歩いて鑑賞する', body: 'アバターの姿で会場を巡ります。在廊の日時に来ると、作家から直接作品の話を聞けます。' },
+    ],
+    infoKicker: 'Information',
+    infoHeading: '開催概要',
+    recordsKicker: 'Records',
     latestEyebrow: '最新回',
     viewEdition: '{title} を見る',
     archiveIntro: '各回の会期・会場・参加作家・在廊・報告を、年ごとのページにまとめています。',
@@ -279,7 +336,7 @@ const en: UIStrings = {
     inquiryButton: 'Inquire about this artist',
   },
   artlinkEdition: {
-    eyebrow: 'ARTLINK Archive',
+    eyebrow: 'Group VR Art Exhibition',
     period: 'Dates',
     venue: 'Venue',
     hours: 'Hours',
@@ -298,6 +355,35 @@ const en: UIStrings = {
     previous: 'Previous',
     next: 'Next',
     backToProgram: '← About ARTLINK',
+    jumpSchedule: 'See the schedule',
+    sectionNavAria: 'On this page',
+    scheduleKicker: 'Schedule',
+    scheduleHeading: 'Artist Talk Schedule',
+    scheduleLead: 'During the run, participating artists will be in the VR venue to talk about their work. You can ask them questions directly, in front of the work.',
+    weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    legendPeriod: 'Exhibition',
+    legendTalk: 'Artist talk',
+    outsidePeriod: 'Outside the run',
+    talkLabel: 'Artist talk',
+    talkJoin: 'Go to the venue',
+    timeZoneNote: 'All times are Japan Standard Time (JST, UTC+9).',
+    statusLive: 'Live now',
+    statusPast: 'Ended',
+    statusToday: 'Today',
+    artistsKicker: 'Artists',
+    artistsHeading: 'Participating Artists',
+    artistsOrder: '',
+    artistPage: 'Artist page',
+    howtoKicker: 'How to Join',
+    howtoHeading: 'How to Join',
+    howtoSteps: [
+      { title: 'Log in to VRChat', body: 'Install VRChat (free) and log in with your account.' },
+      { title: 'Open the venue world', body: 'Use “Open the venue in VRChat”, or search for “{search}” in world search.' },
+      { title: 'Walk through the exhibition', body: 'Explore the venue as an avatar. Come during an artist talk to hear about the work from the artist directly.' },
+    ],
+    infoKicker: 'Information',
+    infoHeading: 'Overview',
+    recordsKicker: 'Records',
     latestEyebrow: 'Latest edition',
     viewEdition: 'View {title}',
     archiveIntro: 'Each edition has its own page with dates, venues, artists, artist talks, and the exhibition report.',

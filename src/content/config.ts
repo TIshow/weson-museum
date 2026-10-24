@@ -165,7 +165,15 @@ const artlinkCollection = defineCollection({
     format: z.enum(['vr', 'hybrid']).default('vr'),
     /** 回ごとの短い紹介。長い報告は news の記事を正とする */
     summary: i18nText.optional(),
+    /** 写真（16:9）。トップの ARTLINK バナーと、キービジュアルが無い回のページ上部に使う */
     image: z.string().optional(),
+    /**
+     * キービジュアル（16:9、文字入りのポスター）。あれば回のページ上部に切り抜かずに出し、
+     * SNS のシェア画像にも使う。文字が入っているのでバナーの背景には使わない
+     */
+    keyVisual: z.object({ src: z.string(), alt: i18nText }).optional(),
+    /** 在廊の様子の写真。スケジュール欄に添える */
+    talkPhoto: z.object({ src: z.string(), alt: i18nText }).optional(),
 
     venues: z
       .array(
@@ -178,6 +186,8 @@ const artlinkCollection = defineCollection({
           hours: i18nText.optional(),
           /** VR 会場なら VRChat のワールド URL */
           url: z.string().url().optional(),
+          /** VRChat のワールド検索に入れる語 */
+          search: z.string().optional(),
         })
       )
       .min(1),
@@ -185,7 +195,18 @@ const artlinkCollection = defineCollection({
     admission: i18nText.optional(),
     organizer: i18nText.optional(),
 
-    talks: z.array(z.object({ date: isoDate, start: hhmm, end: hhmm })).default([]),
+    /** 作家在廊。label / note を省くと既定の「作家在廊・作品解説」の文言になる */
+    talks: z
+      .array(
+        z.object({
+          date: isoDate,
+          start: hhmm,
+          end: hhmm,
+          label: i18nText.optional(),
+          note: i18nText.optional(),
+        })
+      )
+      .default([]),
 
     /** 50音順。読みが確認できていない名前は en を書かず原表記のままにする */
     artists: z

@@ -6,10 +6,11 @@ import { artistPath, getPublishedArtists } from '@lib/artists';
 import { assetUrl } from '@lib/assets';
 import {
   artistTotal,
+  buildCalendar,
+  dateParts,
   editionPath,
   editionTitle,
   formatPeriod,
-  formatTalk,
   toJstIso,
   worldUrl,
   type Edition,
@@ -32,8 +33,12 @@ const title = editionTitle(edition);
 const period = formatPeriod(d.startDate, d.endDate, lang);
 const summary = pick(d.summary, lang);
 const image = assetUrl(d.image);
+const keyVisual = d.keyVisual && { src: assetUrl(d.keyVisual.src)!, alt: pick(d.keyVisual.alt, lang) };
+const talkPhoto = d.talkPhoto && { src: assetUrl(d.talkPhoto.src)!, alt: pick(d.talkPhoto.alt, lang) };
 const world = worldUrl(edition);
+const worldSearch = d.venues.find(v => v.kind === 'vr')?.search;
 const total = artistTotal(edition);
+const admission = pick(d.admission, lang);
 
 const venues = d.venues.map(venue => ({
   name: pick(venue.name, lang),
@@ -45,24 +50,56 @@ const venues = d.venues.map(venue => ({
   hours: pick(venue.hours, lang),
 }));
 
-const talks = d.talks.map(talk => formatTalk(talk, lang));
+// ---- スケジュール ----
+const tz = lang === 'ja' ? '' : ' JST';
+const talks = d.talks.map(talk => {
+  const p = dateParts(talk.date, lang);
+  return {
+    month: lang === 'ja' ? `${p.month}月` : p.monthName,
+    day: p.day,
+    weekday: p.weekday,
+    time: `${talk.start} – ${talk.end}${tz}`,
+    label: pick(talk.label, lang) ?? t.talkLabel,
+    note: pick(talk.note, lang),
+    inPeriod: talk.date >= d.startDate && talk.date <= d.endDate,
+    startIso: toJstIso(talk.date, talk.start),
+    endIso: toJstIso(talk.date, talk.end),
+    date: talk.date,
+  };
+});
+const calendar = talks.length > 0 ? buildCalendar(edition) : [];
 
-// slug があっても、公開中の作家ページが無ければリンクにしない（リンク切れ防止）
-const published = new Set((await getPublishedArtists()).map(a => a.id));
-const artists = d.artists.map(artist => ({
-  name: pick(artist.name, lang),
-  href: artist.slug && published.has(artist.slug) ? artistPath(lang, artist.slug) : undefined,
-}));
+// ---- 参加作家（公開中の作家ページがあるときだけリンクと写真を出す） ----
+const published = new Map((await getPublishedArtists()).map(a => [a.id, a]));
+const artists = d.artists.map(artist => {
+  const page = artist.slug ? published.get(artist.slug) : undefined;
+  const name = pick(artist.name, lang);
+  return {
+    name,
+    href: page ? artistPath(lang, page.id) : undefined,
+    photo: page ? assetUrl(page.data.portrait ?? page.data.coverImage) : undefined,
+    initial: Array.from(name)[0],
+  };
+});
 
 const records = [
   d.announcementSlug && { label: t.announcementLink, href: localizedPath(lang, `/news/${d.announcementSlug}/`) },
   d.reportSlug && { label: t.reportLink, href: localizedPath(lang, `/news/${d.reportSlug}/`) },
 ].filter(Boolean) as { label: string; href: string }[];
 
+// ページ内ナビ（中身がある節だけ）
+const sections = [
+  talks.length > 0 && { id: 'schedule', label: t.scheduleHeading },
+  artists.length > 0 && { id: 'artists', label: t.artistsHeading },
+  world && { id: 'howto', label: t.howtoHeading },
+  { id: 'info', label: t.infoHeading },
+].filter(Boolean) as { id: string; label: string }[];
+
 const programHref = localizedPath(lang, '/artlink/');
 
 // ---- SEO ----
 const metaDescription = summary ? `${title}（${period}）— ${summary}` : `${title} — ${period}`;
+const ogImage = keyVisual?.src ?? image;
 const pageUrl = new URL(editionPath(lang, edition), Astro.site).toString();
 const locations = d.venues.map(venue =>
   venue.kind === 'vr'
@@ -83,17 +120,17 @@ const jsonLd = {
       ? 'https://schema.org/MixedEventAttendanceMode'
       : 'https://schema.org/OnlineEventAttendanceMode',
   location: locations.length === 1 ? locations[0] : locations,
-  ...(image && { image: new URL(image, Astro.site).toString() }),
+  ...(ogImage && { image: new URL(ogImage, Astro.site).toString() }),
   organizer: { '@id': 'https://weson-museum.com/#organization' },
   ...(artists.length > 0 && {
     performer: artists.map(a => ({ '@type': 'Person', name: a.name })),
   }),
-  ...(d.talks.length > 0 && {
-    subEvent: d.talks.map(talk => ({
+  ...(talks.length > 0 && {
+    subEvent: talks.map(talk => ({
       '@type': 'Event',
-      name: `${title} — ${t.talks}`,
-      startDate: toJstIso(talk.date, talk.start),
-      endDate: toJstIso(talk.date, talk.end),
+      name: `${title} — ${talk.label}`,
+      startDate: talk.startIso,
+      endDate: talk.endIso,
       eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
       location: locations.find(l => l['@type'] === 'VirtualLocation') ?? locations[0],
     })),
@@ -101,13 +138,21 @@ const jsonLd = {
 };
 ---
 
-<BaseLayout title={`${title} — WESON MUSEUM`} description={metaDescription} lang={lang}>
+<BaseLayout title={`${title} — WESON MUSEUM`} description={metaDescription} ogImage={ogImage} lang={lang}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
   <!-- ================================================================
-       Hero
+       Hero — キービジュアルがある回はポスターを切り抜かずに出す
        ================================================================ -->
-  <section class="edition-hero">
+  {keyVisual ? (
+    <section class="edition-kv-section">
+      <div class="edition-kv-frame">
+        <img src={keyVisual.src} alt={keyVisual.alt} class="edition-kv" loading="eager" decoding="async" width="1536" height="864" />
+      </div>
+    </section>
+  ) : null}
+
+  <section class={`edition-hero${keyVisual ? ' edition-hero--with-kv' : ''}`}>
     <div class="container">
       <nav class="breadcrumb" aria-label={ui.common.breadcrumbAria}>
         <ol>
@@ -117,33 +162,226 @@ const jsonLd = {
         </ol>
       </nav>
 
-      <p class="edition-eyebrow mono-label">{t.eyebrow}</p>
-      <h1 class="edition-title">{title}</h1>
-      <p class="edition-period">{period}</p>
-      {summary && <p class="edition-summary">{summary}</p>}
+      <div class="edition-hero-layout">
+        <div>
+          <p class="edition-eyebrow mono-label">{t.eyebrow}</p>
+          <h1 class="edition-title">{title}</h1>
+          <p class="edition-period">{period}</p>
 
-      {world && (
-        <div class="edition-actions">
-          <a href={world} target="_blank" rel="noopener noreferrer" class="btn btn-accent">
-            {t.enterButton}
-          </a>
+          <ul class="edition-chips" role="list">
+            <li class="edition-chip">{d.format === 'hybrid' ? t.formatHybrid : t.formatVr}</li>
+            {admission && <li class="edition-chip edition-chip--accent">{t.admission}：{admission}</li>}
+            {talks.length > 0 && <li class="edition-chip">{t.talks} × {talks.length}</li>}
+            {total && <li class="edition-chip">{t.artists} {fill(t.artistCount, { n: total })}</li>}
+          </ul>
         </div>
-      )}
+
+        {(world || talks.length > 0) && (
+          <div class="edition-hero-actions">
+            {world && (
+              <a href={world} target="_blank" rel="noopener noreferrer" class="btn btn-accent edition-cta">
+                {t.enterButton}
+              </a>
+            )}
+            {talks.length > 0 && <a href="#schedule" class="btn btn-outline">{t.jumpSchedule}</a>}
+          </div>
+        )}
+      </div>
+
+      {summary && <p class="edition-summary">{summary}</p>}
     </div>
   </section>
 
-  {image && (
+  {!keyVisual && image && (
     <div class="edition-image-wrap">
       <img src={image} alt={title} class="edition-image" loading="eager" decoding="async" />
       <div class="edition-image-overlay" aria-hidden="true"></div>
     </div>
   )}
 
+  <!-- ページ内ナビ -->
+  <nav class="edition-tabs" aria-label={t.sectionNavAria}>
+    <ul class="container edition-tabs-list" role="list">
+      {sections.map(section => (
+        <li><a href={`#${section.id}`}>{section.label}</a></li>
+      ))}
+    </ul>
+  </nav>
+
   <!-- ================================================================
-       開催概要
+       Schedule — 作家在廊（カレンダー + タイムテーブル）
        ================================================================ -->
-  <section class="edition-section" aria-label={title}>
+  {talks.length > 0 && (
+    <section id="schedule" class="edition-section" aria-labelledby="schedule-heading">
+      <div class="container">
+        <div class={`edition-section-head${talkPhoto ? ' edition-section-head--photo' : ''}`}>
+          <div>
+            <p class="edition-kicker" aria-hidden="true">{t.scheduleKicker}</p>
+            <h2 id="schedule-heading" class="edition-heading">{t.scheduleHeading}</h2>
+            <p class="edition-lead">{t.scheduleLead}</p>
+            {t.timeZoneNote && <p class="edition-tz mono-label">{t.timeZoneNote}</p>}
+          </div>
+          {talkPhoto && (
+            <figure class="edition-photo">
+              <img src={talkPhoto.src} alt={talkPhoto.alt} loading="lazy" decoding="async" width="1536" height="864" />
+            </figure>
+          )}
+        </div>
+
+        <!-- カレンダー（日曜始まり） -->
+        <div class="cal" role="group" aria-label={period}>
+          <ol class="cal-head" role="list" aria-hidden="true">
+            {t.weekdays.map(w => <li>{w}</li>)}
+          </ol>
+          {calendar.map(week => (
+            <ol class="cal-week" role="list">
+              {week.map(day =>
+                day ? (
+                  <li
+                    class:list={['cal-day', { 'is-period': day.inPeriod, 'is-talk': day.talks.length > 0 }]}
+                    data-cal-date={day.date}
+                  >
+                    <span class="cal-num">{day.day}</span>
+                    {day.talks.map(talk => <span class="cal-time">{talk.start}</span>)}
+                    {day.talks.length > 0 && !day.inPeriod && <span class="cal-outside">{t.outsidePeriod}</span>}
+                  </li>
+                ) : (
+                  <li class="cal-day cal-day--blank" aria-hidden="true"></li>
+                )
+              )}
+            </ol>
+          ))}
+          <p class="cal-legend mono-label">
+            <span class="cal-legend-item cal-legend-item--period">{t.legendPeriod}</span>
+            <span class="cal-legend-item cal-legend-item--talk">{t.legendTalk}</span>
+          </p>
+        </div>
+
+        <!-- タイムテーブル -->
+        <ol class="talk-list" role="list">
+          {talks.map(talk => (
+            <li class="talk" data-talk-start={talk.startIso} data-talk-end={talk.endIso} data-talk-date={talk.date}>
+              <div class="talk-date">
+                <span class="talk-month">{talk.month}</span>
+                <span class="talk-day">{talk.day}</span>
+                <span class="talk-weekday">{talk.weekday}</span>
+              </div>
+              <div class="talk-body">
+                <span
+                  class="talk-status mono-label"
+                  data-talk-status
+                  data-live={t.statusLive}
+                  data-past={t.statusPast}
+                  data-today={t.statusToday}
+                  hidden
+                ></span>
+                <p class="talk-time">{talk.time}</p>
+                <h3 class="talk-label">{talk.label}</h3>
+                {talk.note && <p class="talk-note">{talk.note}</p>}
+                {!talk.inPeriod && <p class="talk-note">{t.outsidePeriod}</p>}
+                {world && (
+                  <a href={world} target="_blank" rel="noopener noreferrer" class="talk-join mono-label">
+                    {t.talkJoin} →
+                  </a>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  <!-- ================================================================
+       Artists
+       ================================================================ -->
+  {artists.length > 0 && (
+    <section id="artists" class="edition-section edition-section--tinted" aria-labelledby="artists-heading">
+      <div class="container">
+        <div class="edition-section-head">
+          <div>
+            <p class="edition-kicker" aria-hidden="true">{t.artistsKicker}</p>
+            <h2 id="artists-heading" class="edition-heading">
+              {t.artistsHeading}
+              {t.artistsOrder && <span class="edition-heading-sub">（{t.artistsOrder}）</span>}
+            </h2>
+          </div>
+        </div>
+
+        <ul class="artist-grid" role="list">
+          {artists.map(artist => {
+            const inner = (
+              <>
+                <span class="artist-tile-media">
+                  {artist.photo ? (
+                    <img src={artist.photo} alt="" loading="lazy" decoding="async" />
+                  ) : (
+                    <span class="artist-tile-initial" aria-hidden="true">{artist.initial}</span>
+                  )}
+                </span>
+                <span class="artist-tile-name">{artist.name}</span>
+                {artist.href && <span class="artist-tile-link mono-label">{t.artistPage} →</span>}
+              </>
+            );
+            return (
+              <li>
+                {artist.href ? (
+                  <a href={artist.href} class="artist-tile artist-tile--linked">{inner}</a>
+                ) : (
+                  <div class="artist-tile">{inner}</div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <!-- ================================================================
+       How to join（VRChat の会場がある回だけ）
+       ================================================================ -->
+  {world && (
+    <section id="howto" class="edition-section" aria-labelledby="howto-heading">
+      <div class="container">
+        <div class="edition-section-head">
+          <div>
+            <p class="edition-kicker" aria-hidden="true">{t.howtoKicker}</p>
+            <h2 id="howto-heading" class="edition-heading">{t.howtoHeading}</h2>
+          </div>
+        </div>
+
+        <ol class="howto-steps" role="list">
+          {t.howtoSteps.map((step, i) => (
+            <li class="howto-step">
+              <span class="howto-num">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="howto-title">{step.title}</h3>
+              <p class="howto-body">{fill(step.body, { search: worldSearch ?? title })}</p>
+            </li>
+          ))}
+        </ol>
+
+        <div class="howto-cta">
+          <a href={world} target="_blank" rel="noopener noreferrer" class="btn btn-accent edition-cta">
+            {t.enterButton}
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ================================================================
+       Information — 開催概要と記録
+       ================================================================ -->
+  <section id="info" class={`edition-section${world ? ' edition-section--tinted' : ''}`} aria-labelledby="info-heading">
     <div class="container">
+      <div class="edition-section-head">
+        <div>
+          <p class="edition-kicker" aria-hidden="true">{t.infoKicker}</p>
+          <h2 id="info-heading" class="edition-heading">{t.infoHeading}</h2>
+        </div>
+      </div>
+
       <dl class="edition-facts">
         <div class="edition-fact">
           <dt class="mono-label">{t.period}</dt>
@@ -159,31 +397,19 @@ const jsonLd = {
             <ul class="edition-venues" role="list">
               {venues.map(venue => (
                 <li>
-                  <span class="edition-venue-name">{venue.name}</span>
+                  <span>{venue.name}</span>
                   {(venue.period || venue.hours) && (
-                    <span class="edition-venue-meta">
-                      {[venue.period, venue.hours].filter(Boolean).join(' / ')}
-                    </span>
+                    <span class="edition-venue-meta">{[venue.period, venue.hours].filter(Boolean).join(' / ')}</span>
                   )}
                 </li>
               ))}
             </ul>
           </dd>
         </div>
-        {d.admission && (
+        {admission && (
           <div class="edition-fact">
             <dt class="mono-label">{t.admission}</dt>
-            <dd>{pick(d.admission, lang)}</dd>
-          </div>
-        )}
-        {talks.length > 0 && (
-          <div class="edition-fact">
-            <dt class="mono-label">{t.talks}</dt>
-            <dd>
-              <ul class="edition-talks" role="list">
-                {talks.map(talk => <li>{talk}</li>)}
-              </ul>
-            </dd>
+            <dd>{admission}</dd>
           </div>
         )}
         {total && (
@@ -200,20 +426,9 @@ const jsonLd = {
         )}
       </dl>
 
-      {artists.length > 0 && (
-        <div class="edition-block">
-          <h2 class="edition-block-heading mono-label">{t.artists}</h2>
-          <ul class="edition-artist-list" role="list">
-            {artists.map(artist => (
-              <li>{artist.href ? <a href={artist.href}>{artist.name}</a> : <span>{artist.name}</span>}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       {records.length > 0 && (
-        <div class="edition-block">
-          <h2 class="edition-block-heading mono-label">{t.records}</h2>
+        <div class="edition-records-wrap">
+          <p class="edition-records-heading mono-label">{t.records}</p>
           <ul class="edition-records" role="list">
             {records.map(record => (
               <li>
@@ -255,15 +470,70 @@ const jsonLd = {
   </nav>
 </BaseLayout>
 
+<script>
+  // 在廊の状態（本日・開催中・終了）は閲覧時刻で決まるので、ブラウザ側で付ける。
+  // 静的 HTML には状態を書かない（ビルド時点で固定されて古くなるため）。JS が無くても表示は崩れない。
+  const now = Date.now();
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tokyo' }).format(new Date());
+
+  document.querySelectorAll<HTMLElement>('[data-talk-start]').forEach(talk => {
+    const start = Date.parse(talk.dataset.talkStart!);
+    const end = Date.parse(talk.dataset.talkEnd!);
+    const badge = talk.querySelector<HTMLElement>('[data-talk-status]');
+    const state =
+      now >= end ? 'past' : now >= start ? 'live' : talk.dataset.talkDate === today ? 'today' : undefined;
+    if (!state || !badge) return;
+    talk.classList.add(`is-${state}`);
+    badge.textContent = badge.dataset[state] ?? '';
+    badge.hidden = false;
+  });
+
+  document.querySelectorAll<HTMLElement>(`[data-cal-date="${today}"]`).forEach(day => day.classList.add('is-today'));
+</script>
+
 <style>
+  /* ================================================================
+     Hero
+     ================================================================ */
+  .edition-kv-section {
+    background: #000;
+    border-bottom: 1px solid var(--color-border-accent);
+  }
+
+  .edition-kv-frame {
+    max-width: 1600px;
+    margin-inline: auto;
+  }
+
+  .edition-kv {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    display: block;
+  }
+
   .edition-hero {
-    padding-block: var(--space-16) var(--space-16);
+    padding-block: var(--space-12) var(--space-12);
     border-bottom: 1px solid var(--color-border);
+  }
+
+  .edition-hero--with-kv {
+    background:
+      radial-gradient(ellipse at 15% 0%, var(--color-main-glow) 0%, transparent 55%),
+      var(--color-bg);
+  }
+
+  .edition-hero-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-8);
+    flex-wrap: wrap;
   }
 
   .edition-eyebrow {
     color: var(--color-accent);
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-4);
   }
 
   .edition-title {
@@ -271,32 +541,59 @@ const jsonLd = {
     font-weight: 200;
     letter-spacing: var(--tracking-widest);
     line-height: 1.05;
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-4);
   }
 
   .edition-period {
-    font-size: var(--text-lg);
+    font-size: var(--text-xl);
     font-weight: 300;
     letter-spacing: var(--tracking-wide);
     color: var(--color-main);
-    margin-bottom: var(--space-8);
+    margin-bottom: var(--space-6);
+  }
+
+  .edition-chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .edition-chip {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-main);
+    border: 1px solid var(--color-border-bright);
+    border-radius: 999px;
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .edition-chip--accent {
+    color: var(--color-text-on-accent);
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .edition-hero-actions {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .edition-cta {
+    padding-inline: var(--space-12);
+    box-shadow: var(--glow-accent);
   }
 
   .edition-summary {
+    margin-top: var(--space-8);
     font-size: var(--text-base);
     line-height: 2;
     color: var(--color-text-muted);
     max-width: var(--content-width);
   }
 
-  .edition-actions {
-    display: flex;
-    gap: var(--space-4);
-    flex-wrap: wrap;
-    margin-top: var(--space-8);
-  }
-
-  /* ---- Image ---- */
   .edition-image-wrap {
     position: relative;
     width: 100%;
@@ -318,12 +615,470 @@ const jsonLd = {
     pointer-events: none;
   }
 
-  /* ---- 開催概要 ---- */
-  .edition-section {
-    padding-block: var(--space-16) var(--space-24);
+  /* ================================================================
+     ページ内ナビ
+     ================================================================ */
+  .edition-tabs {
+    position: sticky;
+    top: var(--nav-height);
+    z-index: 50;
+    background: rgba(5, 11, 10, 0.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--color-border);
   }
 
+  .edition-tabs-list {
+    list-style: none;
+    display: flex;
+    gap: var(--space-8);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .edition-tabs-list a {
+    display: block;
+    padding-block: var(--space-4);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .edition-tabs-list a:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  /* ================================================================
+     セクション共通
+     ================================================================ */
+  .edition-section {
+    padding-block: var(--space-24);
+    border-bottom: 1px solid var(--color-border);
+    /* sticky なヘッダとページ内ナビの下に見出しが隠れないように */
+    scroll-margin-top: calc(var(--nav-height) + 56px);
+  }
+
+  .edition-section--tinted {
+    background: var(--color-bg-1);
+  }
+
+  .edition-section-head {
+    margin-bottom: var(--space-12);
+  }
+
+  .edition-section-head--photo {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 520px);
+    gap: var(--space-12);
+    align-items: end;
+  }
+
+  .edition-kicker {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 7vw, 4rem);
+    font-weight: 200;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--color-text);
+    margin-bottom: var(--space-4);
+  }
+
+  .edition-kicker::first-letter {
+    color: var(--color-accent);
+  }
+
+  .edition-heading {
+    font-size: var(--text-lg);
+    font-weight: 400;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-main);
+  }
+
+  .edition-heading-sub {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .edition-lead {
+    margin-top: var(--space-6);
+    font-size: var(--text-base);
+    line-height: 2;
+    color: var(--color-text-muted);
+    max-width: 52ch;
+  }
+
+  .edition-tz {
+    margin-top: var(--space-4);
+    color: var(--color-text-muted);
+  }
+
+  .edition-photo {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--color-border-bright);
+  }
+
+  .edition-photo img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  /* ================================================================
+     カレンダー
+     ================================================================ */
+  .cal {
+    margin-bottom: var(--space-12);
+  }
+
+  .cal-head,
+  .cal-week {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: var(--space-1);
+  }
+
+  .cal-week {
+    margin-top: var(--space-1);
+  }
+
+  .cal-head li {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+    text-align: center;
+    padding-block: var(--space-2);
+  }
+
+  .cal-day {
+    min-height: 84px;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    color: var(--color-text-subtle);
+  }
+
+  .cal-day--blank {
+    border: none;
+  }
+
+  .cal-day.is-period {
+    background: var(--color-bg-2);
+    border-color: var(--color-border);
+    color: var(--color-text-muted);
+  }
+
+  .cal-day.is-talk {
+    border-color: var(--color-accent);
+    box-shadow: inset 0 0 0 1px var(--color-accent-glow), var(--glow-accent);
+  }
+
+  .cal-day.is-today {
+    outline: 2px solid var(--color-main);
+    outline-offset: 2px;
+  }
+
+  .cal-num {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .cal-day.is-talk .cal-num {
+    color: var(--color-accent);
+    font-weight: 400;
+  }
+
+  .cal-time {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-on-accent);
+    background: var(--color-accent);
+    border-radius: var(--radius-sm);
+    padding: 1px var(--space-1);
+    align-self: flex-start;
+  }
+
+  .cal-outside {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .cal-legend {
+    display: flex;
+    gap: var(--space-6);
+    margin-top: var(--space-4);
+    color: var(--color-text-muted);
+  }
+
+  .cal-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .cal-legend-item::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  .cal-legend-item--period::before {
+    background: var(--color-bg-2);
+    border: 1px solid var(--color-border-bright);
+  }
+
+  .cal-legend-item--talk::before {
+    border: 1px solid var(--color-accent);
+    box-shadow: var(--glow-accent);
+  }
+
+  /* ================================================================
+     タイムテーブル
+     ================================================================ */
+  .talk-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .talk {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    border: 1px solid var(--color-border-bright);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-bg-1);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  }
+
+  .talk:hover {
+    border-color: var(--color-main);
+    box-shadow: var(--glow-main);
+  }
+
+  .talk-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-2);
+    background: var(--color-main);
+    color: var(--color-text-on-main);
+  }
+
+  .talk-month,
+  .talk-weekday {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .talk-day {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .talk-body {
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  .talk-status {
+    color: var(--color-text-on-accent);
+    background: var(--color-accent);
+    border-radius: 999px;
+    padding: 1px var(--space-3);
+  }
+
+  .talk-time {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-accent);
+    line-height: 1.3;
+  }
+
+  .talk-label {
+    font-size: var(--text-base);
+    font-weight: 400;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text);
+  }
+
+  .talk-note {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.8;
+  }
+
+  .talk-join {
+    margin-top: var(--space-2);
+    color: var(--color-main);
+  }
+
+  .talk-join:hover {
+    color: var(--color-main-light);
+  }
+
+  /* 閲覧時刻に応じてブラウザ側で付く状態 */
+  .talk.is-live {
+    border-color: var(--color-accent);
+    box-shadow: var(--glow-accent-strong);
+  }
+
+  .talk.is-live .talk-date {
+    background: var(--color-accent);
+  }
+
+  .talk.is-past {
+    opacity: 0.55;
+  }
+
+  .talk.is-past .talk-status {
+    background: var(--color-bg-2);
+    color: var(--color-text-muted);
+  }
+
+  /* ================================================================
+     参加作家
+     ================================================================ */
+  .artist-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .artist-tile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    height: 100%;
+    padding: var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .artist-tile--linked {
+    border-color: var(--color-border-bright);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  }
+
+  .artist-tile--linked:hover {
+    color: var(--color-text);
+    text-decoration: none;
+    border-color: var(--color-main);
+    box-shadow: var(--glow-main);
+  }
+
+  .artist-tile-media {
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 30% 20%, var(--color-main-glow) 0%, transparent 60%),
+      var(--color-bg-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .artist-tile-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .artist-tile-initial {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 200;
+    color: var(--color-main);
+  }
+
+  .artist-tile-name {
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wide);
+    line-height: 1.5;
+  }
+
+  .artist-tile-link {
+    color: var(--color-main);
+    margin-top: auto;
+  }
+
+  /* ================================================================
+     参加方法
+     ================================================================ */
+  .howto-steps {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+  }
+
+  .howto-step {
+    padding: var(--space-8);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-1);
+  }
+
+  .howto-num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 200;
+    line-height: 1;
+    color: var(--color-accent);
+    margin-bottom: var(--space-4);
+  }
+
+  .howto-title {
+    font-size: var(--text-base);
+    font-weight: 400;
+    letter-spacing: var(--tracking-wide);
+    margin-bottom: var(--space-3);
+  }
+
+  .howto-body {
+    font-size: var(--text-sm);
+    line-height: 1.9;
+    color: var(--color-text-muted);
+  }
+
+  .howto-cta {
+    margin-top: var(--space-12);
+    display: flex;
+    justify-content: center;
+  }
+
+  /* ================================================================
+     開催概要・記録
+     ================================================================ */
   .edition-facts {
     border-top: 1px solid var(--color-border);
     max-width: var(--content-width);
@@ -348,8 +1103,7 @@ const jsonLd = {
     color: var(--color-text);
   }
 
-  .edition-venues,
-  .edition-talks {
+  .edition-venues {
     list-style: none;
     display: flex;
     flex-direction: column;
@@ -366,37 +1120,14 @@ const jsonLd = {
     font-size: var(--text-xs);
   }
 
-  .edition-block {
-    margin-top: var(--space-16);
+  .edition-records-wrap {
+    margin-top: var(--space-12);
     max-width: var(--content-width);
   }
 
-  .edition-block-heading {
+  .edition-records-heading {
     color: var(--color-text-muted);
-    margin-bottom: var(--space-6);
-  }
-
-  .edition-artist-list {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3) var(--space-8);
-  }
-
-  .edition-artist-list li {
-    font-size: var(--text-base);
-    letter-spacing: var(--tracking-wide);
-    color: var(--color-text);
-  }
-
-  .edition-artist-list a {
-    color: var(--color-main);
-    border-bottom: 1px solid var(--color-border-bright);
-  }
-
-  .edition-artist-list a:hover {
-    color: var(--color-main-light);
-    border-color: var(--color-main);
+    margin-bottom: var(--space-4);
   }
 
   .edition-records {
@@ -439,7 +1170,9 @@ const jsonLd = {
     line-height: 1.8;
   }
 
-  /* ---- Pager ---- */
+  /* ================================================================
+     Pager
+     ================================================================ */
   .edition-pager {
     padding-block: var(--space-12);
   }
@@ -474,12 +1207,46 @@ const jsonLd = {
     text-align: right;
   }
 
+  /* ================================================================
+     Responsive
+     ================================================================ */
+  @media (max-width: 900px) {
+    .edition-section-head--photo {
+      grid-template-columns: 1fr;
+    }
+
+    .howto-steps {
+      grid-template-columns: 1fr;
+    }
+  }
+
   @media (max-width: 640px) {
-    .edition-hero { padding-block: var(--space-12); }
+    .edition-hero { padding-block: var(--space-8); }
     .edition-period { font-size: var(--text-base); }
+    .edition-hero-actions { width: 100%; }
+    .edition-hero-actions .btn { flex: 1 1 auto; justify-content: center; }
+    .edition-cta { padding-inline: var(--space-6); }
     .edition-image-wrap { aspect-ratio: 16 / 9; }
-    .edition-section { padding-block: var(--space-12) var(--space-16); }
+    .edition-section { padding-block: var(--space-16); }
+    .edition-section-head { margin-bottom: var(--space-8); }
+    .edition-tabs-list { gap: var(--space-6); }
+
+    .cal-day {
+      min-height: 64px;
+      padding: var(--space-1);
+      align-items: center;
+    }
+
+    .cal-num { font-size: var(--text-base); }
+    .cal-time { align-self: center; font-size: 0.55rem; padding-inline: 2px; }
+    .cal-outside { display: none; }
+
+    .talk { grid-template-columns: 72px 1fr; }
+    .talk-day { font-size: 2rem; }
+    .talk-body { padding: var(--space-4); }
+
+    .artist-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .howto-step { padding: var(--space-6); }
     .edition-fact { grid-template-columns: 88px 1fr; }
-    .edition-block { margin-top: var(--space-12); }
   }
 </style>
