@@ -2,7 +2,15 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import artlinkData from '../../data/artlink.json';
 import ValueCard from '@components/ValueCard.astro';
-import ArtlinkEdition from '@components/ArtlinkEdition.astro';
+import { fill } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import {
+  artistTotal,
+  editionPath,
+  editionTitle,
+  formatPeriodCompact,
+  getEditions,
+} from '@lib/artlink';
 
 interface Props { lang: 'ja' | 'en' }
 const { lang } = Astro.props;
@@ -12,11 +20,19 @@ const p = isEn ? '/en' : '';
 const base = import.meta.env.BASE_URL;
 
 const connections = artlinkData.connections.map(c => ({ ...c, body: isEn ? c.bodyEn : c.bodyJa }));
-const archives    = artlinkData.archives.map(a => ({
-  ...a,
-  path: `${base}news/${a.newsSlug}/`,
-  note: isEn ? a.noteEn : a.noteJa,
-}));
+
+// 各回は src/content/artlink/<年>.yaml。一覧は新しい順で、各回のページへリンクする
+const te = useTranslations(lang).artlinkEdition;
+const editions = (await getEditions()).map(edition => {
+  const total = artistTotal(edition);
+  return {
+    title: editionTitle(edition),
+    href: editionPath(lang, edition),
+    period: formatPeriodCompact(edition.data.startDate, edition.data.endDate),
+    artists: total ? fill(te.artistCount, { n: total }) : undefined,
+  };
+});
+const latest = editions[0];
 ---
 
 <BaseLayout
@@ -73,9 +89,20 @@ const archives    = artlinkData.archives.map(a => ({
   </section>
 
   <!-- ================================================================
-       今回の開催（データは src/lib/artlink.ts）
+       最新回への案内（詳細は各回のページ /artlink/<年>/）
        ================================================================ -->
-  <ArtlinkEdition lang={lang} />
+  {latest && (
+    <section class="al-latest" aria-label={te.latestEyebrow}>
+      <div class="container">
+        <a href={latest.href} class="al-latest-card">
+          <span class="al-latest-eyebrow mono-label">{te.latestEyebrow}</span>
+          <span class="al-latest-title">{latest.title}</span>
+          <span class="al-latest-period mono-label">{latest.period}</span>
+          <span class="al-latest-cta mono-label">{fill(te.viewEdition, { title: latest.title })} →</span>
+        </a>
+      </div>
+    </section>
+  )}
 
   <!-- ================================================================
        Image
@@ -364,29 +391,18 @@ const archives    = artlinkData.archives.map(a => ({
           <h2 id="sec-archive" class="section-heading">Archive</h2>
         </div>
         <div class="section-body">
-          <p class="archive-intro">
-            {isEn
-              ? 'These are the exhibition records from past editions of ARTLINK. See the year-by-year pages for details.'
-              : '歴代の ARTLINK 展示記録です。各回の詳細は、年度別ページをご覧ください。'}
-          </p>
+          <p class="archive-intro">{te.archiveIntro}</p>
           <ul class="archive-list" aria-label={isEn ? 'ARTLINK archive by year' : 'ARTLINK 年度別アーカイブ'}>
-            {archives.map(a => (
+            {editions.map(edition => (
               <li class="archive-row">
-                <a href={a.path} class="archive-link">
-                  <span class="archive-year mono-label">ARTLINK {a.year}</span>
-                  {a.note && <span class="archive-note tag">{a.note}</span>}
+                <a href={edition.href} class="archive-link">
+                  <span class="archive-year mono-label">{edition.title}</span>
+                  <span class="archive-meta mono-label">{edition.period}</span>
+                  {edition.artists && <span class="archive-meta mono-label">{edition.artists}</span>}
                   <span class="archive-arrow" aria-hidden="true">→</span>
                 </a>
               </li>
             ))}
-            <li class="archive-row">
-              <a href={`${p}/news/`} class="archive-link archive-link--all">
-                <span class="archive-year mono-label">
-                  {isEn ? 'Full archive' : '全アーカイブ'}
-                </span>
-                <span class="archive-arrow" aria-hidden="true">→</span>
-              </a>
-            </li>
           </ul>
         </div>
       </div>
@@ -596,7 +612,64 @@ const archives    = artlinkData.archives.map(a => ({
     letter-spacing: var(--tracking-widest);
   }
 
-  .archive-note { font-size: var(--text-xs); }
+  .archive-meta {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  @media (max-width: 640px) {
+    .archive-link { flex-wrap: wrap; row-gap: var(--space-1); }
+  }
+
+  /* ---- 最新回への案内 ---- */
+  .al-latest {
+    padding-block: var(--space-12);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .al-latest-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "eyebrow eyebrow eyebrow"
+      "title   period  cta";
+    align-items: baseline;
+    gap: var(--space-2) var(--space-8);
+    padding: var(--space-8);
+    border: 1px solid var(--color-border-accent);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-1);
+    color: var(--color-text);
+    text-decoration: none;
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  }
+
+  .al-latest-card:hover {
+    color: var(--color-text);
+    text-decoration: none;
+    border-color: var(--color-accent);
+    box-shadow: var(--glow-accent);
+  }
+
+  .al-latest-eyebrow { grid-area: eyebrow; color: var(--color-accent); }
+
+  .al-latest-title {
+    grid-area: title;
+    font-size: var(--text-2xl);
+    font-weight: 200;
+    letter-spacing: var(--tracking-widest);
+  }
+
+  .al-latest-period { grid-area: period; color: var(--color-main); }
+  .al-latest-cta { grid-area: cta; color: var(--color-main); }
+
+  @media (max-width: 640px) {
+    .al-latest-card {
+      grid-template-columns: 1fr;
+      grid-template-areas: "eyebrow" "title" "period" "cta";
+      padding: var(--space-6);
+    }
+  }
 
   .archive-arrow {
     margin-left: auto;

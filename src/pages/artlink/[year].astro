@@ -1,0 +1,17 @@
+---
+import ArtlinkEditionPage from '@components/pages/ArtlinkEditionPage.astro';
+import { assertNewsLinks, getEditions } from '@lib/artlink';
+
+export async function getStaticPaths() {
+  const editions = await getEditions(); // 新しい順
+  await assertNewsLinks(editions);
+  return editions.map((edition, i) => ({
+    params: { year: edition.id },
+    props: { edition, newer: editions[i - 1], older: editions[i + 1] },
+  }));
+}
+
+const { edition, newer, older } = Astro.props;
+---
+
+<ArtlinkEditionPage lang="ja" edition={edition} newer={newer} older={older} />

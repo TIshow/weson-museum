@@ -1,0 +1,51 @@
+startDate: '2026-11-01'
+endDate: '2026-11-14'
+format: vr
+
+summary:
+  ja: VRChat 上の会場で開催する、12名の作家による VR 総合美術展。会期中はいつでも入場でき、作家本人が会場に立つ在廊イベントを3回行う。
+  en: A group VR art exhibition by 12 artists, held in a venue on VRChat. Open at any time during the run, with three artist talks in the venue.
+
+venues:
+  - name:
+      ja: ARTLINK2026会場 ⁄ Venue
+      en: ARTLINK2026会場 ⁄ Venue
+    kind: vr
+    hours:
+      ja: 会期中いつでも入場可
+      en: Open at any time during the run
+    url: https://vrchat.com/home/world/wrld_0ac2766e-de64-4add-a890-3e0dab8dce15
+
+admission:
+  ja: 無料
+  en: Free
+organizer:
+  ja: WESON MUSEUM／ARTLINK
+  en: WESON MUSEUM / ARTLINK
+
+talks:
+  - { date: '2026-11-01', start: '21:00', end: '23:00' }
+  - { date: '2026-11-07', start: '21:00', end: '23:00' }
+  - { date: '2026-11-08', start: '14:00', end: '16:00' }
+
+# 50音順。読みが確認できていない名前は en を書かない（英語版でも原表記のまま出る）
+artists:
+  - { name: { ja: 植村友哉, en: Tomoya Uemura }, slug: tomoya-uemura }
+  - { name: { ja: 川端陽子 } }
+  - { name: { ja: 志村敬子 } }
+  - { name: { ja: 濵 一蝶 } }
+  - { name: { ja: やぐっか } }
+  - { name: { ja: 善也 } }
+  - { name: { ja: ChoN } }
+  - { name: { ja: H。T。 } }
+  - { name: { ja: iT } }
+  - { name: { ja: marron chantilly } }
+  - { name: { ja: Miki Amano } }
+  - { name: { ja: MIU } }
+
+announcementSlug: artlink-2026-announcement
+
+# 会期が終わったら消し、開催報告を書いたら reportSlug を追加する
+notice:
+  ja: 開催内容は変更になる場合があります。最新情報は公式 SNS でお知らせします。
+  en: Details may change. Updates are posted on our official social channels.

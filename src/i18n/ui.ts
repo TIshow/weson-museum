@@ -78,19 +78,32 @@ export interface UIStrings {
   };
   /** ARTLINK の開催回ブロック。年・日付は src/lib/artlink.ts から埋めるので、ここには書かない */
   artlinkEdition: {
+    /** 回ごとのページ */
     eyebrow: string;
-    lead: string;
     period: string;
     venue: string;
     hours: string;
-    hoursValue: string;
+    format: string;
+    formatVr: string;
+    formatHybrid: string;
     admission: string;
     talks: string;
     artists: string;
+    /** {n} = 人数 */
+    artistCount: string;
     organizer: string;
     enterButton: string;
-    newsButton: string;
-    note: string;
+    records: string;
+    announcementLink: string;
+    reportLink: string;
+    previous: string;
+    next: string;
+    backToProgram: string;
+    /** /artlink/ の最新回案内とアーカイブ */
+    latestEyebrow: string;
+    /** {title} = 「ARTLINK 2026」 */
+    viewEdition: string;
+    archiveIntro: string;
   };
 }
 
@@ -167,19 +180,28 @@ const ja: UIStrings = {
     inquiryButton: 'この作家について問い合わせる',
   },
   artlinkEdition: {
-    eyebrow: 'Exhibition',
-    lead: 'VRChat 上の会場で開催します。会期中はいつでも入場でき、作家本人が会場に立つ在廊イベントも予定しています。',
+    eyebrow: 'ARTLINK Archive',
     period: '会期',
     venue: '会場',
     hours: '開場',
-    hoursValue: '会期中いつでも入場できます',
+    format: '形式',
+    formatVr: 'VR（VRChat）',
+    formatHybrid: 'VR とリアル会場のハイブリッド',
     admission: '入場料',
     talks: '作家在廊',
-    artists: '参加作家（50音順）',
+    artists: '参加作家',
+    artistCount: '{n}名',
     organizer: '主催',
     enterButton: 'VRChat で会場を開く',
-    newsButton: 'お知らせを読む',
-    note: '開催内容は変更になる場合があります。最新情報は公式 SNS でお知らせします。',
+    records: '記録',
+    announcementLink: '開催のお知らせ',
+    reportLink: '開催報告',
+    previous: '前の回',
+    next: '次の回',
+    backToProgram: '← ARTLINK について',
+    latestEyebrow: '最新回',
+    viewEdition: '{title} を見る',
+    archiveIntro: '各回の会期・会場・参加作家・在廊・報告を、年ごとのページにまとめています。',
   },
 };
 
@@ -257,19 +279,28 @@ const en: UIStrings = {
     inquiryButton: 'Inquire about this artist',
   },
   artlinkEdition: {
-    eyebrow: 'Exhibition',
-    lead: 'Held in a venue on VRChat, open at any time during the run. Participating artists will also be present in the venue for gallery talks.',
+    eyebrow: 'ARTLINK Archive',
     period: 'Dates',
     venue: 'Venue',
     hours: 'Hours',
-    hoursValue: 'Open at any time during the run',
+    format: 'Format',
+    formatVr: 'VR (VRChat)',
+    formatHybrid: 'Hybrid: VR and a physical gallery',
     admission: 'Admission',
     talks: 'Artist talks',
     artists: 'Artists',
+    artistCount: '{n} artists',
     organizer: 'Organizer',
     enterButton: 'Open the venue in VRChat',
-    newsButton: 'Read the announcement',
-    note: 'Details may change. Updates are posted on our official social channels.',
+    records: 'Records',
+    announcementLink: 'Announcement',
+    reportLink: 'Exhibition report',
+    previous: 'Previous',
+    next: 'Next',
+    backToProgram: '← About ARTLINK',
+    latestEyebrow: 'Latest edition',
+    viewEdition: 'View {title}',
+    archiveIntro: 'Each edition has its own page with dates, venues, artists, artist talks, and the exhibition report.',
   },
 };
 

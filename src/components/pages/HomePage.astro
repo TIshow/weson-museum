@@ -5,7 +5,8 @@ import MediaCard from '@components/MediaCard.astro';
 import museumsData from '../../data/museums.json';
 import siteConfig from '../../data/config.json';
 import { featuredMedia } from '@lib/media';
-import { currentEdition, formatPeriodCompact } from '@lib/artlink';
+import { editionPath, formatPeriodCompact, getLatestEdition } from '@lib/artlink';
+import { assetUrl } from '@lib/assets';
 
 interface Props { lang: 'ja' | 'en' }
 const { lang } = Astro.props;
@@ -15,6 +16,15 @@ const p = isEn ? '/en' : '';
 const base = import.meta.env.BASE_URL;
 
 const featured = featuredMedia(siteConfig.maxFeaturedMedia);
+
+// ARTLINK バナーは最新回（src/content/artlink/）から。画像が未設定の回は既存の写真で代用する
+const latestEdition = await getLatestEdition();
+const artlinkBanner = {
+  year: latestEdition.id,
+  period: formatPeriodCompact(latestEdition.data.startDate, latestEdition.data.endDate),
+  image: assetUrl(latestEdition.data.image) ?? `${base}images/artlink2025.jpg`,
+  href: editionPath(lang, latestEdition),
+};
 
 const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
   const m = museumsData.find(x => x.num === num)!;
@@ -119,14 +129,14 @@ const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
   </section>
 
   <!-- ================================================================
-       ARTLINK（年・会期は src/lib/artlink.ts の currentEdition）
+       ARTLINK（最新回。データは src/content/artlink/<年>.yaml）
        ================================================================ -->
   <section class="section-artlink">
     <div class="container">
       <div class="artlink-banner">
         <img
-          src={`${base}images/artlink2025.jpg`}
-          alt={`ARTLINK ${currentEdition.year}`}
+          src={artlinkBanner.image}
+          alt={`ARTLINK ${artlinkBanner.year}`}
           loading="lazy"
           decoding="async"
           class="artlink-img"
@@ -134,14 +144,14 @@ const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
         <div class="artlink-overlay">
           <div class="artlink-meta">
             <span class="tag">Special Exhibition</span>
-            <span class="artlink-year mono-label">{currentEdition.year}</span>
+            <span class="artlink-year mono-label">{artlinkBanner.year}</span>
           </div>
           <h2 class="artlink-title">ARTLINK</h2>
-          <p class="artlink-period mono-label">{formatPeriodCompact(currentEdition)}</p>
+          <p class="artlink-period mono-label">{artlinkBanner.period}</p>
           <p class="artlink-desc">
             {isEn ? 'Group VR Art Exhibition' : '複数作家による VR 総合美術展'}
           </p>
-          <a href={`${p}/artlink/`} class="btn btn-accent">
+          <a href={artlinkBanner.href} class="btn btn-accent">
             View Exhibition
           </a>
         </div>

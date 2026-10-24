@@ -145,9 +145,69 @@ const artistsCollection = defineCollection({
   }),
 });
 
+// ------------------------------------------------------------
+// ARTLINK の開催回（1回 = 1ファイル、ファイル名が年 = URL）
+// ------------------------------------------------------------
+
+/**
+ * 日付は JST の暦日として文字列で持つ。z.date() にすると YAML の日付が
+ * UTC の 0 時として解釈され、ビルド環境によって日付がずれうるため。
+ */
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'YYYY-MM-DD（JST）で書く');
+const hhmm = z.string().regex(/^\d{2}:\d{2}$/, 'HH:MM（JST）で書く');
+
+const artlinkCollection = defineCollection({
+  type: 'data',
+  schema: z.object({
+    /** 会期全体（複数会場があるときは最初の初日〜最後の最終日） */
+    startDate: isoDate,
+    endDate: isoDate,
+    format: z.enum(['vr', 'hybrid']).default('vr'),
+    /** 回ごとの短い紹介。長い報告は news の記事を正とする */
+    summary: i18nText.optional(),
+    image: z.string().optional(),
+
+    venues: z
+      .array(
+        z.object({
+          name: i18nText,
+          kind: z.enum(['vr', 'physical']),
+          /** 会場ごとに会期が違う場合だけ書く */
+          startDate: isoDate.optional(),
+          endDate: isoDate.optional(),
+          hours: i18nText.optional(),
+          /** VR 会場なら VRChat のワールド URL */
+          url: z.string().url().optional(),
+        })
+      )
+      .min(1),
+
+    admission: i18nText.optional(),
+    organizer: i18nText.optional(),
+
+    talks: z.array(z.object({ date: isoDate, start: hhmm, end: hhmm })).default([]),
+
+    /** 50音順。読みが確認できていない名前は en を書かず原表記のままにする */
+    artists: z
+      .array(z.object({ name: i18nText, slug: z.string().optional() }))
+      .default([]),
+    /** 作家名の記録がない回の人数。artists があればそちらの件数を優先する */
+    artistCount: z.number().int().positive().optional(),
+
+    /** 開催告知・開催報告の news slug（news / news-en 共通）。存在しない slug はビルドで落とす */
+    announcementSlug: z.string().optional(),
+    reportSlug: z.string().optional(),
+
+    /** 会期前の注意書きなど。会期が終わったら消す */
+    notice: i18nText.optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
 export const collections = {
   news: newsCollection,
   'news-en': newsEnCollection,
   exhibitions: exhibitionsCollection,
   artists: artistsCollection,
+  artlink: artlinkCollection,
 };

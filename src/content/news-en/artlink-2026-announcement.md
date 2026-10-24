@@ -20,6 +20,8 @@ ARTLINK is a multi-artist exhibition that has grown out of WESON MUSEUM since 20
 
 [Open the venue in VRChat](https://vrchat.com/home/world/wrld_0ac2766e-de64-4add-a890-3e0dab8dce15)
 
+The latest dates, artists, and talk schedule are kept on the [ARTLINK 2026 page](/en/artlink/2026/).
+
 ## Artist Talks
 
 All times are Japan Standard Time (JST, UTC+9).

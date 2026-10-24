@@ -20,6 +20,8 @@ ARTLINK は、WESON MUSEUM を基盤に2023年から続けている、複数の�
 
 [VRChat で会場を開く](https://vrchat.com/home/world/wrld_0ac2766e-de64-4add-a890-3e0dab8dce15)
 
+会期・参加作家・在廊の最新情報は [ARTLINK 2026 のページ](/artlink/2026/) にまとめています。
+
 ## 作家在廊イベント
 
 - 11月1日（日）21:00–23:00

@@ -1,78 +1,64 @@
-import type { I18nText, Locale } from '@i18n/config';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { localizedPath, type Locale } from '@i18n/config';
 
 /**
- * ARTLINK の開催回データ。
+ * ARTLINK の開催回。データは src/content/artlink/<年>.yaml（ファイル名が年 = URL）。
  *
- * 日付・時刻はすべて日本時間（JST）で書く。
+ * 日付・時刻はすべて日本時間（JST）の文字列で持つ。
  * サイトは push 時にしかビルドされないため、「開催中」「終了」のような
- * 時刻に依存する状態はここから導出しないこと（ビルド時点で固定されて古くなる）。
+ * 時刻に依存する状態は導出しないこと（ビルド時点で固定されて古くなる）。
  */
+export type Edition = CollectionEntry<'artlink'>;
+export type EditionTalk = Edition['data']['talks'][number];
 
-/** 作家在廊イベント。date は YYYY-MM-DD、start/end は HH:MM（JST）。 */
-export interface ArtlinkTalk {
-  date: string;
-  start: string;
-  end: string;
+/** 公開中の開催回を新しい順に返す。 */
+export async function getEditions(): Promise<Edition[]> {
+  const editions = await getCollection('artlink', ({ data }) => !data.draft);
+  return editions.sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));
 }
 
-export interface ArtlinkArtist {
-  /**
-   * 表記は作家の指定どおり。読みが確認できていない名前は en を書かず、
-   * 原表記のまま ja にフォールバックさせる（推測でローマ字にしない）。
-   */
-  name: I18nText;
-  /** 作家ページがある場合の slug。公開中の作家ページがあるときだけリンクになる。 */
-  slug?: string;
+/** 最新の開催回（トップのバナーや /artlink/ の案内に使う）。 */
+export async function getLatestEdition(): Promise<Edition> {
+  const [latest] = await getEditions();
+  if (!latest) throw new Error('src/content/artlink/ に公開中の開催回がありません');
+  return latest;
 }
 
-export interface ArtlinkEdition {
-  year: string;
-  /** 会期の初日・最終日（YYYY-MM-DD、JST） */
-  startDate: string;
-  endDate: string;
-  venue: I18nText;
-  worldUrl: string;
-  admission: I18nText;
-  organizer: I18nText;
-  talks: ArtlinkTalk[];
-  /** 50音順 */
-  artists: ArtlinkArtist[];
-  /** 開催告知のニュース記事 slug（news / news-en 共通） */
-  announcementSlug: string;
+export function editionTitle(edition: Edition): string {
+  return `ARTLINK ${edition.id}`;
 }
 
-export const currentEdition: ArtlinkEdition = {
-  year: '2026',
-  startDate: '2026-11-01',
-  endDate: '2026-11-14',
-  venue: {
-    ja: 'ARTLINK2026会場 ⁄ Venue（VRChat）',
-    en: 'ARTLINK2026会場 ⁄ Venue (VRChat)',
-  },
-  worldUrl: 'https://vrchat.com/home/world/wrld_0ac2766e-de64-4add-a890-3e0dab8dce15',
-  admission: { ja: '無料', en: 'Free' },
-  organizer: { ja: 'WESON MUSEUM／ARTLINK', en: 'WESON MUSEUM / ARTLINK' },
-  talks: [
-    { date: '2026-11-01', start: '21:00', end: '23:00' },
-    { date: '2026-11-07', start: '21:00', end: '23:00' },
-    { date: '2026-11-08', start: '14:00', end: '16:00' },
-  ],
-  artists: [
-    { name: { ja: '植村友哉', en: 'Tomoya Uemura' }, slug: 'tomoya-uemura' },
-    { name: { ja: '川端陽子' } },
-    { name: { ja: '志村敬子' } },
-    { name: { ja: '濵 一蝶' } },
-    { name: { ja: 'やぐっか' } },
-    { name: { ja: '善也' } },
-    { name: { ja: 'ChoN' } },
-    { name: { ja: 'H。T。' } },
-    { name: { ja: 'iT' } },
-    { name: { ja: 'marron chantilly' } },
-    { name: { ja: 'Miki Amano' } },
-    { name: { ja: 'MIU' } },
-  ],
-  announcementSlug: 'artlink-2026-announcement',
-};
+export function editionPath(lang: Locale, edition: Edition): string {
+  return localizedPath(lang, `/artlink/${edition.id}/`);
+}
+
+/** 参加作家数。名前の記録があればその件数、なければ artistCount。 */
+export function artistTotal(edition: Edition): number | undefined {
+  return edition.data.artists.length > 0 ? edition.data.artists.length : edition.data.artistCount;
+}
+
+/** VRChat の会場 URL（VR 会場に url があるときだけ）。 */
+export function worldUrl(edition: Edition): string | undefined {
+  return edition.data.venues.find(v => v.kind === 'vr' && v.url)?.url;
+}
+
+/**
+ * 開催回が参照する news 記事が実在するか確かめる。リンク切れを本番に出さないため、
+ * getStaticPaths から呼んでビルド時に落とす。
+ */
+export async function assertNewsLinks(editions: Edition[]): Promise<void> {
+  const ja = new Set((await getCollection('news')).map(n => n.slug));
+  const en = new Set((await getCollection('news-en')).map(n => n.slug));
+  for (const edition of editions) {
+    for (const slug of [edition.data.announcementSlug, edition.data.reportSlug]) {
+      if (slug && !(ja.has(slug) && en.has(slug))) {
+        throw new Error(
+          `src/content/artlink/${edition.id}.yaml: news 記事 "${slug}" が news と news-en の両方にありません`
+        );
+      }
+    }
+  }
+}
 
 // ------------------------------------------------------------
 // 日付の整形。ビルド環境（CI は UTC）に左右されないよう常に JST で解釈する。
@@ -105,22 +91,22 @@ export function formatDay(date: string, lang: Locale): string {
 }
 
 /** 「2026年11月1日（日）〜11月14日（土）」/「Sun, Nov 1 – Sat, Nov 14, 2026」 */
-export function formatPeriod(edition: ArtlinkEdition, lang: Locale): string {
-  const start = parts(edition.startDate, lang);
+export function formatPeriod(start: string, end: string, lang: Locale): string {
+  const year = parts(start, lang).year;
   return lang === 'ja'
-    ? `${start.year}年${formatDay(edition.startDate, lang)}〜${formatDay(edition.endDate, lang)}`
-    : `${formatDay(edition.startDate, lang)} – ${formatDay(edition.endDate, lang)}, ${start.year}`;
+    ? `${year}年${formatDay(start, lang)}〜${formatDay(end, lang)}`
+    : `${formatDay(start, lang)} – ${formatDay(end, lang)}, ${year}`;
 }
 
-/** バナー用の短い表記「2026.11.01 — 11.14」 */
-export function formatPeriodCompact(edition: ArtlinkEdition): string {
-  const [y, m1, d1] = edition.startDate.split('-');
-  const [, m2, d2] = edition.endDate.split('-');
+/** 一覧やバナー用の短い表記「2026.11.01 — 11.14」 */
+export function formatPeriodCompact(start: string, end: string): string {
+  const [y, m1, d1] = start.split('-');
+  const [, m2, d2] = end.split('-');
   return `${y}.${m1}.${d1} — ${m2}.${d2}`;
 }
 
 /** 「11月1日（日）21:00–23:00」/「Sun, Nov 1 · 21:00–23:00 JST」 */
-export function formatTalk(talk: ArtlinkTalk, lang: Locale): string {
+export function formatTalk(talk: EditionTalk, lang: Locale): string {
   const time = `${talk.start}–${talk.end}`;
   return lang === 'ja' ? `${formatDay(talk.date, lang)} ${time}` : `${formatDay(talk.date, lang)} · ${time} JST`;
 }
