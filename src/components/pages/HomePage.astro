@@ -7,6 +7,8 @@ import siteConfig from '../../data/config.json';
 import { featuredMedia } from '@lib/media';
 import { editionPath, formatPeriodCompact, getLatestEdition } from '@lib/artlink';
 import { assetUrl } from '@lib/assets';
+import { fill, localizedPath } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
 
 interface Props { lang: 'ja' | 'en' }
 const { lang } = Astro.props;
@@ -24,6 +26,13 @@ const artlinkBanner = {
   period: formatPeriodCompact(latestEdition.data.startDate, latestEdition.data.endDate),
   image: assetUrl(latestEdition.data.image) ?? `${base}images/artlink2025.jpg`,
   href: editionPath(lang, latestEdition),
+};
+// バナーからは最新回と、企画全体のページ（/artlink/）の両方へ行けるようにする
+const te = useTranslations(lang).artlinkEdition;
+const artlinkLinks = {
+  edition: fill(te.viewEdition, { title: `ARTLINK ${latestEdition.id}` }),
+  program: te.aboutProgram,
+  programHref: localizedPath(lang, '/artlink/'),
 };
 
 const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
@@ -151,9 +160,10 @@ const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
           <p class="artlink-desc">
             {isEn ? 'Group VR Art Exhibition' : '複数作家による VR 総合美術展'}
           </p>
-          <a href={artlinkBanner.href} class="btn btn-accent">
-            View Exhibition
-          </a>
+          <div class="artlink-actions">
+            <a href={artlinkBanner.href} class="btn btn-accent">{artlinkLinks.edition}</a>
+            <a href={artlinkLinks.programHref} class="btn btn-outline artlink-program-link">{artlinkLinks.program}</a>
+          </div>
         </div>
         <div class="artlink-corner artlink-corner--tl" aria-hidden="true"></div>
         <div class="artlink-corner artlink-corner--br" aria-hidden="true"></div>
@@ -514,9 +524,17 @@ const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
     line-height: 1;
   }
 
-  /* overlay は縦方向の flex なので、ボタンが横幅いっぱいに伸びないよう左寄せにする */
-  .artlink-overlay .btn {
-    align-self: flex-start;
+  .artlink-actions {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  /* 写真の上に載るので、輪郭線だけのボタンは背景を少し敷いて読めるようにする */
+  .artlink-program-link {
+    background: rgba(5, 11, 10, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
   }
 
   .artlink-period {
@@ -555,8 +573,15 @@ const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
   }
 
   @media (max-width: 640px) {
-    .artlink-overlay { padding: var(--space-6); }
-    .artlink-banner { aspect-ratio: 4 / 3; }
+    /* 狭い画面ではボタンが2段になるので、固定比率をやめて中身の高さに合わせる。
+       写真は背景として敷いたまま、文字が読めるよう全面に暗幕をかける */
+    .artlink-banner { aspect-ratio: auto; min-height: 0; }
+    .artlink-overlay {
+      position: relative;
+      inset: auto;
+      padding: var(--space-8) var(--space-6);
+      background: linear-gradient(to bottom, rgba(5, 11, 10, 0.7), rgba(5, 11, 10, 0.9));
+    }
   }
 
   .section-media {

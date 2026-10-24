@@ -7,6 +7,7 @@ import { DEFAULT_LOCALE, type Locale } from './config';
 export interface UIStrings {
   nav: {
     artists: string;
+    artlink: string;
     exhibitions: string;
     news: string;
     media: string;
@@ -102,6 +103,8 @@ export interface UIStrings {
     previous: string;
     next: string;
     backToProgram: string;
+    /** 企画全体のページ（/artlink/）へのリンク */
+    aboutProgram: string;
     /** 回のページのセクション（お祭りイベント風の構成） */
     jumpSchedule: string;
     sectionNavAria: string;
@@ -140,6 +143,7 @@ export interface UIStrings {
 const ja: UIStrings = {
   nav: {
     artists: 'Artists',
+    artlink: 'ARTLINK',
     exhibitions: 'Exhibitions',
     news: 'News',
     media: 'Media',
@@ -231,6 +235,7 @@ const ja: UIStrings = {
     previous: '前の回',
     next: '次の回',
     backToProgram: '← ARTLINK について',
+    aboutProgram: 'ARTLINK について',
     jumpSchedule: 'スケジュールを見る',
     sectionNavAria: 'このページの内容',
     scheduleKicker: 'Schedule',
@@ -268,6 +273,7 @@ const ja: UIStrings = {
 const en: UIStrings = {
   nav: {
     artists: 'Artists',
+    artlink: 'ARTLINK',
     exhibitions: 'Exhibitions',
     news: 'News',
     media: 'Media',
@@ -360,6 +366,7 @@ const en: UIStrings = {
     previous: 'Previous',
     next: 'Next',
     backToProgram: '← About ARTLINK',
+    aboutProgram: 'About ARTLINK',
     jumpSchedule: 'See the schedule',
     sectionNavAria: 'On this page',
     scheduleKicker: 'Schedule',
