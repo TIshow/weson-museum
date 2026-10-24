@@ -102,6 +102,8 @@ export interface UIStrings {
     previous: string;
     next: string;
     backToProgram: string;
+    /** 企画全体のページ（/artlink/）へのリンク */
+    aboutProgram: string;
     /** 回のページのセクション（お祭りイベント風の構成） */
     jumpSchedule: string;
     sectionNavAria: string;
@@ -231,6 +233,7 @@ const ja: UIStrings = {
     previous: '前の回',
     next: '次の回',
     backToProgram: '← ARTLINK について',
+    aboutProgram: 'ARTLINK について',
     jumpSchedule: 'スケジュールを見る',
     sectionNavAria: 'このページの内容',
     scheduleKicker: 'Schedule',
@@ -360,6 +363,7 @@ const en: UIStrings = {
     previous: 'Previous',
     next: 'Next',
     backToProgram: '← About ARTLINK',
+    aboutProgram: 'About ARTLINK',
     jumpSchedule: 'See the schedule',
     sectionNavAria: 'On this page',
     scheduleKicker: 'Schedule',

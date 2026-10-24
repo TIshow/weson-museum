@@ -164,7 +164,10 @@ const jsonLd = {
 
       <div class="edition-hero-layout">
         <div>
-          <p class="edition-eyebrow mono-label">{t.eyebrow}</p>
+          <p class="edition-eyebrow mono-label">
+            <span>{t.eyebrow}</span>
+            <a href={programHref} class="edition-program-link">{t.aboutProgram} →</a>
+          </p>
           <h1 class="edition-title">{title}</h1>
           <p class="edition-period">{period}</p>
 
@@ -532,8 +535,22 @@ const jsonLd = {
   }
 
   .edition-eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-6);
     color: var(--color-accent);
     margin-bottom: var(--space-4);
+  }
+
+  .edition-program-link {
+    color: var(--color-main);
+    border-bottom: 1px solid var(--color-border-bright);
+  }
+
+  .edition-program-link:hover {
+    color: var(--color-main-light);
+    border-color: var(--color-main);
+    text-decoration: none;
   }
 
   .edition-title {
