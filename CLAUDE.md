@@ -244,6 +244,8 @@ works:
 - スマホ（640px 以下）のメニューは Popover API（`popover` 属性）で実装している。JS 不要で、Escape・外側タップで閉じ、閉じるとフォーカスが開閉ボタンに戻る。未対応ブラウザではボタンを出さず（`@supports selector(:popover-open)`）、フッターのナビで移動する
 - ナビの現在地は `aria-current="page"`。配下のページ（`/artlink/2026/` など）でもその項目が現在地になる
 - `aspect-ratio` と `min-height` を同じ要素に併用しないこと。`min-height` が比率を通じて最小幅に換算され、狭い画面ではみ出す（トップの ARTLINK バナーで発生済み）
+- グリッドの列は `1fr` ではなく `minmax(0, 1fr)` で書く。`1fr` は中身の最小幅より狭くならないため、折り返せない大きな文字（時刻表示など）があると列が押し広げられて画面からはみ出す（トップの VR 在廊ツアー欄で発生済み）
+- 1語の大きな英字見出し（`INFORMATION` など）は折り返せない。狭い画面で文字サイズか字送りを落とす。文字だけがはみ出す場合は要素の幅が変わらないので、`document.documentElement.scrollWidth` で確認する
 - 英語ページの内部リンクは必ず `/en/*` を向けること
 - `BaseLayout` に `lang="en"` を渡し忘れると nav リンクが日本語パスになる
 - news の Content Collections は配列 JSON ではなく 1ファイル = 1記事の Markdown 形式
