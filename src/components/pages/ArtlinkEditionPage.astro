@@ -713,6 +713,15 @@ const jsonLd = {
     color: var(--color-accent);
   }
 
+  /* 英字の見出しは1語だと折り返せない。320px 幅では「INFORMATION」が 321px になり、
+     箱（282px）からはみ出していたので、狭い画面では一段小さくする */
+  @media (max-width: 400px) {
+    .edition-kicker {
+      font-size: 2rem;
+      letter-spacing: var(--tracking-wider);
+    }
+  }
+
   .edition-heading {
     font-size: var(--text-lg);
     font-weight: 400;

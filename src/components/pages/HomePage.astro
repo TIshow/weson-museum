@@ -618,15 +618,17 @@ const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
     padding-block: var(--space-8) var(--space-24);
   }
 
+  /* 列は minmax(0, …) にして、中身の最小幅（大きな時刻表示など）で押し広げられないようにする。
+     1fr のままだと 320px 幅で列が約 326px になり、画面からはみ出していた */
   .tour-layout {
     display: grid;
-    grid-template-columns: 1fr 1.4fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
     gap: var(--space-12);
     align-items: center;
   }
 
   @media (max-width: 900px) {
-    .tour-layout { grid-template-columns: 1fr; }
+    .tour-layout { grid-template-columns: minmax(0, 1fr); }
   }
 
   .tour-info {
@@ -651,8 +653,9 @@ const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
 
   .tour-time-block {
     display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
-    gap: var(--space-3);
+    gap: 0 var(--space-3);
   }
 
   .tour-time {
@@ -689,6 +692,12 @@ const museums = siteConfig.homepageMuseumOrder.map((num, i) => {
   @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.3; }
+  }
+
+  /* 狭い画面では時刻と枠の余白を一段小さくして、「21:00 — 22:00」を1行に収める */
+  @media (max-width: 400px) {
+    .tour-schedule { padding: var(--space-4); }
+    .tour-time { font-size: var(--text-2xl); }
   }
 
   .tour-desc {
