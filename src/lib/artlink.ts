@@ -85,7 +85,7 @@ export function dateParts(date: string, lang: Locale) {
 }
 
 /** 「11月1日（日）」/「Sun, Nov 1」 */
-export function formatDay(date: string, lang: Locale): string {
+function formatDay(date: string, lang: Locale): string {
   const p = dateParts(date, lang);
   return lang === 'ja' ? `${p.month}月${p.day}日（${p.weekday}）` : `${p.weekday}, ${p.monthName} ${p.day}`;
 }
@@ -105,10 +105,10 @@ export function formatPeriodCompact(start: string, end: string): string {
   return `${y}.${m1}.${d1} — ${m2}.${d2}`;
 }
 
-/** 「11月1日（日）21:00–23:00」/「Sun, Nov 1 · 21:00–23:00 JST」 */
-export function formatTalk(talk: EditionTalk, lang: Locale): string {
-  const time = `${talk.start}–${talk.end}`;
-  return lang === 'ja' ? `${formatDay(talk.date, lang)} ${time}` : `${formatDay(talk.date, lang)} · ${time} JST`;
+/** 在廊の時間帯「21:00 – 23:00」/「21:00 – 23:00 JST」（海外の来場者向けに en は時間帯を明記） */
+export function formatTalkTime(talk: EditionTalk, lang: Locale): string {
+  const time = `${talk.start} – ${talk.end}`;
+  return lang === 'ja' ? time : `${time} JST`;
 }
 
 // ------------------------------------------------------------

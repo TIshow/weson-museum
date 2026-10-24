@@ -11,6 +11,7 @@ import {
   editionPath,
   editionTitle,
   formatPeriod,
+  formatTalkTime,
   toJstIso,
   worldUrl,
   type Edition,
@@ -51,14 +52,13 @@ const venues = d.venues.map(venue => ({
 }));
 
 // ---- スケジュール ----
-const tz = lang === 'ja' ? '' : ' JST';
 const talks = d.talks.map(talk => {
   const p = dateParts(talk.date, lang);
   return {
     month: lang === 'ja' ? `${p.month}月` : p.monthName,
     day: p.day,
     weekday: p.weekday,
-    time: `${talk.start} – ${talk.end}${tz}`,
+    time: formatTalkTime(talk, lang),
     label: pick(talk.label, lang) ?? t.talkLabel,
     note: pick(talk.note, lang),
     inPeriod: talk.date >= d.startDate && talk.date <= d.endDate,
@@ -170,9 +170,9 @@ const jsonLd = {
 
           <ul class="edition-chips" role="list">
             <li class="edition-chip">{d.format === 'hybrid' ? t.formatHybrid : t.formatVr}</li>
-            {admission && <li class="edition-chip edition-chip--accent">{t.admission}：{admission}</li>}
-            {talks.length > 0 && <li class="edition-chip">{t.talks} × {talks.length}</li>}
-            {total && <li class="edition-chip">{t.artists} {fill(t.artistCount, { n: total })}</li>}
+            {admission && <li class="edition-chip edition-chip--accent">{fill(t.chipAdmission, { value: admission })}</li>}
+            {talks.length > 0 && <li class="edition-chip">{fill(t.chipTalks, { n: talks.length })}</li>}
+            {total && <li class="edition-chip">{fill(t.chipArtists, { n: total })}</li>}
           </ul>
         </div>
 

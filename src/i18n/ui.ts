@@ -82,7 +82,6 @@ export interface UIStrings {
     eyebrow: string;
     period: string;
     venue: string;
-    hours: string;
     format: string;
     formatVr: string;
     formatHybrid: string;
@@ -91,6 +90,10 @@ export interface UIStrings {
     artists: string;
     /** {n} = 人数 */
     artistCount: string;
+    /** ヒーローのチップ。語順が言語で違うので組み立てずに辞書で持つ */
+    chipAdmission: string;
+    chipTalks: string;
+    chipArtists: string;
     organizer: string;
     enterButton: string;
     records: string;
@@ -126,7 +129,6 @@ export interface UIStrings {
     howtoSteps: { title: string; body: string }[];
     infoKicker: string;
     infoHeading: string;
-    recordsKicker: string;
     /** /artlink/ の最新回案内とアーカイブ */
     latestEyebrow: string;
     /** {title} = 「ARTLINK 2026」 */
@@ -211,7 +213,6 @@ const ja: UIStrings = {
     eyebrow: 'Group VR Art Exhibition',
     period: '会期',
     venue: '会場',
-    hours: '開場',
     format: '形式',
     formatVr: 'VR（VRChat）',
     formatHybrid: 'VR とリアル会場のハイブリッド',
@@ -219,6 +220,9 @@ const ja: UIStrings = {
     talks: '作家在廊',
     artists: '参加作家',
     artistCount: '{n}名',
+    chipAdmission: '入場料：{value}',
+    chipTalks: '作家在廊 × {n}',
+    chipArtists: '参加作家 {n}名',
     organizer: '主催',
     enterButton: 'VRChat で会場を開く',
     records: '記録',
@@ -255,7 +259,6 @@ const ja: UIStrings = {
     ],
     infoKicker: 'Information',
     infoHeading: '開催概要',
-    recordsKicker: 'Records',
     latestEyebrow: '最新回',
     viewEdition: '{title} を見る',
     archiveIntro: '各回の会期・会場・参加作家・在廊・報告を、年ごとのページにまとめています。',
@@ -339,7 +342,6 @@ const en: UIStrings = {
     eyebrow: 'Group VR Art Exhibition',
     period: 'Dates',
     venue: 'Venue',
-    hours: 'Hours',
     format: 'Format',
     formatVr: 'VR (VRChat)',
     formatHybrid: 'Hybrid: VR and a physical gallery',
@@ -347,6 +349,9 @@ const en: UIStrings = {
     talks: 'Artist talks',
     artists: 'Artists',
     artistCount: '{n} artists',
+    chipAdmission: 'Admission: {value}',
+    chipTalks: '{n} artist talks',
+    chipArtists: '{n} artists',
     organizer: 'Organizer',
     enterButton: 'Open the venue in VRChat',
     records: 'Records',
@@ -383,7 +388,6 @@ const en: UIStrings = {
     ],
     infoKicker: 'Information',
     infoHeading: 'Overview',
-    recordsKicker: 'Records',
     latestEyebrow: 'Latest edition',
     viewEdition: 'View {title}',
     archiveIntro: 'Each edition has its own page with dates, venues, artists, artist talks, and the exhibition report.',
