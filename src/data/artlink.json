@@ -28,9 +28,5 @@
       "bodyJa": "VR での観覧をきっかけに、作家の個展へ足を運ぶ鑑賞者が実際に生まれています。仮想空間での接点は、現実の行動や関係へと続いていく入口にもなります。",
       "bodyEn": "Viewers who first encountered an artist through VR have gone on to attend their physical exhibitions. A connection in virtual space can become a door to real-world action and ongoing relationships."
     }
-  ],
-  "archives": [
-    { "year": "2025", "newsSlug": "artlink-2025-report", "noteJa": "最新回", "noteEn": "Latest" },
-    { "year": "2024", "newsSlug": "artlink-2024-report", "noteJa": "",     "noteEn": "" }
   ]
 }

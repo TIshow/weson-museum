@@ -1,0 +1,25 @@
+startDate: '2025-11-06'
+endDate: '2025-11-19'
+format: vr
+image: /images/artlink2025.jpg
+
+summary:
+  ja: VRChat 上で開催した、完全 VR の総合美術展。油彩やアクリル画をデジタル化した作品と、デジタルアート作品が一つの空間に並んだ。
+  en: A fully virtual group art exhibition held on VRChat, bringing digitized oil and acrylic paintings together with digital artworks in a single space.
+
+venues:
+  - name:
+      ja: WESON MUSEUM ARTLINK 2025
+      en: WESON MUSEUM ARTLINK 2025
+    kind: vr
+
+# 開催報告の記載どおり。11/3 は会期（11/6〜）より前だが、報告の表記を優先している
+talks:
+  - { date: '2025-11-03', start: '21:00', end: '22:00' }
+  - { date: '2025-11-15', start: '21:00', end: '22:00' }
+  - { date: '2025-11-16', start: '21:00', end: '22:00' }
+
+# 参加作家名の記録がないため人数のみ（主催者を含む）
+artistCount: 17
+
+reportSlug: artlink-2025-report

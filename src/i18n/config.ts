@@ -83,6 +83,14 @@ export function pickAll(texts: I18nText[] | undefined, lang: Locale): string[] {
   return (texts ?? []).map(text => pick(text, lang));
 }
 
+/**
+ * 辞書の文字列に値を差し込む。`fill('{n}名', { n: 12 })` → `12名`。
+ * 語順が言語ごとに違う文言は、組み立てずにこれで辞書側に語順を持たせる。
+ */
+export function fill(template: string, vars: Record<string, string | number>): string {
+  return template.replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? `{${key}}`));
+}
+
 /** そのロケールの表記で日付を整形する。 */
 export function formatDate(date: Date, lang: Locale): string {
   return date.toLocaleDateString(LOCALE_META[lang].dateLocale, {

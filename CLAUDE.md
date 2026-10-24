@@ -148,6 +148,24 @@ works:
 - 価格は静的サイトの出力に載る。公開したくない価格は `price` に書かず `priceOnRequest: true` を使う
 - スキーマ全体と運用手順は `docs/artists-content.md` を参照
 
+**ARTLINK の開催回**: `src/content/artlink/<年>.yaml`（Content Collections、`type: 'data'`）
+
+1回＝1ファイル、ファイル名の年がそのまま URL（`2026.yaml` → `/artlink/2026/`）。
+`/artlink/` は企画全体の紹介ページで、ここには回ごとの詳細を書かない。
+トップの ARTLINK バナーと `/artlink/` の「最新回」は、開始日が最も新しい回から自動で出る。
+
+- 日付・時刻は **JST の文字列**（`'2026-11-01'` `'21:00'`）で書く。クォートを外すと YAML が日付型にして検証に落ちる
+- 静的サイトなので「開催中」「終了」のような時刻依存の表示は出さない。会期前の注意書きは `notice` に書き、会期が終わったら消す
+- 長い開催報告は news 記事を正とし、回のファイルからは `reportSlug` / `announcementSlug` で参照する。存在しない slug はビルドで落ちる
+- 参加作家名の記録がない回は `artistCount` に人数だけ書く。読みが確認できない名前は `en` を書かない
+- 画像は3種類。`keyVisual`（文字入りポスター 16:9。回のページ上部に切り抜かず表示し、SNS のシェア画像にもなる）、
+  `image`（写真 16:9。トップのバナー背景。キービジュアルが無い回はページ上部の帯にも使う）、`talkPhoto`（在廊の様子。スケジュール欄に添える）。
+  キービジュアルは文字が入っているのでバナー背景には使わない
+- 在廊（`talks`）はカレンダーとタイムテーブルで表示する。「本日」「開催中」「終了」は閲覧時刻からブラウザ側で付ける
+  （HTML には書かない）。VR 会場の `search` はワールド検索名として「参加方法」に出る
+- 回を追加する手順（会期前）: `<年>.yaml` を作る → 告知記事を news / news-en に書いて `announcementSlug` を設定
+- 会期後: `notice` を消す → 報告記事を書いて `reportSlug` を設定
+
 ### Three.js ギャラリー
 
 `src/components/Gallery.astro` + `src/components/three/GalleryScene.ts`
@@ -184,6 +202,7 @@ works:
 | `pages/artists/[slug].astro` | `/artists/[slug]/` | 作家詳細（Content Collections から自動生成） |
 | `pages/exhibitions.astro` | `/exhibitions/` | 常設4館詳細・VRChatリンク |
 | `pages/artlink.astro` | `/artlink/` | ARTLINK 企画展 |
+| `pages/artlink/[year].astro` | `/artlink/[year]/` | ARTLINK の各回（会期・会場・参加作家・在廊・報告。Content Collections から自動生成） |
 | `pages/news/index.astro` | `/news/` | ニュース一覧 |
 | `pages/news/[slug].astro` | `/news/[slug]/` | ニュース詳細（Content Collections から自動生成） |
 | `pages/media.astro` | `/media/` | メディア掲載一覧 |
