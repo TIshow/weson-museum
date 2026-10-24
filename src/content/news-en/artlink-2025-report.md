@@ -4,6 +4,7 @@ description: "A report on ARTLINK 2025, held on VRChat from November 6–19, 202
 pubDate: 2025-11-25
 tags: ["ARTLINK", "Exhibition Report", "VRChat"]
 draft: false
+ogImage: "/images/artlink2025.jpg"
 ---
 
 WESON MUSEUM held ARTLINK 2025 from Thursday, November 6 to Wednesday, November 19, 2025, on VRChat. The exhibition brought together work by 17 artists from across Japan — including oil paintings and acrylic works digitized for virtual display, alongside digital artworks — presented in an immersive virtual environment.

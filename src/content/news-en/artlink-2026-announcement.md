@@ -4,6 +4,7 @@ description: "WESON MUSEUM will hold the group VR art exhibition ARTLINK 2026 on
 pubDate: 2026-10-24
 tags: ["ARTLINK", "Announcement", "VRChat"]
 draft: false
+ogImage: "/images/artlink/2026/key-visual.jpg"
 ---
 
 WESON MUSEUM will hold the group VR art exhibition ARTLINK 2026 on VRChat from Sunday, November 1 to Saturday, November 14, 2026.

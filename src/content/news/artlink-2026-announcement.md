@@ -4,6 +4,7 @@ description: "2026年11月1日（日）から11月14日（土）まで、VRChat�
 pubDate: 2026-10-24
 tags: ["ARTLINK", "お知らせ", "VRChat"]
 draft: false
+ogImage: "/images/artlink/2026/key-visual.jpg"
 ---
 
 WESON MUSEUM は、2026年11月1日（日）から11月14日（土）まで、VRChat 上でVR総合美術展「ARTLINK 2026」を開催します。

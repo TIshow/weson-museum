@@ -130,7 +130,13 @@ const jsonLd = {
 };
 ---
 
-<BaseLayout title={`${name} — WESON MUSEUM`} description={metaDescription} lang={lang}>
+<BaseLayout
+  title={`${name} — WESON MUSEUM`}
+  description={metaDescription}
+  ogImage={assetUrl(d.coverImage ?? d.portrait)}
+  ogImageAlt={name}
+  lang={lang}
+>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
   <!-- ================================================================

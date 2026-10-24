@@ -23,6 +23,8 @@ export interface UIStrings {
     home: string;
     breadcrumbAria: string;
     langAria: string;
+    /** SNS 共有の既定サムネイル（public/images/og/default.jpg）の代替テキスト */
+    ogImageAlt: string;
   };
   artists: {
     eyebrow: string;
@@ -159,6 +161,7 @@ const ja: UIStrings = {
     home: 'Home',
     breadcrumbAria: 'パンくずリスト',
     langAria: 'Language / 言語',
+    ogImageAlt: 'WESON MUSEUM — VRChat に開かれた VR 美術館',
   },
   artists: {
     eyebrow: 'ARTLINK ARTISTS',
@@ -289,6 +292,7 @@ const en: UIStrings = {
     home: 'Home',
     breadcrumbAria: 'Breadcrumb',
     langAria: 'Language / 言語',
+    ogImageAlt: 'WESON MUSEUM — a VR art museum on VRChat',
   },
   artists: {
     eyebrow: 'ARTLINK ARTISTS',
