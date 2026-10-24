@@ -4,7 +4,7 @@ description: "From May 20–24, 2026, the WESON MUSEUM team visited the Republic
 pubDate: 2026-05-27
 tags: ["Palau", "International Exchange", "VRChat", "Press Coverage"]
 draft: false
-ogImage: "/images/tia_belau_newspaper.jpeg"
+ogImage: "/images/museums/palau_museum.jpg"
 ---
 
 From May 20 to 24, 2026, the WESON MUSEUM team visited the Republic of Palau. Through our Palau Museum — operated under the patronage of the Palauan Embassy — we had been building relationships with people on the island, and this trip gave us the opportunity to meet them in person and discuss the possibilities of cultural exchange through VR.

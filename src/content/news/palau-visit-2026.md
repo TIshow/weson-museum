@@ -4,7 +4,7 @@ description: "2026年5月20日〜24日、WESON MUSEUMのチームがパラオ共
 pubDate: 2026-05-27
 tags: ["パラオ", "国際交流", "VRChat", "海外メディア"]
 draft: false
-ogImage: "/images/tia_belau_newspaper.jpeg"
+ogImage: "/images/museums/palau_museum.jpg"
 ---
 
 2026年5月20日から24日にかけて、WESON MUSEUMのチームがパラオ共和国を訪問しました。パラオ大使館後援のもと運営している「パラオ美術館」を通じてご縁をいただいた現地の方々と直接お会いし、VRを通じた文化交流の可能性について話し合う機会を得ました。
