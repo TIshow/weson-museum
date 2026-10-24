@@ -236,6 +236,9 @@ works:
 
 - `--space-10` はデザイントークンに**存在しない**（`--space-8` または `--space-12` を使う）
 - ヘッダーのナビは7項目で、既定の間隔だと約 986px 必要。`BaseLayout.astro` で 1100px / 900px / 760px ごとに段階的に詰めて 641px 以上で1行に収めている。項目を増やすときは各幅ではみ出さないか確認する（640px 以下はテキストナビ非表示）
+- スマホ（640px 以下）のメニューは Popover API（`popover` 属性）で実装している。JS 不要で、Escape・外側タップで閉じ、閉じるとフォーカスが開閉ボタンに戻る。未対応ブラウザではボタンを出さず（`@supports selector(:popover-open)`）、フッターのナビで移動する
+- ナビの現在地は `aria-current="page"`。配下のページ（`/artlink/2026/` など）でもその項目が現在地になる
+- `aspect-ratio` と `min-height` を同じ要素に併用しないこと。`min-height` が比率を通じて最小幅に換算され、狭い画面ではみ出す（トップの ARTLINK バナーで発生済み）
 - 英語ページの内部リンクは必ず `/en/*` を向けること
 - `BaseLayout` に `lang="en"` を渡し忘れると nav リンクが日本語パスになる
 - news の Content Collections は配列 JSON ではなく 1ファイル = 1記事の Markdown 形式
