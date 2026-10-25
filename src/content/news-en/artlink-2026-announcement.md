@@ -28,8 +28,7 @@ The latest dates, artists, and talk schedule are kept on the [ARTLINK 2026 page]
 All times are Japan Standard Time (JST, UTC+9).
 
 - Sun, November 1 · 21:00–23:00
-- Sat, November 7 · 14:00–16:00
-- Sun, November 8 · 21:00–23:00
+- Sat, November 7 · 21:00–23:00
 
 ## Participating Artists
 
