@@ -3,8 +3,8 @@ endDate: '2026-11-14'
 format: vr
 
 summary:
-  ja: VRChat 上の会場で開催する、12名の作家による VR 総合美術展。会期中はいつでも入場でき、作家本人が会場に立つ在廊イベントを3回行う。
-  en: A group VR art exhibition by 12 artists, held in a venue on VRChat. Open at any time during the run, with three artist talks in the venue.
+  ja: VRChat 上の会場で開催する、12名の作家による VR 総合美術展。会期中はいつでも入場でき、作家本人が会場に立つ在廊イベントを2回行う。
+  en: A group VR art exhibition by 12 artists, held in a venue on VRChat. Open at any time during the run, with two artist talks in the venue.
 
 image: /images/artlink/2026/talk.jpg
 keyVisual:
@@ -37,11 +37,11 @@ organizer:
   en: WESON MUSEUM / ARTLINK
 
 # 作家が VR 会場に在廊し、作品解説をする日。
-# 寄稿記事（バーチャルライフマガジン）は 11/7 と 11/8 の時間帯が逆になっている。こちらが正
+# 2026-10-25 に変更: 11/7 を 21:00–23:00 に、11/8 は中止。
+# 寄稿記事（バーチャルライフマガジン）は 11/8 14:00–16:00 を載せたままなので注意
 talks:
   - { date: '2026-11-01', start: '21:00', end: '23:00' }
-  - { date: '2026-11-07', start: '14:00', end: '16:00' }
-  - { date: '2026-11-08', start: '21:00', end: '23:00' }
+  - { date: '2026-11-07', start: '21:00', end: '23:00' }
 
 # 50音順。読みが確認できていない名前は en を書かない（英語版でも原表記のまま出る）
 artists:
